@@ -9,11 +9,19 @@ class_name Map
 @export var settings: MapSettings
 @export var data: MapData
 
+var size: Vector2i:
+	get:
+		if not settings: return Vector2i.ZERO
+		return settings.size
+
 
 func _ready() -> void:
 	# Editor tools
 	if Engine.is_editor_hint():
 		_connect_editor_signals()
+		return
+	
+	propagate_call("set_map", [self])
 
 
 #region Editor Tools

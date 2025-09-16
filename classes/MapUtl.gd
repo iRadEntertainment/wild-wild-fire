@@ -4,6 +4,17 @@ class_name MapUtl
 const EARTH_RADIUS = 6378137.0
 
 
+static func grid_to_world(grid_pos: Vector2i, elevation: float = 0.0, cell_size: float = 1.0) -> Vector3:
+	var position: Vector3 = Vector3(
+		grid_pos.x * cell_size,
+		elevation,
+		grid_pos.y * cell_size
+	)
+	var half_cell: Vector3 = Vector3(cell_size/2.0, 0, cell_size/2.0)
+	position += half_cell
+	return position
+
+
 static func meters_per_pixel(lat_deg: float, zoom: int) -> float:
 	var lat_rad = deg_to_rad(lat_deg)
 	var circumference = 2.0 * PI * EARTH_RADIUS

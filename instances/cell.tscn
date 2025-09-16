@@ -1,18 +1,57 @@
-[gd_scene load_steps=6 format=3 uid="uid://bx3fykta4fi5m"]
+[gd_scene load_steps=11 format=3 uid="uid://bx3fykta4fi5m"]
 
 [ext_resource type="Script" uid="uid://0duegcy8jh3h" path="res://instances/cell.gd" id="1_wtpau"]
 [ext_resource type="ArrayMesh" uid="uid://4cwj3t76l3h7" path="res://assets/models/cell_top.mesh" id="2_6541q"]
-[ext_resource type="Material" uid="uid://bdggqet2he6o8" path="res://assets/materials/cell_grass.material" id="3_tqud0"]
+[ext_resource type="Material" uid="uid://bbdkjirksod1b" path="res://assets/materials/cell_sand.material" id="3_tqud0"]
 [ext_resource type="ArrayMesh" uid="uid://0kh8rdkiku4b" path="res://assets/models/cell_bot.mesh" id="4_v4ogw"]
 [ext_resource type="Material" uid="uid://c2em7klm6xeu4" path="res://assets/materials/cell_side.material" id="5_q35wr"]
+[ext_resource type="Material" uid="uid://pi53nlmhqcdu" path="res://assets/materials/particle_smoke.material" id="6_tqud0"]
+
+[sub_resource type="Curve" id="Curve_v4ogw"]
+_data = [Vector2(0, 0), 0.0, 7.154427, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_q35wr"]
+curve = SubResource("Curve_v4ogw")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_m1cg8"]
+emission_shape_scale = Vector3(0.5, 1, 0.5)
+emission_shape = 6
+emission_ring_axis = Vector3(0, -90, 1)
+emission_ring_height = 1.0
+emission_ring_radius = 1.0
+emission_ring_inner_radius = 0.0
+emission_ring_cone_angle = 58.0
+inherit_velocity_ratio = 0.05
+gravity = Vector3(0, 9.8, 0)
+damping_min = 4.6070004
+damping_max = 8.401
+scale_curve = SubResource("CurveTexture_q35wr")
+turbulence_enabled = true
+
+[sub_resource type="SphereMesh" id="SphereMesh_mcyav"]
+material = ExtResource("6_tqud0")
 
 [node name="cell" type="Node3D"]
 script = ExtResource("1_wtpau")
+soil_type = 2
 
 [node name="mesh_top" type="MeshInstance3D" parent="."]
 mesh = ExtResource("2_6541q")
 surface_material_override/0 = ExtResource("3_tqud0")
 
 [node name="mesh_bot" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 8, 0, 0, 0, 1, 0, 0, 0)
 mesh = ExtResource("4_v4ogw")
 surface_material_override/0 = ExtResource("5_q35wr")
+
+[node name="part_smoke" type="GPUParticles3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.73097533, 0)
+visible = false
+amount = 30
+lifetime = 5.0
+process_material = SubResource("ParticleProcessMaterial_m1cg8")
+draw_pass_1 = SubResource("SphereMesh_mcyav")
+
+[node name="cell_top" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)
