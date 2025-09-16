@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://b0g0gacn2eay"]
+
+[ext_resource type="Script" uid="uid://ku41aqkdqwef" path="res://singletons/Mng.gd" id="1_neuo5"]
+
+[node name="Mng" type="Node"]
+script = ExtResource("1_neuo5")

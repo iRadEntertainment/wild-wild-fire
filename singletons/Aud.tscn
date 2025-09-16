@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://cpeunbbr3yjlp"]
+
+[ext_resource type="Script" uid="uid://dl813p27n6vkb" path="res://singletons/Aud.gd" id="1_4c3ed"]
+
+[node name="Aud" type="Node"]
+script = ExtResource("1_4c3ed")
+
+[node name="music" type="AudioStreamPlayer" parent="."]

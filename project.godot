@@ -14,6 +14,11 @@ config/name="Wild Wild Fire"
 config/features=PackedStringArray("4.5", "Forward Plus")
 config/icon="res://icon.svg"
 
+[autoload]
+
+Mng="*res://singletons/Mng.tscn"
+Aud="*res://singletons/Aud.tscn"
+
 [dotnet]
 
 project/assembly_name="Wild Wild Fire"
