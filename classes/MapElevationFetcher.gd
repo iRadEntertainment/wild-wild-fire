@@ -2,10 +2,13 @@
 extends Node
 class_name MapElevationFetcher
 
-@export_category("Fetch Controls")
-@export var coord_latitude: float = 37.7749
-@export var coord_longitude: float = -122.4194
-@export_range(0, 19, 1) var zoom: int = 10
+
+const TERRARIUM_URL := "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png"
+const WORLD_IMAGERY_URL := "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+
+@export var coord_latitude: float = 39.87082
+@export var coord_longitude: float = 15.78452
+@export_range(0, 19, 1) var zoom: int = 12
 
 
 @warning_ignore("unused_private_class_variable")
@@ -14,94 +17,70 @@ func _fetch_now() -> void:
 	if Engine.is_editor_hint():
 		_fetch_tile()
 
-@export var http_request: HTTPRequest
 
-@export_category("Result")
-@export var result_texture: Texture2D
-var result_image: Image
+var http_request_satellite: HTTPRequest
+var http_request_heightmap: HTTPRequest
+var img_elevation: Image
+var img_satellite: Image
+var min_height: float
+var max_height: float
 
-@export_category("Source")
-## Choose source; Mapbox needs a token. Terrarium works without one.
-@export_enum("Terrarium", "Mapbox Terrain-RGB") var source: int = 0
-@export var mapbox_access_token: String = "" # only used if source == 1
-
-# ---------- Constants ----------
-const TERRARIUM_URL := "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png"
-const MAPBOX_URL := "https://api.mapbox.com/v4/mapbox.terrain-rgb/{z}/{x}/{y}.pngraw?access_token={token}"
-
+signal heightmap_fetched
+signal satellite_fetched
 signal tile_fetched
 
 
+#region Init
 func _enter_tree() -> void:
 	if not Engine.is_editor_hint():
 		return
-	if not is_instance_valid(http_request):
-		http_request = HTTPRequest.new()
-		http_request.name = "MapFetcherHTTPRequest"
-		add_child(http_request)
-		# Keep it editor-only so it doesn’t end up in exported builds by accident
-		http_request.owner = null
-	# (Re)connect signal safely
-	if http_request.is_connected("request_completed", Callable(self, "_on_request_completed")):
-		http_request.disconnect("request_completed", Callable(self, "_on_request_completed"))
 	
-	http_request.request_completed.connect(_on_request_completed)
+	if not is_instance_valid(http_request_heightmap):
+		http_request_heightmap = HTTPRequest.new()
+		http_request_heightmap.name = "MapFetcherHTTPRequest"
+		add_child(http_request_heightmap)
+		# Keep it editor-only so it doesn’t end up in exported builds by accident
+		http_request_heightmap.owner = null
+	
+	if http_request_heightmap.request_completed.is_connected(_on_request_heightmap_completed):
+		http_request_heightmap.request_completed.disconnect(_on_request_heightmap_completed)
+	
+	http_request_heightmap.request_completed.connect(_on_request_heightmap_completed)
+	
+	if not is_instance_valid(http_request_satellite):
+		http_request_satellite = HTTPRequest.new()
+		http_request_satellite.name = "MapFetcherHTTPRequestSat"
+		add_child(http_request_satellite)
+		# Keep it editor-only so it doesn’t end up in exported builds by accident
+		http_request_satellite.owner = null
+	
+	if http_request_satellite.request_completed.is_connected(_on_request_satellite_completed):
+		http_request_satellite.request_completed.disconnect(_on_request_satellite_completed)
+	
+	http_request_satellite.request_completed.connect(_on_request_satellite_completed)
+#endregion
 
 
-static func latlon_to_xyz(lat: float, lon: float, z: int) -> Vector3i:
-	var lat_rad := deg_to_rad(lat)
-	var n := 1 << z
-	var x := int(floor((lon + 180.0) / 360.0 * n))
-	var y := int(floor((1.0 - asinh(tan(lat_rad)) / PI) / 2.0 * n))
-	return Vector3i(x, y, z)
-
-
-static func terrarium_to_meters(color: Color) -> float:
-	var R := color.r8
-	var G := color.g8
-	var B := color.b8
-	return (R * 256.0 + G + B / 256.0) - 32768.0
-
-
-static func terrainrgb_to_meters(color: Color) -> float:
-	var R := color.r8
-	var G := color.g8
-	var B := color.b8
-	return -10000.0 + (R * 256.0 * 256.0 + G * 256.0 + B) * 0.1
-
-
+#region Fetch
 func _fetch_tile() -> void:
 	if not Engine.is_editor_hint():
 		return
-	if not is_instance_valid(http_request):
+	if not is_instance_valid(http_request_heightmap):
 		push_warning("No HTTPRequest available. Please assign one in the Inspector or re-select the node.")
 		return
-
-	var xyz := latlon_to_xyz(coord_latitude, coord_longitude, zoom)
+	
+	var xyz := MapUtl.latlon_to_xyz(coord_latitude, coord_longitude, zoom)
 	var x := xyz.x
 	var y := xyz.y
 	var z := xyz.z
-
-	var url := ""
-	match source:
-		0: # Terrarium
-			url = TERRARIUM_URL.format({ "z": z, "x": x, "y": y })
-		1: # Mapbox Terrain-RGB
-			if mapbox_access_token.is_empty():
-				push_error("Mapbox source selected but access token is empty.")
-				return
-			url = MAPBOX_URL.format({ "z": z, "x": x, "y": y, "token": mapbox_access_token })
-		_:
-			push_error("Unknown source.")
-			return
-
-	# request
-	var err := http_request.request(url)
-	if err != OK:
-		push_error("HTTPRequest failed to start. Code: %s" % err)
+	
+	var url_heightmap := TERRARIUM_URL.format({ "z": z, "x": x, "y": y })
+	http_request_heightmap.request(url_heightmap)
+	var url_satellite := WORLD_IMAGERY_URL.format({ "z": z, "x": x, "y": y })
+	http_request_satellite.request(url_satellite)
 
 
-func _on_request_completed(result: int, response_code: int, _headers: PackedStringArray, body: PackedByteArray) -> void:
+func _on_request_heightmap_completed(result: int, response_code: int, _headers: PackedStringArray, body: PackedByteArray) -> void:
 	if not Engine.is_editor_hint():
 		return
 	if result != HTTPRequest.RESULT_SUCCESS or response_code < 200 or response_code >= 300:
@@ -114,39 +93,44 @@ func _on_request_completed(result: int, response_code: int, _headers: PackedStri
 		push_error("Failed to decode PNG. Code: %s" % load_err)
 		return
 	
-	result_image = img
-	
-	# Create/replace preview texture for the Inspector
-	var tex := ImageTexture.create_from_image(img)
-	result_texture = tex
+	img_elevation = img
+	var min_max: Array[float] = MapUtl.get_min_max_from_heightmap(img)
+	min_height = min_max[0]
+	max_height = min_max[1]
 	tile_fetched.emit()
 
 
-# ---------- Convenience: sample an elevation from the last fetch ----------
-## Returns elevation (meters) at a pixel (Terrarium or Terrain-RGB decoding).
-func sample_elevation_at(px: int, py: int) -> float:
-	if result_image == null or result_image.is_empty():
-		return NAN
-	var c := result_image.get_pixel(px, py)
-	return terrarium_to_meters(c) if source == 0 else terrainrgb_to_meters(c)
+func _on_request_satellite_completed(result: int, response_code: int, _headers: PackedStringArray, body: PackedByteArray) -> void:
+	if not Engine.is_editor_hint():
+		return
+	if result != HTTPRequest.RESULT_SUCCESS or response_code < 200 or response_code >= 300:
+		push_error("HTTP error. result=%s, code=%s" % [result, response_code])
+		return
+
+	var img := Image.new()
+	var load_err := img.load_jpg_from_buffer(body)
+	if load_err != OK:
+		push_error("Failed to decode PNG. Code: %s" % load_err)
+		return
+	
+	img_satellite = img
+	satellite_fetched.emit()
+#endregion
 
 
-# ---------- Optional: normalize helpers ----------
-static func normalize(value: float, mn: float, mx: float) -> float:
-	return (value - mn) / max(0.000001, mx - mn)
-
-
+#region Utilities
 func compute_min_max() -> Vector2:
-	if result_image == null or result_image.is_empty():
+	if img_elevation == null or img_elevation.is_empty():
 		return Vector2.ZERO
-	var w := result_image.get_width()
-	var h := result_image.get_height()
-	var mn := INF
-	var mx := -INF
+	var w := img_elevation.get_width()
+	var h := img_elevation.get_height()
+	var min_value := INF
+	var max_value := -INF
 	for y in h:
 		for x in w:
-			var c := result_image.get_pixel(x, y)
-			var e := terrarium_to_meters(c) if source == 0 else terrainrgb_to_meters(c)
-			mn = min(mn, e)
-			mx = max(mx, e)
-	return Vector2(mn, mx)
+			var c := img_elevation.get_pixel(x, y)
+			var e := MapUtl.terrarium_color_to_height_meters(c)
+			min_value = min(min_value, e)
+			max_value = max(max_value, e)
+	return Vector2(min_value, max_value)
+#endregion
