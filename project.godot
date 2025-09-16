@@ -12,7 +12,7 @@ config_version=5
 
 config/name="Wild Wild Fire"
 config/features=PackedStringArray("4.5", "Forward Plus")
-config/icon="res://icon.svg"
+config/icon="uid://bgsdag8245p2j"
 
 [autoload]
 
