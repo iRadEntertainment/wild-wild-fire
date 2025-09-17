@@ -48,14 +48,14 @@ func clear() -> void:
 
 func spawn_cell_at(grid_pos: Vector2i) -> void:
 	if not map: return
-	if not map.settings: return
-	if not map.settings.img_elevation: return
+	if not map.data: return
+	if not map.data.out_img_elevation: return
 	
-	var img_to_size_ratio: Vector2i = map.settings.img_elevation.get_size() / map.size
+	var img_to_size_ratio: Vector2i = map.data.out_img_elevation.get_size() / map.size
 	var sample_pos: Vector2i = grid_pos * img_to_size_ratio
-	var sampled_col: Color = map.settings.img_elevation.get_pixelv(sample_pos)
+	var sampled_col: Color = map.data.out_img_elevation.get_pixelv(sample_pos)
 	var elevation: float = MapUtl.terrarium_color_to_height_meters(sampled_col)
-	var elevation_scaled: float = elevation * map.settings.elevation_scale
+	var elevation_scaled: float = elevation * map.data.elevation_scale
 	
 	var new_cell: Cell = preload("res://instances/cell.tscn").instantiate()
 	new_cell.name = "Cell_%03d_%03d" % [grid_pos.x, grid_pos.y]

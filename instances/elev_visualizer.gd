@@ -62,7 +62,7 @@ func _update() -> void:
 			#center_meters = -fetcher.min_height
 	
 	# dimensions
-	plane.size = map.settings.size
+	plane.size = map.data.size
 	
 	#position
 	position.x = plane.size.x/2.0

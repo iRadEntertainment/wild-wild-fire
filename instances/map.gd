@@ -4,15 +4,12 @@ class_name Map
 
 
 @onready var map_elevation_fetcher: MapElevationFetcher = %MapElevationFetcher
-
-
-@export var settings: MapSettings
 @export var data: MapData
 
 var size: Vector2i:
 	get:
-		if not settings: return Vector2i.ZERO
-		return settings.size
+		if not data: return Vector2i.ZERO
+		return data.size
 
 
 func _ready() -> void:
@@ -32,5 +29,6 @@ func _connect_editor_signals() -> void:
 
 func _update_elevation_map() -> void:
 	if !Engine.is_editor_hint(): return
-	settings.img_elevation = map_elevation_fetcher.img_elevation
+	data.in_img_elevation = map_elevation_fetcher.img_elevation
+	data.in_min_max_elevation = Vector2(map_elevation_fetcher.min_height, map_elevation_fetcher.max_height)
 #endregion
