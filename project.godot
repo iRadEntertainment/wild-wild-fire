@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Wild Wild Fire"
-config/features=PackedStringArray("4.5", "Forward Plus")
+config/features=PackedStringArray("4.5", "C#", "Forward Plus")
 config/icon="uid://bgsdag8245p2j"
 
 [autoload]
