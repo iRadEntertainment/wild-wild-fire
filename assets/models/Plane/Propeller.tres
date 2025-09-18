@@ -1,0 +1,7 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://dlc2xye8i4pdm"]
+
+[resource]
+resource_name = "Propeller"
+cull_mode = 2
+albedo_color = Color(0.49276054, 0.49276054, 0.49276048, 1)
+roughness = 0.5

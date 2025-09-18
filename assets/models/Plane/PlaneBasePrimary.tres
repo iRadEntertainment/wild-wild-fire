@@ -1,0 +1,8 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://d2g0kwbshgq7o"]
+
+[resource]
+resource_name = "PlaneBasePrimary"
+cull_mode = 2
+albedo_color = Color(0.9916753, 0.79394925, 0.06680005, 1)
+metallic = 0.33714285
+roughness = 0.22

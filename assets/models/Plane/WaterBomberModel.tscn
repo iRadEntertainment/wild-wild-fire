@@ -1,0 +1,5 @@
+[gd_scene load_steps=2 format=3 uid="uid://jmf4s4jjpgqo"]
+
+[ext_resource type="PackedScene" uid="uid://bj6ffmccttxym" path="res://assets/models/Plane/WaterBomber.glb" id="1_fyvqn"]
+
+[node name="WaterBomber" instance=ExtResource("1_fyvqn")]
