@@ -16,7 +16,9 @@ extends Node3D
 
 
 func _ready() -> void:
-	if not Engine.is_editor_hint():
+	if Engine.is_editor_hint():
+		pass
+	else:
 		_run_test()
 
 
