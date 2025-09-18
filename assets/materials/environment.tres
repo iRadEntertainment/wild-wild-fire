@@ -1,0 +1,32 @@
+[gd_resource type="Environment" load_steps=3 format=3 uid="uid://cgrswn2ofntp4"]
+
+[ext_resource type="Material" uid="uid://cuotl5irbnxs2" path="res://assets/materials/procedural_sky.material" id="1_qlo0c"]
+
+[sub_resource type="Sky" id="Sky_2x15e"]
+sky_material = ExtResource("1_qlo0c")
+process_mode = 3
+
+[resource]
+background_mode = 2
+background_energy_multiplier = 1.1
+sky = SubResource("Sky_2x15e")
+ambient_light_source = 3
+ambient_light_sky_contribution = 0.69
+ambient_light_energy = 2.9
+reflected_light_source = 2
+tonemap_mode = 4
+tonemap_exposure = 0.8
+fog_enabled = true
+fog_mode = 1
+fog_light_color = Color(0.55519646, 0.6946387, 0.93648964, 1)
+fog_light_energy = 2.94
+fog_sun_scatter = 0.3
+fog_density = 1.0
+fog_aerial_perspective = 0.212
+fog_sky_affect = 0.465
+fog_depth_curve = 0.48296806
+fog_depth_begin = 50.0
+volumetric_fog_emission = Color(0.41323084, 0.8068823, 0.93446577, 1)
+volumetric_fog_length = 132.58
+volumetric_fog_detail_spread = 2.7991002
+volumetric_fog_sky_affect = 0.366
