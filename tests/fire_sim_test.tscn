@@ -1,0 +1,45 @@
+[gd_scene load_steps=6 format=3 uid="uid://1fgi2oiec67y"]
+
+[ext_resource type="Script" uid="uid://fyrf5rhnbh16" path="res://classes/FireSim/FireSimTextureDisplayTest.cs" id="1_dkcha"]
+[ext_resource type="Texture2D" uid="uid://cvqg4m8ea0qx3" path="res://assets/map/sim-map-textures/example-test/Brunable.png" id="2_1f5a5"]
+[ext_resource type="Texture2D" uid="uid://0kx0452g6l6p" path="res://assets/map/sim-map-textures/example-test/ExternalM.png" id="3_mtwqd"]
+[ext_resource type="Texture2D" uid="uid://cikggkrk8hjd7" path="res://assets/map/sim-map-textures/example-test/InternalM.png" id="4_1013e"]
+[ext_resource type="Script" uid="uid://bq5pc7u8ql0hi" path="res://classes/FireSim/FireSimulation.cs" id="5_snpfl"]
+
+[node name="Control" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.42365062, 0.42365065, 0.42365062, 1)
+
+[node name="FireSimTextureDisplayTest" type="TextureRect" parent="." node_paths=PackedStringArray("fireCells")]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+stretch_mode = 5
+script = ExtResource("1_dkcha")
+fireCells = NodePath("FireSimulation")
+runTexturedMap = false
+startingPos = Vector2i(50, 50)
+burnableMap = ExtResource("2_1f5a5")
+externalMoistureMap = ExtResource("3_mtwqd")
+internalMoistureMap = ExtResource("4_1013e")
+metadata/_custom_type_script = "uid://fyrf5rhnbh16"
+
+[node name="FireSimulation" type="Node" parent="FireSimTextureDisplayTest"]
+script = ExtResource("5_snpfl")
+metadata/_custom_type_script = "uid://bq5pc7u8ql0hi"
