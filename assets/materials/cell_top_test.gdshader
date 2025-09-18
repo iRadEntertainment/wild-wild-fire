@@ -36,7 +36,7 @@ void vertex() {
 	grid_pos.y =INSTANCE_ID/grid_size.x;
 	grid_uv = vec2(grid_pos) / vec2(grid_size);
 	spawn_amt = texture(vertical_shift_tex, grid_uv).r;
-	VERTEX.y += spawn_amt * vertical_shift;
+	VERTEX *= 1.0 - (spawn_amt * vertical_shift);
 }
 
 
