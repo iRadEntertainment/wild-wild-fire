@@ -30,7 +30,7 @@ uniform sampler2D normalmap_a_sampler : hint_normal;
 uniform sampler2D normalmap_b_sampler : hint_normal;
 
 uniform sampler2D foam_sampler : hint_default_black;  // Foam noise/tiling
-uniform float  foam_level = 0.5;                      // 0..1: shoreline width/sensitivity
+uniform float foam_level = 0.5;                       // 0..1: shoreline width/sensitivity
 
 // Volume / absorption
 uniform float refraction = 0.075;
@@ -43,6 +43,8 @@ uniform float depth_offset = 0.0;                     // meters added to column 
 // Caustics (projected)
 uniform mat4  projector;
 uniform sampler2DArray caustic_sampler : hint_default_black;
+
+varying vec3 V_SURFACE_WORLD;
 
 
 vec4 wave(vec4 parameter, vec2 position, float time, inout vec3 tangent, inout vec3 binormal) {
@@ -66,6 +68,17 @@ vec4 wave(vec4 parameter, vec2 position, float time, inout vec3 tangent, inout v
 }
 
 
+float distance_to_underlying_world(vec2 sample_uv, vec3 ground_world) {
+	sample_uv = clamp(sample_uv, vec2(0.0), vec2(1.0));
+	
+	float scene_depth = texture(DEPTH_TEXTURE, sample_uv).r;
+	if (scene_depth <= 0.0001) {
+		return 0.0; // no geometry behind
+	}
+	return distance(V_SURFACE_WORLD, ground_world);
+}
+
+
 void vertex() {
 	float time = TIME * wave_speed;
 	
@@ -86,6 +99,10 @@ void vertex() {
 	
 	// Tile UVs by world XZ so the surface doesn't stretch with mesh topology
 	UV = vtx.xz * sampler_scale;
+	
+	vec4 displaced_world = MODEL_MATRIX * vec4(vtx.xyz, 1.0);
+	V_SURFACE_WORLD = displaced_world.xyz;
+	
 	VERTEX = vtx.xyz;
 }
 
@@ -112,16 +129,22 @@ void fragment() {
 	refraction_offset = clamp(refraction_offset, vec2(-0.01), vec2(0.01));
 	vec2 ref_uv = SCREEN_UV + refraction_offset;
 	
-	// --- Depths in the SAME space (0..1) for contact / shoreline ---
-	float scene_depth = texture(DEPTH_TEXTURE, ref_uv).r; // depth of ground/geometry under water at refracted UV
+	// Gradients for stable sampling
+	vec2 duv_dx = dFdx(ref_uv);
+	vec2 duv_dy = dFdy(ref_uv);
+	
+	// Depths in the SAME space (0..1) for contact / shoreline
+	float scene_depth = textureGrad(DEPTH_TEXTURE, ref_uv, duv_dx, duv_dy).r;
+	//float scene_depth = texture(DEPTH_TEXTURE, ref_uv).r; // depth of ground/geometry under water at refracted UV
 	float my_depth = FRAGCOORD.z; // depth of this water pixel
+	bool has_depth = scene_depth < 0.999;
 	
 	// Positive near shore/contacts, approaches 0 in deep water
 	// foam_level scales sensitivity/width (0.2 narrow, 1.0 wide/strong)
 	float foam_sensitivity = mix(20.0, 200.0, clamp(foam_level, 0.0, 1.0));
-	float depth_diff = clamp((scene_depth - my_depth) * foam_sensitivity, 0.0, 1.0);
+	float depth_diff = has_depth ? clamp((my_depth - scene_depth) * foam_sensitivity, 0.0, 1.0) : 0.0;
 	
-	// --- View-space thickness for absorption (Beer's law) ---
+	// View-space thickness for absorption (Beer's law)
 	// Back-project ground (at refracted UV)
 	vec3 ndc_ground = vec3(ref_uv * 2.0 - 1.0, scene_depth * 2.0 - 1.0);
 	vec4 vp_ground  = INV_PROJECTION_MATRIX * vec4(ndc_ground, 1.0);
@@ -139,12 +162,19 @@ void fragment() {
 	float depth_blend = clamp(1.0 - exp(-beers_law * column), 0.0, 1.0);
 	float depth_blend_pow = clamp(pow(depth_blend, 2.5), 0.0, 1.0);
 	
+	// Roughness-driven extra blur (scale the gradients)
+	float local_roughness = 0.2 + depth_blend_pow * 0.4;
+	float lod_bias = mix(0.0, 1.5, local_roughness);
+	duv_dx *= exp2(lod_bias);
+	duv_dy *= exp2(lod_bias);
+	
 	// Screen color & dyeing by water color
-	vec3 screen_color = textureLod(SCREEN_TEXTURE, ref_uv, depth_blend_pow * 2.5).rgb;
+	vec3 screen_color = textureGrad(SCREEN_TEXTURE, ref_uv, duv_dx, duv_dy).rgb;
+	//vec3 screen_color = textureLod(SCREEN_TEXTURE, ref_uv, depth_blend_pow * 2.5).rgb;
 	vec3 dye_color = mix(color_shallow.rgb, color_deep.rgb, depth_blend_pow);
 	vec3 color = mix(screen_color * dye_color, dye_color * 0.25, depth_blend_pow * 0.5);
 	
-	// --- Caustics (simple projected variant) ---
+	// Caustics (simple projected variant) 
 	// Convert screen → world → local
 	vec4 world_from_screen = INV_VIEW_MATRIX * vec4(ndc_ground, 1.0);
 	world_from_screen /= world_from_screen.w;
@@ -157,14 +187,16 @@ void fragment() {
 	
 	color *= 1.0 + pow(max(caustic.r, 0.0), 1.5) * (1.0 - depth_blend) * 6.0;
 	
-	// --- Foam (only where the floor/geometry is close under the surface) ---
+	// Foam where the floor/geometry is close
 	if (depth_diff > 0.0) {
 		float foam_noise = clamp(pow(texture(foam_sampler, (uv * 4.0) - uv_offset).r, 10.0) * 40.0, 0.0, 0.2);
-		float foam_edge  = pow(depth_diff, 3.0); // sharper near contact
-		float foam_mix   = clamp(foam_edge * foam_noise * 0.8, 0.0, 1.0);
+		float foam_edge = pow(depth_diff, 3.0);
+		float foam_mix = clamp(foam_edge * foam_noise * 0.8, 0.0, 1.0);
 		color = mix(color, vec3(1.0), foam_mix);
 	}
 	
+	//ALBEDO = vec3(depth_diff, 0.0, 0.0);
+	//ALBEDO = has_depth ? vec3(0,1,0) : vec3(1,0,0);
 	// Outputs
 	ALBEDO = color;
 	METALLIC = 0.1;

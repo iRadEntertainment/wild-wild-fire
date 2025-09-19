@@ -45,25 +45,27 @@ func _set_fetcher(_fetcher: MapElevationFetcher) -> void:
 	if not fetcher:
 		return
 	
-	if not fetcher.heightmap_fetched.is_connected(_update):
-		fetcher.heightmap_fetched.connect(_update)
-	if not fetcher.satellite_fetched.is_connected(_update):
-		fetcher.satellite_fetched.connect(_update)
+	if not fetcher.heightmap_fetched.is_connected(_update_heightmap):
+		fetcher.heightmap_fetched.connect(_update_heightmap)
+	if not fetcher.satellite_fetched.is_connected(_update_satellite):
+		fetcher.satellite_fetched.connect(_update_satellite)
 	
-	_update()
+	_update_heightmap()
+	_update_satellite()
 
 
-func _update() -> void:
+func _update_heightmap() -> void:
+	if not fetcher: return
 	# texture
-	if fetcher:
-		if fetcher.img_elevation:
-			texture_albedo = ImageTexture.create_from_image(fetcher.img_satellite)
-			texture_heightmap = ImageTexture.create_from_image(fetcher.img_elevation)
-			#center_meters = -fetcher.min_height
-	
-	# dimensions
+	if fetcher.img_elevation:
+		texture_heightmap = ImageTexture.create_from_image(fetcher.img_elevation)
+	# dimensions and position
 	plane.size = map.data.size
-	
-	#position
 	position.x = plane.size.x/2.0
 	position.z = plane.size.y/2.0
+
+
+func _update_satellite() -> void:
+	if not fetcher: return
+	if fetcher.img_satellite:
+		texture_albedo = ImageTexture.create_from_image(fetcher.img_satellite)

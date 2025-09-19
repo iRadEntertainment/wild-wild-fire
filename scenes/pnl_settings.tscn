@@ -1,0 +1,108 @@
+[gd_scene load_steps=4 format=3 uid="uid://bbigim1y05ox2"]
+
+[ext_resource type="Script" uid="uid://i2agw3ikouyg" path="res://scenes/pnl_settings.gd" id="1_6vtcv"]
+[ext_resource type="Theme" uid="uid://byujsu8xvuvyt" path="res://assets/theme/main.theme" id="1_8jliw"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_8jliw"]
+
+[node name="pnl_settings" type="PanelContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_8jliw")
+script = ExtResource("1_6vtcv")
+
+[node name="bg" type="TextureRect" parent="."]
+self_modulate = Color(1, 1, 1, 0.36862746)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="vb" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="hb_top" type="HBoxContainer" parent="vb"]
+layout_mode = 2
+
+[node name="empty_space" type="Control" parent="vb/hb_top"]
+visible = false
+custom_minimum_size = Vector2(160, 0)
+layout_mode = 2
+
+[node name="hb_mid" type="HBoxContainer" parent="vb/hb_top"]
+custom_minimum_size = Vector2(700, 0)
+layout_mode = 2
+size_flags_horizontal = 2
+
+[node name="btn_tab_graphics" type="Button" parent="vb/hb_top/hb_mid"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Graphics"
+
+[node name="btn_tab_audio" type="Button" parent="vb/hb_top/hb_mid"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Audio"
+
+[node name="btn_tab_game" type="Button" parent="vb/hb_top/hb_mid"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Game"
+
+[node name="btn_close" type="Button" parent="vb/hb_top"]
+custom_minimum_size = Vector2(160, 0)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 0
+text = "Close"
+
+[node name="tab" type="TabContainer" parent="vb"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxEmpty_8jliw")
+tab_alignment = 1
+current_tab = 0
+tabs_visible = false
+
+[node name="Graphics" type="PanelContainer" parent="vb/tab"]
+layout_mode = 2
+metadata/_tab_index = 0
+
+[node name="lb_placeholder" type="Label" parent="vb/tab/Graphics"]
+layout_mode = 2
+size_flags_vertical = 1
+text = "Graphics"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Audio" type="PanelContainer" parent="vb/tab"]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 1
+
+[node name="lb_placeholder" type="Label" parent="vb/tab/Audio"]
+layout_mode = 2
+size_flags_vertical = 1
+text = "Audio"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Game" type="PanelContainer" parent="vb/tab"]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 2
+
+[node name="lb_placeholder" type="Label" parent="vb/tab/Game"]
+layout_mode = 2
+size_flags_vertical = 1
+text = "Game settings"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[connection signal="pressed" from="vb/hb_top/hb_mid/btn_tab_graphics" to="." method="_on_btn_tab_graphics_pressed"]
+[connection signal="pressed" from="vb/hb_top/hb_mid/btn_tab_audio" to="." method="_on_btn_tab_audio_pressed"]
+[connection signal="pressed" from="vb/hb_top/hb_mid/btn_tab_game" to="." method="_on_btn_tab_game_pressed"]
+[connection signal="pressed" from="vb/hb_top/btn_close" to="." method="_on_btn_close_pressed"]

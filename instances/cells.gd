@@ -3,7 +3,7 @@ extends Node3D
 class_name CellsMng
 
 
-@warning_ignore("unused_private_class_variable")
+@warning_ignore_start("unused_private_class_variable")
 @export_tool_button("Respawn Cells", "Button") var _respawn_btn: Callable = respawn_cells
 @export_tool_button("CLEAR", "Button") var _clear_btn: Callable = clear
 

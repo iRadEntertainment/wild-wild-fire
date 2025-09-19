@@ -27,7 +27,6 @@ var max_height: float
 
 signal heightmap_fetched
 signal satellite_fetched
-signal tile_fetched
 
 
 #region Init
@@ -97,7 +96,7 @@ func _on_request_heightmap_completed(result: int, response_code: int, _headers: 
 	var min_max: Array[float] = MapUtl.get_min_max_from_heightmap(img)
 	min_height = min_max[0]
 	max_height = min_max[1]
-	tile_fetched.emit()
+	heightmap_fetched.emit()
 
 
 func _on_request_satellite_completed(result: int, response_code: int, _headers: PackedStringArray, body: PackedByteArray) -> void:
