@@ -1,0 +1,30 @@
+[gd_resource type="Environment" load_steps=3 format=3 uid="uid://bfelwt1bgsy8e"]
+
+[ext_resource type="Material" uid="uid://cuotl5irbnxs2" path="res://assets/materials/procedural_sky.material" id="1_fmg4s"]
+
+[sub_resource type="Sky" id="1"]
+sky_material = ExtResource("1_fmg4s")
+process_mode = 3
+
+[resource]
+background_mode = 2
+background_color = Color(0.337255, 0.541176, 0.733333, 1)
+sky = SubResource("1")
+sky_rotation = Vector3(0, -2.1370003, 0)
+ambient_light_source = 3
+reflected_light_source = 2
+tonemap_mode = 3
+tonemap_exposure = 1.3
+tonemap_white = 5.5
+ssr_enabled = true
+ssao_enabled = true
+ssao_radius = 2.0
+glow_enabled = true
+glow_intensity = 0.1
+glow_bloom = 0.1
+glow_blend_mode = 0
+fog_depth_curve = 2.0
+fog_depth_end = 180.0
+adjustment_enabled = true
+adjustment_contrast = 1.1
+adjustment_saturation = 0.98
