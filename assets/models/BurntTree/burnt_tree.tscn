@@ -1,0 +1,5 @@
+[gd_scene load_steps=2 format=3 uid="uid://cffpbvvj18geo"]
+
+[ext_resource type="PackedScene" uid="uid://c7ans5yxwmxlw" path="res://assets/models/BurntTree/BurntTree.glb" id="1_0jp25"]
+
+[node name="BurntTree" instance=ExtResource("1_0jp25")]

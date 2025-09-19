@@ -1,0 +1,36 @@
+[gd_scene load_steps=5 format=3 uid="uid://yrhefj7ccy5b"]
+
+[ext_resource type="Script" uid="uid://dx7rd6rtbpvft" path="res://classes/Plane/PlaneController.cs" id="1_bn5qk"]
+[ext_resource type="PackedScene" uid="uid://bj6ffmccttxym" path="res://assets/models/Plane/WaterBomber.glb" id="1_iwfio"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_gyten"]
+height = 5.0
+radius = 12.0
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_bn5qk"]
+size = Vector2(127.825, 149.465)
+
+[node name="WaterBomber" type="CharacterBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 19.212076, 0)
+script = ExtResource("1_bn5qk")
+Speed = 75.0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+shape = SubResource("CylinderShape3D_gyten")
+
+[node name="WaterBomber" parent="." instance=ExtResource("1_iwfio")]
+
+[node name="DebugEnv" type="Node" parent="."]
+
+[node name="Floor" type="Node3D" parent="DebugEnv"]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="DebugEnv/Floor"]
+mesh = SubResource("PlaneMesh_bn5qk")
+skeleton = NodePath("../..")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="DebugEnv"]
+transform = Transform3D(1, 0, 0, 0, 0.8616026, 0.5075835, 0, -0.5075835, 0.8616026, 0, 0, 0)
+
+[node name="Camera3D" type="Camera3D" parent="DebugEnv"]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 300, 1.666)

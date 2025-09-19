@@ -1,6 +1,6 @@
 ﻿Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wild Wild Fire", "Wild Wild Fire.csproj", "{B7EB15DA-8D0A-4DB5-A0FC-624EDD9BD514}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wild Wild Fire", "Wild Wild Fire.csproj", "{36DD130C-F6F7-4E87-B236-4557D5BBCD90}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -9,11 +9,11 @@ Global
 	ExportRelease|Any CPU = ExportRelease|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{B7EB15DA-8D0A-4DB5-A0FC-624EDD9BD514}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B7EB15DA-8D0A-4DB5-A0FC-624EDD9BD514}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B7EB15DA-8D0A-4DB5-A0FC-624EDD9BD514}.ExportDebug|Any CPU.ActiveCfg = ExportDebug|Any CPU
-		{B7EB15DA-8D0A-4DB5-A0FC-624EDD9BD514}.ExportDebug|Any CPU.Build.0 = ExportDebug|Any CPU
-		{B7EB15DA-8D0A-4DB5-A0FC-624EDD9BD514}.ExportRelease|Any CPU.ActiveCfg = ExportRelease|Any CPU
-		{B7EB15DA-8D0A-4DB5-A0FC-624EDD9BD514}.ExportRelease|Any CPU.Build.0 = ExportRelease|Any CPU
+		{36DD130C-F6F7-4E87-B236-4557D5BBCD90}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{36DD130C-F6F7-4E87-B236-4557D5BBCD90}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{36DD130C-F6F7-4E87-B236-4557D5BBCD90}.ExportDebug|Any CPU.ActiveCfg = ExportDebug|Any CPU
+		{36DD130C-F6F7-4E87-B236-4557D5BBCD90}.ExportDebug|Any CPU.Build.0 = ExportDebug|Any CPU
+		{36DD130C-F6F7-4E87-B236-4557D5BBCD90}.ExportRelease|Any CPU.ActiveCfg = ExportRelease|Any CPU
+		{36DD130C-F6F7-4E87-B236-4557D5BBCD90}.ExportRelease|Any CPU.Build.0 = ExportRelease|Any CPU
 	EndGlobalSection
 EndGlobal

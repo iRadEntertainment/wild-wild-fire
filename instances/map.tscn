@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://ci2vsorh57rmw" path="res://instances/map.gd" id="1_w1e7p"]
 [ext_resource type="Resource" uid="uid://cm3mpi4pq7vjg" path="res://assets/map/map_data.res" id="2_njd0e"]
-[ext_resource type="Script" uid="uid://bhnw4oa8nrktj" path="res://classes/MapElevationFetcher.gd" id="3_4rkxq"]
+[ext_resource type="Script" uid="uid://bhnw4oa8nrktj" path="res://classes/Map/MapElevationFetcher.gd" id="3_4rkxq"]
 [ext_resource type="Script" uid="uid://8iubrxvl7enp" path="res://instances/elev_visualizer.gd" id="4_655t4"]
 [ext_resource type="Script" uid="uid://hubef3pfivn1" path="res://instances/cells.gd" id="4_bpyqv"]
 [ext_resource type="Material" uid="uid://n53nbls6kvmv" path="res://assets/materials/toon_water.material" id="5_m4ten"]
