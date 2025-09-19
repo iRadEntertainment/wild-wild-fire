@@ -1,7 +1,73 @@
-[gd_scene load_steps=3 format=3 uid="uid://cyy7bec3ko53i"]
+[gd_scene load_steps=9 format=3 uid="uid://cyy7bec3ko53i"]
 
 [ext_resource type="Script" uid="uid://d0cgk0g6nbqhe" path="res://instances/hud.gd" id="1_hvx1s"]
 [ext_resource type="Theme" uid="uid://byujsu8xvuvyt" path="res://assets/theme/main.theme" id="1_oskb6"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_oskb6"]
+font_size = 20
+font_color = Color(0.99215686, 0.41960785, 0.1254902, 1)
+outline_size = 4
+outline_color = Color(0.27058825, 0.10980392, 0.16470589, 1)
+shadow_size = 6
+shadow_color = Color(0, 0, 0, 0.14901961)
+shadow_offset = Vector2(1, 2)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_oskb6"]
+bg_color = Color(0, 0, 0, 0.105882354)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.60236657, 0.2904957, 0, 1)
+border_blend = true
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+expand_margin_left = 2.0
+expand_margin_top = 2.0
+expand_margin_right = 2.0
+expand_margin_bottom = 2.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0osg1"]
+bg_color = Color(0.99215686, 0.41960785, 0.1254902, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="LabelSettings" id="LabelSettings_0osg1"]
+font_size = 20
+font_color = Color(0.46852916, 0.6674648, 0.7894378, 1)
+outline_size = 4
+outline_color = Color(0.10901711, 3.080368e-06, 0.5206572, 1)
+shadow_size = 6
+shadow_color = Color(0, 0, 0, 0.14901961)
+shadow_offset = Vector2(1, 2)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wa3vo"]
+bg_color = Color(0, 0, 0, 0.105882354)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0, 0.34613672, 0.83802897, 1)
+border_blend = true
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+expand_margin_left = 2.0
+expand_margin_top = 2.0
+expand_margin_right = 2.0
+expand_margin_bottom = 2.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_n10qx"]
+bg_color = Color(0.46666667, 0.6666667, 0.7882353, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
 
 [node name="HUD" type="Control"]
 layout_mode = 3
@@ -13,23 +79,12 @@ grow_vertical = 2
 theme = ExtResource("1_oskb6")
 script = ExtResource("1_hvx1s")
 
-[node name="Label" type="Label" parent="."]
-layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -20.0
-offset_right = 20.0
-offset_bottom = 23.0
-grow_horizontal = 2
-text = "HUD"
-
 [node name="vb_top_left" type="VBoxContainer" parent="."]
 layout_mode = 0
 offset_left = 15.0
 offset_top = 16.0
-offset_right = 413.0
-offset_bottom = 74.0
+offset_right = 487.0
+offset_bottom = 76.0
 
 [node name="GridContainer" type="GridContainer" parent="vb_top_left"]
 layout_mode = 2
@@ -38,23 +93,29 @@ columns = 2
 [node name="lb_fuel" type="Label" parent="vb_top_left/GridContainer"]
 layout_mode = 2
 text = "Fuel"
+label_settings = SubResource("LabelSettings_oskb6")
 
 [node name="progress_fuel" type="ProgressBar" parent="vb_top_left/GridContainer"]
 custom_minimum_size = Vector2(0, 16)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
+theme_override_styles/background = SubResource("StyleBoxFlat_oskb6")
+theme_override_styles/fill = SubResource("StyleBoxFlat_0osg1")
 value = 60.72
 show_percentage = false
 
 [node name="lb_water" type="Label" parent="vb_top_left/GridContainer"]
 layout_mode = 2
 text = "Water"
+label_settings = SubResource("LabelSettings_0osg1")
 
 [node name="progress_water" type="ProgressBar" parent="vb_top_left/GridContainer"]
 custom_minimum_size = Vector2(0, 16)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
+theme_override_styles/background = SubResource("StyleBoxFlat_wa3vo")
+theme_override_styles/fill = SubResource("StyleBoxFlat_n10qx")
 value = 32.76
 show_percentage = false
