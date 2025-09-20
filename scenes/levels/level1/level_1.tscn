@@ -49,8 +49,11 @@ transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 6.5068827, 0)
 [node name="map" parent="." instance=ExtResource("3_l7db3")]
 unique_name_in_owner = true
 data = ExtResource("6_qp7ww")
-coord_latitude = 57.616
 
 [node name="Grap3" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 26.998795, 0)
 mesh = SubResource("TextMesh_j0hmq")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.84701985, 0.5315612, 0, -0.5315612, 0.84701985, -4.989311, 18.32169, 39.673122)
+current = true
