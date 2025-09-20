@@ -6,6 +6,8 @@ func _ready() -> void:
 	%pnl_settings.pnl_closed.connect(_on_pnl_closed)
 	%pnl_credits.pnl_closed.connect(_on_pnl_closed)
 	%tab.hide()
+	Aud.connect_all_buttons_sounds(self)
+	Aud.play_music_main_menu()
 
 
 func _on_btn_start_pressed() -> void:

@@ -3,4 +3,5 @@
 [ext_resource type="Script" uid="uid://ku41aqkdqwef" path="res://singletons/Mng.gd" id="1_neuo5"]
 
 [node name="Mng" type="Node"]
+process_mode = 3
 script = ExtResource("1_neuo5")

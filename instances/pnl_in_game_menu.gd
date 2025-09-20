@@ -6,6 +6,7 @@ class_name InGameMenu
 func _ready() -> void:
 	%pnl_settings.hide()
 	%pnl_settings.visibility_changed.connect(_on_pnl_settings_visibility_changed)
+	Aud.connect_all_buttons_sounds(self)
 
 
 func _on_pnl_settings_visibility_changed() -> void:

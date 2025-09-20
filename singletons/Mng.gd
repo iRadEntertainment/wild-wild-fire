@@ -38,6 +38,7 @@ func start_game(level_n: int) -> void:
 	game = get_tree().current_scene
 	game_stats.new_level(game)
 	if not game.is_setup: await game.setup_complete
+	Aud.stop_music()
 	level_setup_complete.emit()
 
 

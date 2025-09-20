@@ -18,3 +18,12 @@ var is_setup: bool = false
 signal setup_complete
 signal game_lost
 signal game_won
+
+
+func _ready() -> void:
+	propagate_call("setup", [], false)
+
+
+func setup() -> void:
+	is_setup = true
+	setup_complete.emit()
