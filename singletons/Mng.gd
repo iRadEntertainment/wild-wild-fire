@@ -5,6 +5,7 @@ var is_debug_mode: bool = true
 
 var game: Game
 var game_stats: GameStats
+var cam: ThirdPersonCamera
 
 # getters
 var map: Map:

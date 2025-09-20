@@ -1,0 +1,65 @@
+[gd_scene load_steps=7 format=3 uid="uid://wmf2eu0uuhrg"]
+
+[ext_resource type="Script" uid="uid://dvrur5edivbrn" path="res://addons/third_person_camera/ThirdPersonCamera.gd" id="1_telmq"]
+[ext_resource type="Script" uid="uid://ch6tv030u7cvu" path="res://addons/third_person_camera/CameraShake.gd" id="2_y3uk4"]
+
+[sub_resource type="SeparationRayShape3D" id="SeparationRayShape3D_84uqy"]
+margin = 1.135
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2bjii"]
+albedo_color = Color(0.8, 0.686275, 0.215686, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_ag7lb"]
+material = SubResource("StandardMaterial3D_2bjii")
+radius = 0.05
+height = 0.1
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_ybkhn"]
+top_radius = 0.0
+height = 0.938
+
+[node name="ThirdPersonCamera" type="Node3D"]
+script = ExtResource("1_telmq")
+
+[node name="RotationPivot" type="Node3D" parent="."]
+transform = Transform3D(0.999983, 0, 0, 0, 0.939713, 0.341948, 0, -0.341958, 0.939687, 0, 0, 0)
+top_level = true
+
+[node name="OffsetPivot" type="Node3D" parent="RotationPivot"]
+transform = Transform3D(1, 1.43469e-07, 2.92406e-07, -7.86183e-07, 1.00126, 8.97348e-05, -5.18907e-06, -0.000103593, 1.00161, 0, 0, 0)
+
+[node name="CameraSpringArm" type="SpringArm3D" parent="RotationPivot/OffsetPivot"]
+process_priority = 11
+shape = SubResource("SeparationRayShape3D_84uqy")
+spring_length = 10.0
+
+[node name="CameraMarker" type="Marker3D" parent="RotationPivot/OffsetPivot/CameraSpringArm"]
+transform = Transform3D(0.999995, -2.36747e-06, -7.01744e-06, 1.45241e-06, 1.00113, 0.000289023, 3.92565e-06, -2.50936e-05, 1.00203, -2.91939e-06, -0.000346899, 9.98422)
+
+[node name="PivotDebug" type="MeshInstance3D" parent="RotationPivot/OffsetPivot"]
+visible = false
+mesh = SubResource("SphereMesh_ag7lb")
+
+[node name="CameraShaker" type="Node3D" parent="." node_paths=PackedStringArray("camera")]
+script = ExtResource("2_y3uk4")
+camera = NodePath("../Camera")
+
+[node name="Camera" type="Camera3D" parent="."]
+transform = Transform3D(1, 3.05222e-15, -8.38591e-15, 0, 0.939693, 0.34202, 8.9241e-15, -0.34202, 0.939693, -8.38591e-14, 3.4202, 9.39692)
+top_level = true
+
+[node name="CameraDebug" type="MeshInstance3D" parent="Camera"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0.570638)
+visible = false
+mesh = SubResource("CylinderMesh_ybkhn")
+
+[node name="pick_ray" type="RayCast3D" parent="Camera"]
+unique_name_in_owner = true
+target_position = Vector3(0, 0, -15)
+collision_mask = 44
+
+[node name="dummy" type="StaticBody3D" parent="Camera"]
+
+[node name="pin" type="PinJoint3D" parent="Camera/dummy"]
+unique_name_in_owner = true
+node_a = NodePath("..")
