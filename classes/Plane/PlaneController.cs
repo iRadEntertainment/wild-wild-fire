@@ -10,17 +10,15 @@ public partial class PlaneController : CharacterBody3D
 	{
 		Vector3 velocity = Velocity;
 
-		// Add the gravity.
-		//if (!IsOnFloor())
-		//{
-		//	velocity += GetGravity() * (float)delta;
-		//}
-
-		// Handle Jump.
-		//if (Input.IsActionJustPressed("ui_accept") && IsOnFloor())
-		//{
-		//	velocity.Y = JumpVelocity;
-		//}
+		// Need forward velocity at a constant rate
+		// Need to rotate in correct direction when pressing left or right
+		// Need to start a speed boost when holding boost action
+		// Need to register input for Release_Water action
+		// Need... Drift?
+		// Longer Term: Need gas gauge to measure how long plane can remain flying (using speed boost impacts gas amount, so does holding more water?)
+		// Longer Term: Water Gauge, to measure how much water can be dropped before needing to refill
+		// Idea: Less water, faster speed due to lower weight
+		// Idea: Less gas, faster speed due to lower weight
 
 		// Get the input direction and handle the movement/deceleration.
 		// As good practice, you should replace UI actions with custom gameplay actions.
