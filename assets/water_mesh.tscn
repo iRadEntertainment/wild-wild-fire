@@ -4,13 +4,13 @@
 [ext_resource type="Script" uid="uid://chf2r654oq0hl" path="res://assets/water_mesh.gd" id="2_g3d7y"]
 [ext_resource type="Texture2D" uid="uid://ccaunkyhjoecj" path="res://assets/materials/godot-realistic-water-master/water/Caustic.png" id="3_bsyhm"]
 
-[sub_resource type="BoxMesh" id="BoxMesh_bsyhm"]
-size = Vector3(5000, 20, 5000)
-subdivide_width = 1000
-subdivide_height = 1000
+[sub_resource type="PlaneMesh" id="PlaneMesh_bsyhm"]
+size = Vector2(2000, 2000)
+subdivide_width = 2000
+subdivide_depth = 2000
 
 [node name="water_mesh" type="MeshInstance3D"]
-mesh = SubResource("BoxMesh_bsyhm")
+mesh = SubResource("PlaneMesh_bsyhm")
 surface_material_override/0 = ExtResource("1_k4oyx")
 script = ExtResource("2_g3d7y")
 texture_caustics = ExtResource("3_bsyhm")

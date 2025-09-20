@@ -1,0 +1,67 @@
+[gd_scene load_steps=5 format=3 uid="uid://i382nukdemjq"]
+
+[ext_resource type="Theme" uid="uid://byujsu8xvuvyt" path="res://assets/theme/main.theme" id="1_7fpxa"]
+[ext_resource type="Script" uid="uid://dkunmle1mh76h" path="res://instances/pnl_in_game_menu.gd" id="2_286hu"]
+[ext_resource type="PackedScene" uid="uid://bbigim1y05ox2" path="res://scenes/pnl_settings.tscn" id="2_s5wbo"]
+[ext_resource type="Texture2D" uid="uid://ctfaifp158klq" path="res://assets/ui/ref_img_palette.jpg" id="3_286hu"]
+
+[node name="pnl_in_game_menu" type="PanelContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_7fpxa")
+script = ExtResource("2_286hu")
+
+[node name="bg_tex" type="TextureRect" parent="."]
+self_modulate = Color(1, 1, 1, 0.16862746)
+layout_mode = 2
+texture = ExtResource("3_286hu")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="vb" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="lb_title" type="Label" parent="vb"]
+layout_mode = 2
+text = "Game Paused"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="vb"]
+layout_mode = 2
+
+[node name="vb_buttons" type="VBoxContainer" parent="vb"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 6
+alignment = 1
+
+[node name="btn_back" type="Button" parent="vb/vb_buttons"]
+layout_mode = 2
+text = "Back"
+
+[node name="btn_settings" type="Button" parent="vb/vb_buttons"]
+layout_mode = 2
+text = "Settings"
+
+[node name="btn_quit_to_main" type="Button" parent="vb/vb_buttons"]
+layout_mode = 2
+text = "Quit to Main Menu"
+
+[node name="btn_quit" type="Button" parent="vb/vb_buttons"]
+layout_mode = 2
+text = "Quit to Desktop"
+
+[node name="pnl_settings" parent="vb" instance=ExtResource("2_s5wbo")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+
+[connection signal="pressed" from="vb/vb_buttons/btn_back" to="." method="_on_btn_back_pressed"]
+[connection signal="pressed" from="vb/vb_buttons/btn_settings" to="." method="_on_btn_settings_pressed"]
+[connection signal="pressed" from="vb/vb_buttons/btn_quit_to_main" to="." method="_on_btn_quit_to_main_pressed"]
+[connection signal="pressed" from="vb/vb_buttons/btn_quit" to="." method="_on_btn_quit_pressed"]

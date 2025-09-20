@@ -1,6 +1,6 @@
 @tool
 extends Node3D
-class_name Cell
+class_name CellPreview
 
 const MAT_CELL_GRASS := preload("res://assets/materials/cell_grass.material")
 const MAT_CELL_ROCK := preload("res://assets/materials/cell_rock.material")

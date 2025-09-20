@@ -1,0 +1,54 @@
+[gd_scene load_steps=4 format=3 uid="uid://cb0mb3td40ghv"]
+
+[ext_resource type="Theme" uid="uid://byujsu8xvuvyt" path="res://assets/theme/main.theme" id="1_7lmdw"]
+[ext_resource type="Script" uid="uid://3smxei4qiku8" path="res://scenes/pnl_credits.gd" id="2_swq7u"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_swq7u"]
+font_size = 36
+
+[node name="pnl_credits" type="PanelContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_7lmdw")
+script = ExtResource("2_swq7u")
+
+[node name="vb" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="lb_title" type="Label" parent="vb"]
+layout_mode = 2
+text = "Credits"
+label_settings = SubResource("LabelSettings_swq7u")
+horizontal_alignment = 1
+
+[node name="sep01" type="HSeparator" parent="vb"]
+layout_mode = 2
+
+[node name="lb_credits" type="RichTextLabel" parent="vb"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "Those look like SHIT!"
+horizontal_alignment = 1
+
+[node name="sep02" type="HSeparator" parent="vb"]
+layout_mode = 2
+
+[node name="hb_bot" type="HBoxContainer" parent="vb"]
+layout_mode = 2
+
+[node name="btn_close" type="Button" parent="vb/hb_bot"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Close"
+
+[node name="btn_quit" type="Button" parent="vb/hb_bot"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Quit"
+
+[connection signal="pressed" from="vb/hb_bot/btn_close" to="." method="_on_btn_close_pressed"]
+[connection signal="pressed" from="vb/hb_bot/btn_quit" to="." method="_on_btn_quit_pressed"]

@@ -27,16 +27,24 @@ uniform vec3 uv2_offset;
 
 varying flat ivec2 grid_pos;
 varying vec2 grid_uv;
+varying vec3 instance_scale;
 varying float spawn_amt;
 
 
 void vertex() {
+	instance_scale = vec3(
+		length(MODEL_MATRIX[0].xyz),
+		length(MODEL_MATRIX[1].xyz),
+		length(MODEL_MATRIX[2].xyz)
+	);
+
 	UV = UV * uv1_scale.xy + uv1_offset.xy;
 	grid_pos.x = INSTANCE_ID % grid_size.x;
 	grid_pos.y =INSTANCE_ID/grid_size.x;
 	grid_uv = vec2(grid_pos) / vec2(grid_size);
 	spawn_amt = texture(vertical_shift_tex, grid_uv).r;
-	VERTEX *= 1.0 - (spawn_amt * vertical_shift);
+	VERTEX.y -= smoothstep(0, vertical_shift, spawn_amt) / instance_scale.y;
+	//VERTEX.y *= smoothstep(0, vertical_shift, spawn_amt);
 }
 
 

@@ -6,17 +6,6 @@ extends MeshInstance3D
 @export var fetcher: MapElevationFetcher: set = _set_fetcher
 
 #region Preview Fields
-@export_subgroup("Preview")
-@export var texture_albedo: Texture2D:
-	set(val):
-		texture_albedo = val
-		if is_node_ready():
-			mat.set_shader_parameter("texture_albedo", val)
-@export var texture_heightmap: Texture2D:
-	set(val):
-		texture_heightmap = val
-		if is_node_ready():
-			mat.set_shader_parameter("texture_heightmap", val)
 @export_range(0.1, 5000.0, 0.1) var meters_per_unit: float = 256.0:
 	set(val):
 		meters_per_unit = val
@@ -34,6 +23,21 @@ extends MeshInstance3D
 			mat.set_shader_parameter("center_meters", val)
 #endregion
 
+
+#region Textures
+var texture_albedo: Texture2D:
+	set(val):
+		texture_albedo = val
+		if is_node_ready():
+			mat.set_shader_parameter("texture_albedo", val)
+var texture_heightmap: Texture2D:
+	set(val):
+		texture_heightmap = val
+		if is_node_ready():
+			mat.set_shader_parameter("texture_heightmap", val)
+#endregion
+
+
 var plane: PlaneMesh:
 	get: return mesh
 var mat: ShaderMaterial:
@@ -45,25 +49,27 @@ func _set_fetcher(_fetcher: MapElevationFetcher) -> void:
 	if not fetcher:
 		return
 	
-	if not fetcher.heightmap_fetched.is_connected(_update):
-		fetcher.heightmap_fetched.connect(_update)
-	if not fetcher.satellite_fetched.is_connected(_update):
-		fetcher.satellite_fetched.connect(_update)
+	if not fetcher.heightmap_fetched.is_connected(_update_heightmap):
+		fetcher.heightmap_fetched.connect(_update_heightmap)
+	if not fetcher.satellite_fetched.is_connected(_update_satellite):
+		fetcher.satellite_fetched.connect(_update_satellite)
 	
-	_update()
+	_update_heightmap()
+	_update_satellite()
 
 
-func _update() -> void:
+func _update_heightmap() -> void:
+	if not fetcher: return
 	# texture
-	if fetcher:
-		if fetcher.img_elevation:
-			texture_albedo = ImageTexture.create_from_image(fetcher.img_satellite)
-			texture_heightmap = ImageTexture.create_from_image(fetcher.img_elevation)
-			#center_meters = -fetcher.min_height
-	
-	# dimensions
+	if fetcher.img_elevation:
+		texture_heightmap = ImageTexture.create_from_image(fetcher.img_elevation)
+	# dimensions and position
 	plane.size = map.data.size
-	
-	#position
-	position.x = plane.size.x/2.0
-	position.z = plane.size.y/2.0
+	position.x = 0.0
+	position.z = 0.0
+
+
+func _update_satellite() -> void:
+	if not fetcher: return
+	if fetcher.img_satellite:
+		texture_albedo = ImageTexture.create_from_image(fetcher.img_satellite)

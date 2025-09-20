@@ -11,6 +11,7 @@ config_version=5
 [application]
 
 config/name="Wild Wild Fire"
+run/main_scene="uid://bwdedi3dcvc1v"
 config/features=PackedStringArray("4.5", "C#", "Forward Plus")
 config/icon="uid://bgsdag8245p2j"
 
@@ -18,6 +19,10 @@ config/icon="uid://bgsdag8245p2j"
 
 Mng="*res://singletons/Mng.tscn"
 Aud="*res://singletons/Aud.tscn"
+
+[display]
+
+window/stretch/mode="canvas_items"
 
 [dotnet]
 

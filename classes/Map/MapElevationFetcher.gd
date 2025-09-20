@@ -6,17 +6,6 @@ class_name MapElevationFetcher
 const TERRARIUM_URL := "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png"
 const WORLD_IMAGERY_URL := "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
 
-@export var coord_latitude: float = 39.87082
-@export var coord_longitude: float = 15.78452
-@export_range(0, 19, 1) var zoom: int = 12
-
-
-@warning_ignore("unused_private_class_variable")
-@export_tool_button("Fetch elevation Image", "Button") var _fetch_now_btn: Callable = _fetch_now
-func _fetch_now() -> void:
-	if Engine.is_editor_hint():
-		_fetch_tile()
-
 
 var http_request_satellite: HTTPRequest
 var http_request_heightmap: HTTPRequest
@@ -27,7 +16,6 @@ var max_height: float
 
 signal heightmap_fetched
 signal satellite_fetched
-signal tile_fetched
 
 
 #region Init
@@ -62,7 +50,7 @@ func _enter_tree() -> void:
 
 
 #region Fetch
-func _fetch_tile() -> void:
+func _fetch_tile(coord_latitude: float, coord_longitude: float, zoom: int) -> void:
 	if not Engine.is_editor_hint():
 		return
 	if not is_instance_valid(http_request_heightmap):
@@ -97,7 +85,7 @@ func _on_request_heightmap_completed(result: int, response_code: int, _headers: 
 	var min_max: Array[float] = MapUtl.get_min_max_from_heightmap(img)
 	min_height = min_max[0]
 	max_height = min_max[1]
-	tile_fetched.emit()
+	heightmap_fetched.emit()
 
 
 func _on_request_satellite_completed(result: int, response_code: int, _headers: PackedStringArray, body: PackedByteArray) -> void:
