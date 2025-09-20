@@ -20,6 +20,10 @@ config/icon="uid://bgsdag8245p2j"
 Mng="*res://singletons/Mng.tscn"
 Aud="*res://singletons/Aud.tscn"
 
+[display]
+
+window/stretch/mode="canvas_items"
+
 [dotnet]
 
 project/assembly_name="Wild Wild Fire"

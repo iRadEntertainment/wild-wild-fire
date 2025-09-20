@@ -5,6 +5,8 @@ class_name Game
 
 @onready var gui: GUI = %GUI
 @onready var map: Map = %map
+@onready var fire_simulation: FireSimulation = %FireSimulation
+
 
 
 var level_n: int

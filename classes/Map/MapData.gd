@@ -7,66 +7,39 @@ class_name MapData
 
 
 @export_group("Globals")
-@export var size: Vector2i = Vector2i(256, 256): # px / cells
-	set(val):
-		size = val
-		var temp: Vector2 = Vector2(size) / 2.0
-		out_map_world_center = Vector3(temp.x, 0.0, temp.y) * cell_world_dim
-		_update_out_img_elevation()
-@export var cell_world_dim: float = 1.0: #m
-	set(val):
-		cell_world_dim = val
-		var temp: Vector2 = Vector2(size) / 2.0
-		out_map_world_center = Vector3(temp.x, 0.0, temp.y) * cell_world_dim
+@export var size: Vector2i = Vector2i(256, 256) # px / cells
+@export var cell_world_dim: float = 1.0
 
 
 @export_group("Inputs", "in_")
-@export var in_img_elevation: Image:
-	set(val):
-		in_img_elevation = val
-		_update_out_img_elevation()
-@export_range(-500.0, 500.0, 0.1) var in_elevation_scale: float = 25.0 #m
+@export_subgroup("Morphology")
+@export var in_img_elevation: Image
+@export_range(5.0, 50.0, 0.01) var in_elevation_scale: float = 20.0 #m
 @export var in_min_max_elevation: Vector2
+@export var in_tex_elevation_mask: Texture2D
+@export_range(0.0, 1.0, 0.001) var in_water_level_ratio: float = 0.05
+
+@export_subgroup("Decorations")
+@export var in_tex_trees: Texture2D
 @export var in_tex_buildings: Texture2D
 
 
 @export_group("Output", "out_")
 @export var out_map_world_center: Vector3
 @export var out_img_elevation: Image
+@export var out_img_elevation_mask: Image
 
 
-
-func get_elevation_at_grid_pos(grid_pos: Vector2i) -> float:
-	if not out_img_elevation:
-		return 0.0
-	var col: Color = out_img_elevation.get_pixelv(grid_pos)
-	return col.r * in_elevation_scale
-
-
-func grid_pos_to_map_pos(grid_pos: Vector2i) -> Vector3:
-	var pos := Vector3(grid_pos.x, 0.0, grid_pos.y) * cell_world_dim
-	return pos - out_map_world_center
+#region Update
+func update_outputs() -> void:
+	_update_out_map_world_center()
+	_update_out_img_elevation()
+	_update_out_img_elevation_mask()
 
 
-func grid_pos_and_elevation_to_map_pos(grid_pos: Vector2i, elevation: float) -> Vector3:
-	var pos = grid_pos_to_map_pos(grid_pos)
-	pos.y = elevation
-	return pos
-
-
-func map_to_grid_pos(map_pos: Vector3) -> Vector2i:
-	var off_pos: Vector3 = map_pos + out_map_world_center
-	off_pos /= cell_world_dim
-	@warning_ignore("narrowing_conversion")
-	return Vector2i(off_pos.x, off_pos.z)
-
-
-func save_to_file(filepath: String) -> void:
-	ResourceSaver.save(self, filepath)
-
-
-static func load_from_file(file_path: String) -> MapData:
-	return ResourceLoader.load(file_path, "MapData")
+func _update_out_map_world_center() -> void:
+	var temp: Vector2 = Vector2(size) / 2.0
+	out_map_world_center = Vector3(temp.x, 0.0, temp.y) * cell_world_dim
 
 
 func _update_out_img_elevation() -> void:
@@ -85,3 +58,56 @@ func _update_out_img_elevation() -> void:
 			var height: float = MapUtl.normalize(raw_elev, in_min_max_elevation.x, in_min_max_elevation.y)
 			var bw_col: Color = Color(height, height, height, 1.0)
 			out_img_elevation.set_pixel(x, y, bw_col)
+
+
+func _update_out_img_elevation_mask() -> void:
+	if in_tex_elevation_mask:
+		out_img_elevation_mask = in_tex_elevation_mask.get_image().duplicate()
+		out_img_elevation_mask.resize(size.x, size.y)
+	else:
+		out_img_elevation_mask = null
+#endregion
+
+
+
+#region Utilities
+func get_elevation_at_grid_pos(grid_pos: Vector2i) -> float:
+	if not out_img_elevation:
+		return 0.0
+	var col: Color = out_img_elevation.get_pixelv(grid_pos)
+	var elev: float = col.r * in_elevation_scale
+	
+	if out_img_elevation_mask:
+		var mult: float = out_img_elevation_mask.get_pixelv(grid_pos).r
+		elev *= mult
+	
+	return elev
+
+
+func grid_pos_to_map_pos(grid_pos: Vector2i) -> Vector3:
+	var pos := Vector3(grid_pos.x, 0.0, grid_pos.y) * cell_world_dim
+	return pos - out_map_world_center
+
+
+func grid_pos_and_elevation_to_map_pos(grid_pos: Vector2i, elevation: float) -> Vector3:
+	var pos = grid_pos_to_map_pos(grid_pos)
+	pos.y = elevation
+	return pos
+
+
+func map_to_grid_pos(map_pos: Vector3) -> Vector2i:
+	var off_pos: Vector3 = map_pos + out_map_world_center
+	off_pos /= cell_world_dim
+	@warning_ignore("narrowing_conversion")
+	return Vector2i(off_pos.x, off_pos.z)
+#endregion
+
+
+#region Save/Load
+func save_to_file(filepath: String) -> void:
+	ResourceSaver.save(self, filepath)
+
+
+static func load_from_file(file_path: String) -> MapData:
+	return ResourceLoader.load(file_path, "MapData")
+#endregion

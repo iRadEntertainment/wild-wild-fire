@@ -6,17 +6,6 @@ extends MeshInstance3D
 @export var fetcher: MapElevationFetcher: set = _set_fetcher
 
 #region Preview Fields
-@export_subgroup("Preview")
-@export var texture_albedo: Texture2D:
-	set(val):
-		texture_albedo = val
-		if is_node_ready():
-			mat.set_shader_parameter("texture_albedo", val)
-@export var texture_heightmap: Texture2D:
-	set(val):
-		texture_heightmap = val
-		if is_node_ready():
-			mat.set_shader_parameter("texture_heightmap", val)
 @export_range(0.1, 5000.0, 0.1) var meters_per_unit: float = 256.0:
 	set(val):
 		meters_per_unit = val
@@ -33,6 +22,21 @@ extends MeshInstance3D
 		if is_node_ready():
 			mat.set_shader_parameter("center_meters", val)
 #endregion
+
+
+#region Textures
+var texture_albedo: Texture2D:
+	set(val):
+		texture_albedo = val
+		if is_node_ready():
+			mat.set_shader_parameter("texture_albedo", val)
+var texture_heightmap: Texture2D:
+	set(val):
+		texture_heightmap = val
+		if is_node_ready():
+			mat.set_shader_parameter("texture_heightmap", val)
+#endregion
+
 
 var plane: PlaneMesh:
 	get: return mesh
@@ -61,8 +65,8 @@ func _update_heightmap() -> void:
 		texture_heightmap = ImageTexture.create_from_image(fetcher.img_elevation)
 	# dimensions and position
 	plane.size = map.data.size
-	position.x = plane.size.x/2.0
-	position.z = plane.size.y/2.0
+	position.x = 0.0
+	position.z = 0.0
 
 
 func _update_satellite() -> void:
