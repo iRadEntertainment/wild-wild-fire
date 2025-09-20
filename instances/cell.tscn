@@ -1,9 +1,9 @@
 [gd_scene load_steps=11 format=3 uid="uid://bx3fykta4fi5m"]
 
 [ext_resource type="Script" uid="uid://0duegcy8jh3h" path="res://instances/cell.gd" id="1_wtpau"]
-[ext_resource type="ArrayMesh" uid="uid://4cwj3t76l3h7" path="res://assets/models/cell_top.mesh" id="2_6541q"]
+[ext_resource type="ArrayMesh" uid="uid://4cwj3t76l3h7" path="res://assets/models/meshes/cell_top.mesh" id="2_6541q"]
 [ext_resource type="Material" uid="uid://bbdkjirksod1b" path="res://assets/materials/cell_sand.material" id="3_tqud0"]
-[ext_resource type="ArrayMesh" uid="uid://0kh8rdkiku4b" path="res://assets/models/cell_bot.mesh" id="4_v4ogw"]
+[ext_resource type="ArrayMesh" uid="uid://0kh8rdkiku4b" path="res://assets/models/meshes/cell_bot.mesh" id="4_v4ogw"]
 [ext_resource type="Material" uid="uid://c2em7klm6xeu4" path="res://assets/materials/cell_side.material" id="5_q35wr"]
 [ext_resource type="Material" uid="uid://pi53nlmhqcdu" path="res://assets/materials/particle_smoke.material" id="6_tqud0"]
 

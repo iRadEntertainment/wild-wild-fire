@@ -6,7 +6,8 @@ class_name Map
 
 @warning_ignore_start("unused_private_class_variable")
 #region Tools
-@export_tool_button("Populate", "MultiMesh") var _bt_run: Callable = _populate_multimesh
+@export_tool_button("Populate", "MultiMesh") var _btn_populate: Callable = _populate_multimesh
+@export_tool_button("Clear tiles", "MultiMesh") var _btn_clear: Callable = _clear_multimesh
 @export var data: MapData
 
 
@@ -64,6 +65,11 @@ func _populate_multimesh() -> void:
 	data.update_outputs()
 	%cells_mng.populate_multimesh()
 	%water_mesh.position.y = data.in_elevation_scale * data.in_water_level_ratio
+
+
+func _clear_multimesh() -> void:
+	if not is_node_ready(): await ready
+	%cells_mng.clear()
 
 
 func _update_elevation_heightmap() -> void:

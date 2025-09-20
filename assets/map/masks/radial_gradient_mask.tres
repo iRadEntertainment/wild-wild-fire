@@ -2,11 +2,11 @@
 
 [sub_resource type="Gradient" id="Gradient_5bcgl"]
 interpolation_mode = 2
-offsets = PackedFloat32Array(0.5140845, 1)
+offsets = PackedFloat32Array(0.25, 1)
 colors = PackedColorArray(1, 1, 1, 1, 0, 0, 0, 1)
 
 [resource]
 gradient = SubResource("Gradient_5bcgl")
 fill = 1
 fill_from = Vector2(0.4957265, 0.47435898)
-fill_to = Vector2(1, 0.2948718)
+fill_to = Vector2(1, 0.4871795)

@@ -1,11 +1,21 @@
-[gd_scene load_steps=7 format=3 uid="uid://csntn6itkdqvr"]
+[gd_scene load_steps=10 format=3 uid="uid://csntn6itkdqvr"]
 
 [ext_resource type="Script" uid="uid://beebhgacvqy7x" path="res://classes/Game/Game.gd" id="1_yh288"]
 [ext_resource type="PackedScene" uid="uid://d1hpgbjtidec2" path="res://instances/gui.tscn" id="2_l7db3"]
 [ext_resource type="Environment" uid="uid://bfelwt1bgsy8e" path="res://assets/materials/water_env.tres" id="2_ltc67"]
 [ext_resource type="PackedScene" uid="uid://cvelwvatlh7hf" path="res://instances/map.tscn" id="3_l7db3"]
 [ext_resource type="Script" uid="uid://bq5pc7u8ql0hi" path="res://classes/FireSim/FireSimulation.cs" id="3_qp7ww"]
+[ext_resource type="PackedScene" uid="uid://jmf4s4jjpgqo" path="res://assets/models/Plane/WaterBomberModel.tscn" id="5_j0hmq"]
 [ext_resource type="Resource" uid="uid://bgsulc66pw44m" path="res://scenes/levels/level1/level1_mapdata.tres" id="6_qp7ww"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qp7ww"]
+albedo_color = Color(0.572622, 0.2534013, 0.60323805, 1)
+
+[sub_resource type="TextMesh" id="TextMesh_j0hmq"]
+material = SubResource("StandardMaterial3D_qp7ww")
+text = "Grap3J3lly"
+pixel_size = 0.05
+depth = 0.3
 
 [node name="level_1" type="Node3D"]
 script = ExtResource("1_yh288")
@@ -33,9 +43,14 @@ directional_shadow_fade_start = 0.835
 directional_shadow_max_distance = 3000.0
 directional_shadow_pancake_size = 36.0
 
+[node name="WaterBomber" parent="." instance=ExtResource("5_j0hmq")]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 6.5068827, 0)
+
 [node name="map" parent="." instance=ExtResource("3_l7db3")]
 unique_name_in_owner = true
 data = ExtResource("6_qp7ww")
+coord_latitude = 57.616
 
-[node name="cam" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.9955669, 0.09405618, 0, -0.09405618, 0.9955669, 1.160492, 12.727835, 24.381405)
+[node name="Grap3" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 26.998795, 0)
+mesh = SubResource("TextMesh_j0hmq")
