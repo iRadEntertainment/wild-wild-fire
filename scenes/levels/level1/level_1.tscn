@@ -24,10 +24,9 @@ script = ExtResource("1_yh288")
 [node name="GUI" parent="." instance=ExtResource("2_l7db3")]
 unique_name_in_owner = true
 
-[node name="FireSimulation" type="Node" parent="."]
+[node name="FireSimulation" type="Node3D" parent="."]
 unique_name_in_owner = true
 script = ExtResource("3_qp7ww")
-metadata/_custom_type_script = "uid://bq5pc7u8ql0hi"
 
 [node name="env" type="WorldEnvironment" parent="."]
 environment = ExtResource("2_ltc67")
@@ -53,12 +52,13 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 26.998795, 0)
 mesh = SubResource("TextMesh_j0hmq")
 script = ExtResource("8_t32xv")
 
-[node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.84701985, 0.5315612, 0, -0.5315612, 0.84701985, -4.989311, 18.32169, 39.673122)
-visible = false
 [node name="cam" type="Camera3D" parent="Grap3"]
 transform = Transform3D(1, 0, 0, 0, 0.8470199, 0.53156126, 0, -0.53156126, 0.8470199, 0, 2.78759, 4.2174835)
 current = true
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.84701985, 0.5315612, 0, -0.5315612, 0.84701985, -4.989311, 18.32169, 39.673122)
+visible = false
 
 [node name="WaterBomber" parent="." instance=ExtResource("7_j0hmq")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.77122116, 18.459045, 49.18265)
