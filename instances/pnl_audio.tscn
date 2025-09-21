@@ -1,0 +1,50 @@
+[gd_scene load_steps=5 format=3 uid="uid://b67soww2kv3ed"]
+
+[ext_resource type="Theme" uid="uid://byujsu8xvuvyt" path="res://assets/theme/main.theme" id="1_wwrku"]
+[ext_resource type="Script" uid="uid://bb4hti287apfn" path="res://instances/pnl_audio.gd" id="2_70gat"]
+[ext_resource type="Texture2D" uid="uid://doq8sax3y4fo6" path="res://assets/ui/volume-up-fill.svg" id="3_v6g6c"]
+[ext_resource type="Texture2D" uid="uid://n65baayf434e" path="res://assets/ui/volume-mute-fill.svg" id="4_4mssh"]
+
+[node name="pnl_audio" type="PanelContainer"]
+offset_right = 497.0
+offset_bottom = 406.0
+theme = ExtResource("1_wwrku")
+script = ExtResource("2_70gat")
+metadata/_tab_index = 1
+
+[node name="vb" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="lb1" type="Label" parent="vb"]
+layout_mode = 2
+text = "Volumes"
+horizontal_alignment = 1
+
+[node name="vb_volumes" type="VBoxContainer" parent="vb"]
+layout_mode = 2
+
+[node name="hb_master" type="HBoxContainer" parent="vb/vb_volumes"]
+layout_mode = 2
+
+[node name="lb" type="Label" parent="vb/vb_volumes/hb_master"]
+layout_mode = 2
+text = "Master"
+
+[node name="btn_master_mute" type="TextureButton" parent="vb/vb_volumes/hb_master"]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+size_flags_vertical = 4
+toggle_mode = true
+texture_normal = ExtResource("3_v6g6c")
+texture_pressed = ExtResource("4_4mssh")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="sl_master" type="HSlider" parent="vb/vb_volumes/hb_master"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+
+[node name="lb_master" type="Label" parent="vb/vb_volumes/hb_master"]
+layout_mode = 2
+text = "1.0"

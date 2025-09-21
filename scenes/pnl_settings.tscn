@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://bbigim1y05ox2"]
+[gd_scene load_steps=5 format=3 uid="uid://bbigim1y05ox2"]
 
 [ext_resource type="Script" uid="uid://i2agw3ikouyg" path="res://scenes/pnl_settings.gd" id="1_6vtcv"]
 [ext_resource type="Theme" uid="uid://byujsu8xvuvyt" path="res://assets/theme/main.theme" id="1_8jliw"]
+[ext_resource type="PackedScene" uid="uid://b67soww2kv3ed" path="res://instances/pnl_audio.tscn" id="3_dol7y"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_8jliw"]
 
@@ -64,10 +65,11 @@ layout_mode = 2
 size_flags_vertical = 3
 theme_override_styles/panel = SubResource("StyleBoxEmpty_8jliw")
 tab_alignment = 1
-current_tab = 0
+current_tab = 1
 tabs_visible = false
 
 [node name="Graphics" type="PanelContainer" parent="vb/tab"]
+visible = false
 layout_mode = 2
 metadata/_tab_index = 0
 
@@ -78,17 +80,8 @@ text = "Graphics"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Audio" type="PanelContainer" parent="vb/tab"]
-visible = false
+[node name="pnl_audio" parent="vb/tab" instance=ExtResource("3_dol7y")]
 layout_mode = 2
-metadata/_tab_index = 1
-
-[node name="lb_placeholder" type="Label" parent="vb/tab/Audio"]
-layout_mode = 2
-size_flags_vertical = 1
-text = "Audio"
-horizontal_alignment = 1
-vertical_alignment = 1
 
 [node name="Game" type="PanelContainer" parent="vb/tab"]
 visible = false
