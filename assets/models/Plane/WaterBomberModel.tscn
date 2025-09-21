@@ -3,3 +3,12 @@
 [ext_resource type="PackedScene" uid="uid://bj6ffmccttxym" path="res://assets/models/Plane/WaterBomber.glb" id="1_fyvqn"]
 
 [node name="WaterBomber" instance=ExtResource("1_fyvqn")]
+
+[node name="PlaneBase" parent="." index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 10.229888, 0, 0, 4)
+
+[node name="Cylinder" parent="." index="1"]
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 0.054340005, 0, 4.0034266, 0.9636065, -1.8452806)
+
+[node name="Cylinder_001" parent="." index="2"]
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 0.054340005, 0, -4.048661, 0.9636065, -1.8452806)
