@@ -7,6 +7,11 @@ func _ready() -> void:
 	%pnl_settings.hide()
 	%pnl_settings.visibility_changed.connect(_on_pnl_settings_visibility_changed)
 	Aud.connect_all_buttons_sounds(self)
+	visibility_changed.connect(_on_visibility_changed)
+
+
+func _on_visibility_changed() -> void:
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE if visible else Input.MOUSE_MODE_CAPTURED
 
 
 func _on_pnl_settings_visibility_changed() -> void:

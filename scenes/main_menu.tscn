@@ -5,7 +5,7 @@
 [ext_resource type="Script" uid="uid://b3ksw417y6wmq" path="res://scenes/main_menu.gd" id="2_wu84c"]
 [ext_resource type="PackedScene" uid="uid://bbigim1y05ox2" path="res://scenes/pnl_settings.tscn" id="4_8ln24"]
 [ext_resource type="PackedScene" uid="uid://cb0mb3td40ghv" path="res://scenes/pnl_credits.tscn" id="5_8ln24"]
-[ext_resource type="Theme" uid="uid://d4nfuafpb5ani" path="res://scenes/main_menu_buttons.theme" id="6_rtw2f"]
+[ext_resource type="Theme" uid="uid://d4nfuafpb5ani" path="res://assets/theme/main_menu_buttons.theme" id="6_rtw2f"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_rtw2f"]
 

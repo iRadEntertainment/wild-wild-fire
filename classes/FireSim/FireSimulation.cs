@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 /// Manages the siumulation of a fire spreading.
 /// </summary>
 [GlobalClass]
-public partial class FireSimulation : Node
+public partial class FireSimulation : Node3D
 {
     [Export]
     public Vector2 windDirection = new Vector2I(0, 0);
@@ -96,7 +96,17 @@ public partial class FireSimulation : Node
 
     // Updated every phys frame the sim runs
     private Image workingImage;
+
+    /// <summary>
+    /// R: Heat
+    /// G: Internal Moisture
+    /// B: Surface Moisture
+    /// A: 1 - burntness
+    /// </summary>
     public ImageTexture OutputTexture { get; private set; }
+
+    // TODO: Add fire out detection to sim tick
+    public bool FireOut { get; private set; } = false;
 
     // if false the sim has not been initialized correctly or at all
     private bool simValid = false;
@@ -161,7 +171,7 @@ public partial class FireSimulation : Node
     /// <param name="startingCell">The center of where the fire starts</param>
     /// <param name="preSimTickCount">The sim will run this number of ticks imediately</param>
     public void InitRandomMap(Vector2I gridSize, Vector2I startingCell, int preSimTickCount = 100)
-    {
+    {      
         this.gridSize = gridSize;
         this.startingCell = startingCell;
 
@@ -213,6 +223,8 @@ public partial class FireSimulation : Node
         SetCellValue(fireCellsASet, startingCell.X - 1, startingCell.Y, ref startingFire);
         SetCellValue(fireCellsASet, startingCell.X, startingCell.Y + 1, ref startingFire);
         SetCellValue(fireCellsASet, startingCell.X, startingCell.Y - 1, ref startingFire);
+
+        FireOut = false;
     }
 
     private void CloneASetToBSet()
@@ -498,12 +510,32 @@ public partial class FireSimulation : Node
     /// <summary>
     /// Adds external moisture to the simulation within the area specified. Use this method to simulate dropping water on the forest.
     /// </summary>
-    /// <param name="center"></param>
-    /// <param name="radius"></param>
-    /// <param name="waterIntensity"></param>
+    /// <param name="center">The center cell of the circle</param>
+    /// <param name="radius">The radius of the circle</param>
+    /// <param name="waterIntensity">Should be any value between 0 and 1</param>
     public void SpreadMoistureOnRadius(Vector2I center, int radius, float waterIntensity)
     {
-        //TODO: This method - Big_The
+        Vector2I min = new Vector2I(center.X - radius, center.Y - radius);
+        Vector2I max = new Vector2I(center.X + radius + 1, center.Y + radius + 1);
+        min.Clamp(new Vector2I(), gridSize);
+        max.Clamp(new Vector2I(), gridSize);
+        radius *= radius;//square radius
+        for (int x = min.X; x < max.X; x++)
+        {
+            for (int y = min.Y; y < max.Y; y++)
+            {
+                Vector2I targetCell = new Vector2I(x, y);
+                if (targetCell.DistanceSquaredTo(center) <= radius) 
+                {
+                    fireCellsASet[x, y].surfaceMoisture = Mathf.Clamp(fireCellsASet[x, y].surfaceMoisture + waterIntensity, 0, 1);
+                }
+            }
+        }
+    }
+
+    public bool IsFireOut() 
+    {
+        return FireOut;
     }
 
     //Any others?
