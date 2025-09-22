@@ -11,7 +11,8 @@ const MAT_CELL_SIDE := preload("res://assets/materials/cell_side.material")
 enum SoilType {
 	GRASS,
 	ROCK,
-	SAND
+	SAND,
+	URBAN
 }
 enum TopType {
 	TREES_LUSH,

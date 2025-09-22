@@ -8,7 +8,12 @@ class_name Map
 #region Tools
 @export_tool_button("Populate", "MultiMesh") var _btn_populate: Callable = _populate_multimesh
 @export_tool_button("Clear tiles", "MultiMesh") var _btn_clear: Callable = _clear_multimesh
-@export var data: MapData
+@export var data: MapData:
+	set(val):
+		data = val
+		if data:
+			if not data.in_water_level_updated.is_connected(_on_water_level_updated):
+				data.in_water_level_updated.connect(_on_water_level_updated)
 
 
 @export_group("Fetch Elevation")
@@ -64,13 +69,13 @@ func _populate_multimesh() -> void:
 	if not data: return
 	data.update_outputs()
 	%cells_mng.populate_multimesh()
-	%water_mesh.position.y = data.in_elevation_scale * data.in_water_level_ratio
+	%water_mesh.position.y = data.in_water_level
 	var heightmap_shape: HeightMapShape3D = %coll.shape
 	var heightmap_img_converted: Image = data.out_img_elevation.duplicate()
 	heightmap_img_converted.convert(Image.FORMAT_RF)
 	heightmap_shape.map_depth = size.x
 	heightmap_shape.map_width = size.y
-	heightmap_shape.update_map_data_from_image(heightmap_img_converted, 0.0, data.in_elevation_scale)
+	heightmap_shape.update_map_data_from_image(heightmap_img_converted, 0.0, data.in_max_elevation)
 
 
 func _clear_multimesh() -> void:
@@ -102,3 +107,7 @@ func _set_anim_ratio(val: float) -> void:
 		grad.offsets[2] = lerpf(0.6, 1.0, ratio)
 		grad.offsets[3] = 1.0
 #endregion
+
+
+func _on_water_level_updated(water_level_meters: float) -> void:
+	%water_mesh.position.y = water_level_meters

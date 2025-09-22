@@ -33,7 +33,7 @@ func start_game(level_n: int) -> void:
 	reset_stats()
 	var level_path: String
 	match level_n:
-		1: level_path = "res://scenes/levels/level1/level_1.tscn"
+		1: level_path = "res://scenes/levels/level_sapri/level_sapri.tscn"
 	
 	if not level_path:
 		push_error("Cannot find level N scene: %" % level_n)
