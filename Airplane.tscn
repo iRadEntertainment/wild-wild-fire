@@ -1,7 +1,8 @@
-[gd_scene load_steps=14 format=4 uid="uid://yrhefj7ccy5b"]
+[gd_scene load_steps=15 format=4 uid="uid://yrhefj7ccy5b"]
 
 [ext_resource type="Script" uid="uid://dx7rd6rtbpvft" path="res://classes/Airplane/Airplane.cs" id="1_bn5qk"]
 [ext_resource type="Resource" uid="uid://c2jqt68v8uo0l" path="res://classes/Airplane/AirplaneSettings.tres" id="2_sl4vo"]
+[ext_resource type="AudioStream" uid="uid://c5vdqyqgicfm4" path="res://assets/sfx/airship-propeller-engine-94298.mp3" id="3_2ft4c"]
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_gyten"]
 height = 0.21858215
@@ -220,3 +221,8 @@ unique_name_in_owner = true
 visible = false
 target_position = Vector3(0, -100, 0)
 collision_mask = 4
+
+[node name="sfx_idle_sound" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("3_2ft4c")
+autoplay = true
+bus = &"Sfx"
