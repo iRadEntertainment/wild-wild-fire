@@ -1,22 +1,13 @@
-[gd_scene load_steps=11 format=3 uid="uid://csntn6itkdqvr"]
+[gd_scene load_steps=9 format=3 uid="uid://csntn6itkdqvr"]
 
 [ext_resource type="Script" uid="uid://beebhgacvqy7x" path="res://classes/Game/Game.gd" id="1_yh288"]
 [ext_resource type="PackedScene" uid="uid://d1hpgbjtidec2" path="res://instances/gui.tscn" id="2_l7db3"]
 [ext_resource type="Environment" uid="uid://bfelwt1bgsy8e" path="res://assets/materials/water_env.tres" id="2_ltc67"]
 [ext_resource type="PackedScene" uid="uid://cvelwvatlh7hf" path="res://instances/map.tscn" id="3_l7db3"]
 [ext_resource type="Script" uid="uid://bq5pc7u8ql0hi" path="res://classes/FireSim/FireSimulation.cs" id="3_qp7ww"]
-[ext_resource type="Resource" uid="uid://bgsulc66pw44m" path="res://scenes/levels/level1/level1_mapdata.tres" id="6_qp7ww"]
-[ext_resource type="PackedScene" uid="uid://yrhefj7ccy5b" path="res://assets/models/Plane/WaterBomberCharacter.tscn" id="7_j0hmq"]
-[ext_resource type="Script" uid="uid://vvm7ng45bfgr" path="res://tests/test_grap3_controller.gd" id="8_t32xv"]
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qp7ww"]
-albedo_color = Color(0.572622, 0.2534013, 0.60323805, 1)
-
-[sub_resource type="TextMesh" id="TextMesh_j0hmq"]
-material = SubResource("StandardMaterial3D_qp7ww")
-text = "Grap3J3lly"
-pixel_size = 0.05
-depth = 0.3
+[ext_resource type="PackedScene" uid="uid://yrhefj7ccy5b" path="res://Airplane.tscn" id="8_t32xv"]
+[ext_resource type="PackedScene" uid="uid://bt1g66qd04g0t" path="res://instances/airport.tscn" id="9_xa6fk"]
+[ext_resource type="Script" uid="uid://31eem6n8p3pc" path="res://classes/Game/GameCamera.cs" id="10_bmu01"]
 
 [node name="level_1" type="Node3D"]
 script = ExtResource("1_yh288")
@@ -45,20 +36,21 @@ directional_shadow_pancake_size = 36.0
 
 [node name="map" parent="." instance=ExtResource("3_l7db3")]
 unique_name_in_owner = true
-data = ExtResource("6_qp7ww")
 
-[node name="Grap3" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 26.998795, 0)
-mesh = SubResource("TextMesh_j0hmq")
-script = ExtResource("8_t32xv")
+[node name="Airplane" parent="." instance=ExtResource("8_t32xv")]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.9116201, 4.1573715, 17.955242)
 
-[node name="cam" type="Camera3D" parent="Grap3"]
-transform = Transform3D(1, 0, 0, 0, 0.8470199, 0.53156126, 0, -0.53156126, 0.8470199, 0, 2.78759, 4.2174835)
-current = true
+[node name="Airport" parent="." instance=ExtResource("9_xa6fk")]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.9116201, 4.0077353, 15.955242)
 
-[node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.84701985, 0.5315612, 0, -0.5315612, 0.84701985, -4.989311, 18.32169, 39.673122)
-visible = false
+[node name="GameCamera" type="Camera3D" parent="."]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 9.794241, 18.752502)
+script = ExtResource("10_bmu01")
+metadata/_custom_type_script = "uid://31eem6n8p3pc"
 
-[node name="WaterBomber" parent="." instance=ExtResource("7_j0hmq")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.77122116, 18.459045, 49.18265)
+[node name="MarkerMapCam" type="Marker3D" parent="."]
+unique_name_in_owner = true
+transform = Transform3D(-4.222196e-08, 0.9659259, -0.25881904, -1.131334e-08, 0.25881904, 0.9659259, 1, 4.3711392e-08, -4.525038e-31, -24.230217, 109.729, 0)

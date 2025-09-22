@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://cyy7bec3ko53i"]
+[gd_scene load_steps=10 format=3 uid="uid://cyy7bec3ko53i"]
 
 [ext_resource type="Script" uid="uid://d0cgk0g6nbqhe" path="res://instances/hud.gd" id="1_hvx1s"]
 [ext_resource type="Theme" uid="uid://byujsu8xvuvyt" path="res://assets/theme/main.theme" id="1_oskb6"]
@@ -69,6 +69,21 @@ corner_radius_top_right = 8
 corner_radius_bottom_right = 8
 corner_radius_bottom_left = 8
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6fdae"]
+content_margin_left = 8.0
+content_margin_top = 8.0
+content_margin_right = 8.0
+content_margin_bottom = 8.0
+bg_color = Color(0, 0, 0, 0.3882353)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
 [node name="HUD" type="Control"]
 layout_mode = 3
 anchors_preset = 15
@@ -119,3 +134,29 @@ theme_override_styles/background = SubResource("StyleBoxFlat_wa3vo")
 theme_override_styles/fill = SubResource("StyleBoxFlat_n10qx")
 value = 32.76
 show_percentage = false
+
+[node name="pnl_debug" type="PanelContainer" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 11
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -357.0
+grow_horizontal = 0
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_6fdae")
+
+[node name="vb" type="VBoxContainer" parent="pnl_debug"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="pnl_debug/vb"]
+layout_mode = 2
+text = "Debug info (press \"\\\" to toggle)"
+
+[node name="lb_debug_info" type="RichTextLabel" parent="pnl_debug/vb"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "fdasdsa dsada"
+fit_content = true
+autowrap_mode = 0

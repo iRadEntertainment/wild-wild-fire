@@ -65,6 +65,12 @@ func _populate_multimesh() -> void:
 	data.update_outputs()
 	%cells_mng.populate_multimesh()
 	%water_mesh.position.y = data.in_elevation_scale * data.in_water_level_ratio
+	var heightmap_shape: HeightMapShape3D = %coll.shape
+	var heightmap_img_converted: Image = data.out_img_elevation.duplicate()
+	heightmap_img_converted.convert(Image.FORMAT_RF)
+	heightmap_shape.map_depth = size.x
+	heightmap_shape.map_width = size.y
+	heightmap_shape.update_map_data_from_image(heightmap_img_converted, 0.0, data.in_elevation_scale)
 
 
 func _clear_multimesh() -> void:
