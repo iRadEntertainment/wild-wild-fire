@@ -3,21 +3,24 @@ extends Node3D
 class_name CellsMng
 
 enum MeshType {
-	TILE,
 	BASE,
+	TILE_GRASS,
+	TILE_SAND,
+	TILE_ROCK,
+	TILE_URBAN,
 	#TREE_DEAD,
 	#TREE_BURNT,
 }
 
 var meshes = {
-	MeshType.TILE:
-		{
-			"mesh": preload("res://assets/models/meshes/cell_top.mesh"),
-			#"material": preload("res://assets/materials/cell_sand.material")
-		},
 	MeshType.BASE:
 		{
 			"mesh": preload("res://assets/models/meshes/cell_bot.mesh"),
+			#"material": preload("res://assets/materials/cell_sand.material")
+		},
+	MeshType.TILE_GRASS:
+		{
+			"mesh": preload("res://assets/models/meshes/cell_top.mesh"),
 			#"material": preload("res://assets/materials/cell_sand.material")
 		},
 	#MeshType.TREE_DEAD:
@@ -54,8 +57,8 @@ func populate_multimesh() -> void:
 	clear()
 	create_multimesh_nodes()
 	
-	var inst_tile: MultiMeshInstance3D = meshes[MeshType.TILE]["instance"]
 	var inst_base: MultiMeshInstance3D = meshes[MeshType.BASE]["instance"]
+	var inst_tile_grass: MultiMeshInstance3D = meshes[MeshType.TILE_GRASS]["instance"]
 	#var inst_tree_dead: MultiMeshInstance3D = meshes[MeshType.TREE_DEAD]["instance"]
 	#var inst_tree_burnt: MultiMeshInstance3D = meshes[MeshType.TREE_BURNT]["instance"]
 	
@@ -68,7 +71,7 @@ func populate_multimesh() -> void:
 			var top_transf: Transform3D = Transform3D.IDENTITY
 			top_transf.origin = map_data.grid_pos_to_map_pos(grid_pos)
 			top_transf.origin.y = map_data.get_elevation_at_grid_pos(grid_pos)
-			inst_tile.multimesh.set_instance_transform(idx, top_transf)
+			inst_tile_grass.multimesh.set_instance_transform(idx, top_transf)
 			#multi_mesh_instance_3d.multimesh.set_instance_color(idx, Color(1,1,1,0.6))
 			
 			#bot
@@ -89,7 +92,7 @@ func create_multimesh_nodes() -> void:
 	for key: int in meshes:
 		var mesh: Mesh = meshes[key]["mesh"] # remember to add the correct material
 		var new_mesh_instance := MultiMeshInstance3D.new()
-		new_mesh_instance.name = "MMInstance%s" % (str(MeshType.keys()[key]).capitalize())
+		new_mesh_instance.name = "MM%s" % (str(MeshType.keys()[key]).capitalize())
 		var multi := MultiMesh.new()
 		multi.transform_format = MultiMesh.TRANSFORM_3D
 		multi.mesh = mesh

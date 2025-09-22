@@ -52,9 +52,21 @@ signal in_water_level_updated(in_water_level: float)
 
 @export_group("Output", "out_")
 @export var out_map_world_center: Vector3
+
+@export_subgroup("Morphology")
 @export var out_img_elevation: Image
 @export var out_img_elevation_mask: Image
 @export var out_btm_water: BitMap
+
+@export_subgroup("Tile Data")
+@export var out_btm_tiles_grass: BitMap
+@export var out_btm_tiles_sand: BitMap
+@export var out_btm_tiles_rock: BitMap
+@export var out_btm_tiles_urban: BitMap
+@export var out_tiles_grass: Array[Vector2i]
+@export var out_tiles_sand: Array[Vector2i]
+@export var out_tiles_rock: Array[Vector2i]
+@export var out_tiles_urban: Array[Vector2i]
 
 
 var rng: RandomNumberGenerator
@@ -66,6 +78,7 @@ func update_outputs() -> void:
 	_update_out_map_world_center()
 	_update_out_img_elevation_mask()
 	_update_out_img_elevation()
+	_update_tile_data()
 
 
 func _update_rng() -> void:
@@ -130,6 +143,66 @@ func _update_out_img_elevation() -> void:
 			var is_water: bool = normalized_height <= water_level_ratio
 			if is_water:
 				out_btm_water.set_bit(x, y, true)
+
+
+func _update_tile_data() -> void:
+	if not in_tex_tiles: return
+	if Vector2i(in_tex_tiles.get_size()) != size:
+		push_warning("in_tex_tiles size is diffecent from map size")
+		return
+	var in_img_tiles: Image = in_tex_tiles.get_image()
+	in_img_tiles.convert(Image.FORMAT_RGBA8)
+	_reset_out_tiles()
+	
+	var col_grass: Color = MAP_LEGEND[CellPreview.SoilType.GRASS]
+	var col_sand: Color = MAP_LEGEND[CellPreview.SoilType.SAND]
+	var col_rock: Color = MAP_LEGEND[CellPreview.SoilType.ROCK]
+	var col_urban: Color = MAP_LEGEND[CellPreview.SoilType.URBAN]
+	
+	for x in size.x:
+		for y in size.y:
+			var p: Vector2i = Vector2i(x, y)
+			var sampled_col: Color = in_img_tiles.get_pixelv(p)
+			
+			if its_almost_the_same_color(sampled_col, col_grass):
+				out_btm_tiles_grass.set_bitv(p, true)
+				out_tiles_grass.append(p)
+			elif its_almost_the_same_color(sampled_col, col_sand):
+				out_btm_tiles_sand.set_bitv(p, true)
+				out_tiles_sand.append(p)
+			elif its_almost_the_same_color(sampled_col, col_rock):
+				out_btm_tiles_rock.set_bitv(p, true)
+				out_tiles_rock.append(p)
+			elif its_almost_the_same_color(sampled_col, col_urban):
+				out_btm_tiles_urban.set_bitv(p, true)
+				out_tiles_urban.append(p)
+			else:
+				out_btm_tiles_sand.set_bitv(p, true)
+				out_tiles_sand.append(p)
+
+
+static func its_almost_the_same_color(col_a: Color, col_b: Color, lambda: float = 0.05) -> bool:
+	var r: float = abs(col_a.r - col_b.r)
+	var g: float = abs(col_a.g - col_b.g)
+	var b: float = abs(col_a.b - col_b.b)
+	var a: float = abs(col_a.a - col_b.a)
+	return r < lambda and g < lambda and b < lambda and a < lambda
+
+
+func _reset_out_tiles() -> void:
+	out_btm_tiles_grass = BitMap.new()
+	out_btm_tiles_grass.resize(size)
+	out_btm_tiles_sand = BitMap.new()
+	out_btm_tiles_sand.resize(size)
+	out_btm_tiles_rock = BitMap.new()
+	out_btm_tiles_rock.resize(size)
+	out_btm_tiles_urban = BitMap.new()
+	out_btm_tiles_urban.resize(size)
+	out_tiles_grass = []
+	out_tiles_sand = []
+	out_tiles_rock = []
+	out_tiles_urban = []
+
 #endregion
 
 
