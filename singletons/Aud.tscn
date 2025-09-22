@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://cpeunbbr3yjlp"]
+[gd_scene load_steps=6 format=3 uid="uid://cpeunbbr3yjlp"]
 
 [ext_resource type="Script" uid="uid://dl813p27n6vkb" path="res://singletons/Aud.gd" id="1_4c3ed"]
 [ext_resource type="AudioStream" uid="uid://7gqeiq8oy23k" path="res://assets/music/mus_renrebello_tribal.ogg" id="2_n8a0g"]
 [ext_resource type="AudioStream" uid="uid://dhy4moku227op" path="res://assets/sfx/sfx_btn_hover_drminky.wav" id="3_7wmun"]
 [ext_resource type="AudioStream" uid="uid://ctc0hh5wl8k7x" path="res://assets/sfx/sfx_btn_pressed.ogg" id="4_n8a0g"]
+[ext_resource type="AudioStream" uid="uid://wywoww7s27t3" path="res://assets/sfx/voice_test_01_runaway_clear.ogg" id="5_ji5cw"]
 
 [node name="Aud" type="Node"]
 process_mode = 3
@@ -22,3 +23,7 @@ bus = &"UI"
 [node name="ui_press" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("4_n8a0g")
 bus = &"UI"
+
+[node name="voice_airport" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("5_ji5cw")
+bus = &"Voice"
