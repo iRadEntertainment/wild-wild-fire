@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=4 uid="uid://yrhefj7ccy5b"]
+[gd_scene load_steps=18 format=4 uid="uid://yrhefj7ccy5b"]
 
 [ext_resource type="Script" uid="uid://dx7rd6rtbpvft" path="res://classes/Airplane/Airplane.cs" id="1_bn5qk"]
 [ext_resource type="Resource" uid="uid://c2jqt68v8uo0l" path="res://classes/Airplane/AirplaneSettings.tres" id="2_sl4vo"]
@@ -106,6 +106,19 @@ _surfaces = [{
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_ofq7g")
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2ft4c"]
+transparency = 4
+blend_mode = 1
+cull_mode = 2
+albedo_color = Color(1, 1, 1, 0.16862746)
+
+[sub_resource type="Curve" id="Curve_2ft4c"]
+_data = [Vector2(0, 1), 0.0, -2.683046, 0, 0, Vector2(1, 0), -1.87805, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Gradient" id="Gradient_f2elq"]
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_d3iv0"]
 resource_name = "Propeller"
 transparency = 4
@@ -184,6 +197,7 @@ shadow_mesh = SubResource("ArrayMesh_whitq")
 [node name="Airplane" type="CharacterBody3D"]
 collision_layer = 8
 collision_mask = 7
+motion_mode = 1
 script = ExtResource("1_bn5qk")
 settings = ExtResource("2_sl4vo")
 
@@ -197,6 +211,26 @@ unique_name_in_owner = true
 [node name="plane_base" type="MeshInstance3D" parent="AirplaneMesh"]
 mesh = SubResource("ArrayMesh_duinr")
 skeleton = NodePath("")
+
+[node name="TrailEmitterLeft" type="TrailEmitter" parent="AirplaneMesh/plane_base"]
+material = SubResource("StandardMaterial3D_2ft4c")
+curve = SubResource("Curve_2ft4c")
+gradient = SubResource("Gradient_f2elq")
+geometry_nodepath = NodePath("..")
+num_points = 8
+size = 0.04
+update_interval = 0.01
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.77, 0.228, 0.203)
+
+[node name="TrailEmitterRight" type="TrailEmitter" parent="AirplaneMesh/plane_base"]
+material = SubResource("StandardMaterial3D_2ft4c")
+curve = SubResource("Curve_2ft4c")
+gradient = SubResource("Gradient_f2elq")
+geometry_nodepath = NodePath("..")
+num_points = 8
+size = 0.04
+update_interval = 0.01
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.77, 0.228, 0.203)
 
 [node name="propeller_right_spin" type="MeshInstance3D" parent="AirplaneMesh"]
 mesh = SubResource("ArrayMesh_sl4vo")
@@ -212,17 +246,23 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0492512, 0.9499076)
 
 [node name="RaySea" type="RayCast3D" parent="."]
 unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.071183726, 0)
 visible = false
 target_position = Vector3(0, -100, 0)
 collision_mask = 3
 
 [node name="RayTerrain" type="RayCast3D" parent="."]
 unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.071183726, 0)
 visible = false
 target_position = Vector3(0, -100, 0)
 collision_mask = 4
 
 [node name="sfx_idle_sound" type="AudioStreamPlayer3D" parent="."]
 stream = ExtResource("3_2ft4c")
+autoplay = true
+bus = &"Sfx"
+
+[node name="sfx_thrust" type="AudioStreamPlayer3D" parent="."]
 autoplay = true
 bus = &"Sfx"
