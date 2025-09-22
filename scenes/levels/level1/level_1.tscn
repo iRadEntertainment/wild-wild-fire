@@ -27,12 +27,12 @@ transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545
 light_energy = 1.255
 light_indirect_energy = 0.61
 light_volumetric_fog_energy = 0.645
+light_angular_distance = 7.4
 shadow_enabled = true
-shadow_bias = 0.165
+shadow_bias = 0.025
+directional_shadow_mode = 0
 directional_shadow_blend_splits = true
-directional_shadow_fade_start = 0.835
-directional_shadow_max_distance = 3000.0
-directional_shadow_pancake_size = 36.0
+directional_shadow_max_distance = 11.9
 
 [node name="map" parent="." instance=ExtResource("3_l7db3")]
 unique_name_in_owner = true
