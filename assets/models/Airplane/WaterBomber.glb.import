@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://bj6ffmccttxym"
-path="res://.godot/imported/WaterBomber.glb-3cc7b45b1374f16b3aa7348e1f422d36.scn"
+path="res://.godot/imported/WaterBomber.glb-d42d01bed094631ce37aaab7526e5ef1.scn"
 
 [deps]
 
-source_file="res://assets/models/Plane/WaterBomber.glb"
-dest_files=["res://.godot/imported/WaterBomber.glb-3cc7b45b1374f16b3aa7348e1f422d36.scn"]
+source_file="res://assets/models/Airplane/WaterBomber.glb"
+dest_files=["res://.godot/imported/WaterBomber.glb-d42d01bed094631ce37aaab7526e5ef1.scn"]
 
 [params]
 
@@ -46,22 +46,22 @@ _subresources={
 },
 "PlaneBasePrimary": {
 "use_external/enabled": true,
-"use_external/fallback_path": "res://assets/models/Plane/PlaneBasePrimary.tres",
+"use_external/fallback_path": "res://assets/models/Airplane/PlaneBasePrimary.tres",
 "use_external/path": "uid://d2g0kwbshgq7o"
 },
 "PlaneBaseSecondary": {
 "use_external/enabled": true,
-"use_external/fallback_path": "res://assets/models/Plane/PlaneBaseSecondary.tres",
+"use_external/fallback_path": "res://assets/models/Airplane/PlaneBaseSecondary.tres",
 "use_external/path": "uid://dvgburp0fhg1c"
 },
 "PlaneGlass": {
 "use_external/enabled": true,
-"use_external/fallback_path": "res://assets/models/Plane/PlaneGlass.tres",
+"use_external/fallback_path": "res://assets/models/Airplane/PlaneGlass.tres",
 "use_external/path": "uid://b3ydf3l3h8500"
 },
 "Propeller": {
 "use_external/enabled": true,
-"use_external/fallback_path": "res://assets/models/Plane/Propeller.tres",
+"use_external/fallback_path": "res://assets/models/Airplane/Propeller.tres",
 "use_external/path": "uid://dlc2xye8i4pdm"
 }
 }
