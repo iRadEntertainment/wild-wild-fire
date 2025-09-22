@@ -1,0 +1,137 @@
+using Godot;
+
+
+[GlobalClass]
+public partial class Airplane : CharacterBody3D
+{
+	// Need to register input for Release_Water action
+	// Need... Drift?
+	// Longer Term: Need gas gauge to measure how long plane can remain flying (using speed boost impacts gas amount, so does holding more water?)
+	// Longer Term: Water Gauge, to measure how much water can be dropped before needing to refill
+	// Idea: Less water, faster speed due to lower weight
+	// Idea: Less gas, faster speed due to lower weight
+	[Export] public AirplaneSettings settings;
+	private Node3D planeMesh;
+	private RayCast3D raySea;
+	private RayCast3D rayTerrain;
+	public Marker3D MarkerBottom;
+
+	// Current state
+	public float CurrentSpeed = 0.0f;
+	public float CurrentPitch = 0.0f;
+	public float CurrentRoll = 0.0f;
+	public float CurrentThrust = 0.0f;
+	public Vector2 CurrentDirection = Vector2.Zero;
+	public bool IsBoosting = false;
+	public bool IsTakingOff = false;
+	public bool IsLanding = false;
+	public bool IsLanded = false;
+	public float ElevFromSea = 0.0f;
+	public float ElevFromTerrain = 0.0f;
+	public float CurrentFuel = 0.0f;
+	public float CurrentWater = 0.0f;
+
+	// Target state
+	private float _targetSpeed = 0.0f;
+	private float _targetThrottle = 0.0f;
+	private float _targetPitch = 0.0f;
+	private float _targetRoll = 0.0f;
+
+	public override void _Ready()
+	{
+		base._Ready();
+		planeMesh = GetNode<Node3D>("%AirplaneMesh");
+		raySea = GetNode<RayCast3D>("%RaySea");
+		rayTerrain = GetNode<RayCast3D>("%RayTerrain");
+		MarkerBottom = GetNode<Marker3D>("%MarkerBottom");
+		CurrentSpeed = settings.MinFlySpeed;
+		_targetSpeed = CurrentSpeed;
+	}
+
+	public override void _PhysicsProcess(double delta)
+	{
+		if (IsLanded || IsLanding || IsTakingOff)
+		{
+			return;
+		}
+		ProcessNormalFlight(delta);
+		UpdatePlaneTransform(delta);
+		GetElevations();
+	}
+
+	private void ProcessNormalFlight(double delta)
+	{
+		Vector2 inputDir = Input.GetVector("steer_left", "steer_right", "pitch_up", "pitch_down");
+		float thrustInput = Input.GetAxis("throttle_down", "throttle_up");
+		IsBoosting = Input.IsActionPressed("boost");
+		float boostMult = IsBoosting ? 1.0f : settings.BoostMultiplier;
+		CurrentThrust += thrustInput * settings.ThrustAcceleration * boostMult * (float)delta;
+		CurrentThrust = Mathf.Clamp(CurrentThrust, 0.0f, 1.0f);
+
+		// Update target values based on input
+		_targetRoll = -inputDir.X * settings.MaxRollAngle;
+		_targetPitch = inputDir.Y * settings.MaxPitchAngle;
+		_targetSpeed = Mathf.Lerp(
+			settings.MinFlySpeed,
+			settings.MaxSpeed,
+			CurrentThrust
+			);
+	}
+
+	private void UpdatePlaneTransform(double delta)
+	{
+		// Interpolate current values towards target values
+		CurrentRoll = Mathf.Lerp(CurrentRoll, _targetRoll, settings.RollSpeed * (float)delta);
+		CurrentPitch = Mathf.Lerp(CurrentPitch, _targetPitch, settings.PitchSpeed * (float)delta);
+		CurrentSpeed = Mathf.Lerp(CurrentSpeed, _targetSpeed, settings.ThrustAcceleration * (float)delta);
+
+		// Update mesh rotation (only pitch and roll)
+		planeMesh.Rotation = new Vector3(CurrentPitch, 0, CurrentRoll);
+
+		// Calculate turn rate based on roll angle and rotate the main node on Y axis
+		float turnRate = CurrentRoll * settings.TurnSensitivity * (float)delta;
+		RotateY(turnRate);
+
+
+		// Get the forward direction and apply vertical offset
+		Vector3 forward = -Transform.Basis.Z;
+		Vector3 movement = forward * CurrentSpeed;
+
+		float verticalMovement = CurrentPitch * settings.ClimbSensitivity;
+		movement.Y += verticalMovement;
+
+		Velocity = movement;
+		MoveAndSlide();
+		float directionAngle = -Transform.Basis.Z.AngleTo(Vector3.Forward);
+		CurrentDirection = Vector2.FromAngle(directionAngle);
+	}
+
+	private void GetElevations()
+	{
+		ElevFromSea = -1.0f;
+		if (raySea.IsColliding())
+		{
+			ElevFromSea = raySea.GetCollisionPoint().DistanceTo(raySea.GlobalPosition);
+		}
+		ElevFromTerrain = -1.0f;
+		if (rayTerrain.IsColliding())
+		{
+			ElevFromTerrain = rayTerrain.GetCollisionPoint().DistanceTo(rayTerrain.GlobalPosition);
+		}
+	}
+
+	private void ProcessLanding(double delta)
+	{
+		// TODO: Implement landing logic
+		// Let's try to use Tweens instead of processing
+		// The airport will have two Node3Ds (marker_land_front, marker_land_back)
+		// If the plane enters an Area3D of the airport, it will check if it is aligned enough with the landing strip
+		// If so it will land on the first of the two markers and reach a full stop at the other marker
+		// opposite of the landing approach side.
+	}
+
+	private void ProcessTakeoff(double delta)
+	{
+		// TODO: Implement takeoff logic
+	}
+}

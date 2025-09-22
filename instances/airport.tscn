@@ -1,0 +1,84 @@
+[gd_scene load_steps=8 format=4 uid="uid://bt1g66qd04g0t"]
+
+[ext_resource type="Script" uid="uid://chu808m8ay8l2" path="res://classes/Airport.cs" id="1_shd3s"]
+[ext_resource type="Texture2D" uid="uid://bds470np0j15w" path="res://assets/models/Kenney/CityKitSuburban/Textures/colormap.png" id="2_rtabe"]
+[ext_resource type="PackedScene" uid="uid://b6yuq32nsgqi8" path="res://assets/models/Kenney/CityKitSuburban/building-type-l.glb" id="3_shd3s"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_s2dno"]
+resource_name = "colormap"
+cull_mode = 2
+albedo_texture = ExtResource("2_rtabe")
+texture_filter = 2
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_3n82a"]
+_surfaces = [{
+"aabb": AABB(-0.17999999, 0, -0.2, 0.35999998, 0.01, 0.4),
+"format": 34896613377,
+"index_count": 36,
+"index_data": PackedByteArray("AAABAAIAAwACAAEAAgAEAAAAAQAFAAMABQABAAAAAgADAAYABgADAAUABgAEAAIAAAAHAAUABQAHAAYABwAAAAQABAAGAAcA"),
+"name": "colormap",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 8,
+"vertex_data": PackedByteArray("AAAAAP//AAD//wAA//8AAP//AAAAAAAAcNz//wAAAAAAAAAAAAAAAHDc/////wAAjiP//wAAAACOI/////8AAA==")
+}]
+blend_shape_mode = 0
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_shd3s"]
+resource_name = "driveway-long_driveway-long"
+_surfaces = [{
+"aabb": AABB(-0.17999999, 0, -0.2, 0.35999998, 0.01, 0.4),
+"attribute_data": PackedByteArray("/zfMrP83zKz/N8ys/zfMrP83MpP/NzKT/zcyk/83MpP/NzKT/zfMrP83zKz/NzKT/zcyk/83zKz/N8ys/zcyk/8XzKz/FzKT/xcyk/8XzKz/FzKT/xfMrP8XzKz/FzKT"),
+"format": 34896613399,
+"index_count": 36,
+"index_data": PackedByteArray("AAABAAIAAgADAAAABAAFAAYABgAHAAQACAAJAAoACgALAAgADAANAA4ADgAPAAwAEAARABIAEgATABAAFAAVABYAFgAXABQA"),
+"material": SubResource("StandardMaterial3D_s2dno"),
+"name": "colormap",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 24,
+"vertex_data": PackedByteArray("AAAAAP///7///wAA////v///AAAAAP+/AAAAAAAA/7+OI///AAD//3Dc//8AAP//cNz///////+OI////////3Dc/////wCA//8AAP//AIAAAAAA//8AgI4j/////wCAjiP//wAA//8AAAAAAAD/////AAAAAP//cNz//wAA//8AAAAAAADZ0I4j//8AANnQjiP/////2dAAAAAA///Z0HDc//8AANnQ//8AAAAA2dD//wAA///Z0HDc/////9nQAAD/fwAA/38AAP9/AAD/f/9//7//f/+//3//v/9//7//f////3////9/////f////3////9/////f////3///8CnfbDAp32wwKd9sMCnfbCBz8Angc/AJ4HPwCeBz8An")
+}]
+blend_shape_mode = 0
+shadow_mesh = SubResource("ArrayMesh_3n82a")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_rtabe"]
+size = Vector3(3, 4, 6)
+
+[node name="Airport" type="Node3D"]
+script = ExtResource("1_shd3s")
+
+[node name="building" parent="." instance=ExtResource("3_shd3s")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -1.10796, 0, 0.9998312)
+
+[node name="MeshStrip" type="MeshInstance3D" parent="."]
+transform = Transform3D(2.5, 0, 0, 0, 2.5, 0, 0, 0, 12.5, 0, 0, 0)
+mesh = SubResource("ArrayMesh_shd3s")
+
+[node name="ApproachAreaFront" type="Area3D" parent="."]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2)
+
+[node name="coll" type="CollisionShape3D" parent="ApproachAreaFront"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 3)
+shape = SubResource("BoxShape3D_rtabe")
+
+[node name="ApproachAreaBack" type="Area3D" parent="."]
+unique_name_in_owner = true
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0, -2)
+
+[node name="coll" type="CollisionShape3D" parent="ApproachAreaBack"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 3)
+shape = SubResource("BoxShape3D_rtabe")
+
+[node name="MarkerLandBack" type="Marker3D" parent="."]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2)
+
+[node name="MarkerLandFront" type="Marker3D" parent="."]
+unique_name_in_owner = true
+transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 0, 0, 2)
+
+[node name="MarkerTower" type="Marker3D" parent="."]
+unique_name_in_owner = true
+transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, -1.1399803, 1.109499, 1.1648278)

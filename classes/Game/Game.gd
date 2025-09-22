@@ -6,6 +6,10 @@ class_name Game
 @onready var gui: GUI = %GUI
 @onready var map: Map = %map
 @onready var fire_simulation: FireSimulation = %FireSimulation
+@onready var airplane: Airplane = %Airplane
+@onready var airport: Airport = %Airport
+@onready var game_camera: GameCamera = %GameCamera
+@onready var MarkerMapCam: Marker3D = %MarkerMapCam
 
 
 

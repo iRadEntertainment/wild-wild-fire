@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="AirplaneSettings" load_steps=2 format=3 uid="uid://c2jqt68v8uo0l"]
+
+[ext_resource type="Script" uid="uid://cf6jnrgq1gdmy" path="res://classes/Airplane/AirplaneSettings.cs" id="1_d6tly"]
+
+[resource]
+script = ExtResource("1_d6tly")
+MaxSpeed = 6.5
+MinFlySpeed = 3.0
+TurnSensitivity = 3.305
+ClimbSensitivity = 3.632
+metadata/_custom_type_script = "uid://cf6jnrgq1gdmy"
