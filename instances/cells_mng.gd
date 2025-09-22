@@ -5,8 +5,8 @@ class_name CellsMng
 enum MeshType {
 	TILE,
 	BASE,
-	TREE_DEAD,
-	TREE_BURNT,
+	#TREE_DEAD,
+	#TREE_BURNT,
 }
 
 var meshes = {
@@ -20,16 +20,16 @@ var meshes = {
 			"mesh": preload("res://assets/models/meshes/cell_bot.mesh"),
 			#"material": preload("res://assets/materials/cell_sand.material")
 		},
-	MeshType.TREE_DEAD:
-		{
-			"mesh": preload("res://assets/models/meshes/DeadTree.mesh"),
-			#"material": preload("res://assets/materials/cell_sand.material")
-		},
-	MeshType.TREE_BURNT:
-		{
-			"mesh": preload("res://assets/models/meshes/BurntTree.mesh"),
-			#"material": preload("res://assets/materials/cell_sand.material")
-		},
+	#MeshType.TREE_DEAD:
+		#{
+			#"mesh": preload("res://assets/models/meshes/DeadTree.mesh"),
+			##"material": preload("res://assets/materials/cell_sand.material")
+		#},
+	#MeshType.TREE_BURNT:
+		#{
+			#"mesh": preload("res://assets/models/meshes/BurntTree.mesh"),
+			##"material": preload("res://assets/materials/cell_sand.material")
+		#},
 }
 
 
@@ -89,6 +89,7 @@ func create_multimesh_nodes() -> void:
 	for key: int in meshes:
 		var mesh: Mesh = meshes[key]["mesh"] # remember to add the correct material
 		var new_mesh_instance := MultiMeshInstance3D.new()
+		new_mesh_instance.name = "MMInstance%s" % (str(MeshType.keys()[key]).capitalize())
 		var multi := MultiMesh.new()
 		multi.transform_format = MultiMesh.TRANSFORM_3D
 		multi.mesh = mesh

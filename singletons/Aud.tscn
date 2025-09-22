@@ -17,8 +17,8 @@ bus = &"Music"
 [node name="ui_hover" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("3_7wmun")
 volume_db = 7.583
-bus = &"Sfx"
+bus = &"UI"
 
 [node name="ui_press" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("4_n8a0g")
-bus = &"Sfx"
+bus = &"UI"

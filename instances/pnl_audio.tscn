@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://b67soww2kv3ed"]
+[gd_scene load_steps=6 format=3 uid="uid://b67soww2kv3ed"]
 
 [ext_resource type="Theme" uid="uid://byujsu8xvuvyt" path="res://assets/theme/main.theme" id="1_wwrku"]
 [ext_resource type="Script" uid="uid://bb4hti287apfn" path="res://instances/pnl_audio.gd" id="2_70gat"]
 [ext_resource type="Texture2D" uid="uid://doq8sax3y4fo6" path="res://assets/ui/volume-up-fill.svg" id="3_v6g6c"]
 [ext_resource type="Texture2D" uid="uid://n65baayf434e" path="res://assets/ui/volume-mute-fill.svg" id="4_4mssh"]
+[ext_resource type="AudioStream" uid="uid://ctc0hh5wl8k7x" path="res://assets/sfx/sfx_btn_pressed.ogg" id="5_4mssh"]
 
 [node name="pnl_audio" type="PanelContainer"]
 offset_right = 497.0
@@ -27,10 +28,12 @@ layout_mode = 2
 layout_mode = 2
 
 [node name="lb" type="Label" parent="vb/vb_volumes/hb_master"]
+custom_minimum_size = Vector2(80, 0)
 layout_mode = 2
 text = "Master"
 
 [node name="btn_master_mute" type="TextureButton" parent="vb/vb_volumes/hb_master"]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(24, 24)
 layout_mode = 2
 size_flags_vertical = 4
@@ -41,10 +44,137 @@ ignore_texture_size = true
 stretch_mode = 5
 
 [node name="sl_master" type="HSlider" parent="vb/vb_volumes/hb_master"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
+max_value = 1.2
+step = 0.01
 
 [node name="lb_master" type="Label" parent="vb/vb_volumes/hb_master"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(40, 0)
+layout_mode = 2
+text = "1.00"
+horizontal_alignment = 2
+
+[node name="hb_sfx" type="HBoxContainer" parent="vb/vb_volumes"]
+layout_mode = 2
+
+[node name="lb" type="Label" parent="vb/vb_volumes/hb_sfx"]
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+text = "Sfx"
+
+[node name="btn_sfx_mute" type="TextureButton" parent="vb/vb_volumes/hb_sfx"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+size_flags_vertical = 4
+toggle_mode = true
+texture_normal = ExtResource("3_v6g6c")
+texture_pressed = ExtResource("4_4mssh")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="sl_sfx" type="HSlider" parent="vb/vb_volumes/hb_sfx"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+max_value = 1.2
+step = 0.01
+
+[node name="lb_sfx" type="Label" parent="vb/vb_volumes/hb_sfx"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(40, 0)
 layout_mode = 2
 text = "1.0"
+horizontal_alignment = 2
+
+[node name="sfx_test" type="AudioStreamPlayer" parent="vb/vb_volumes/hb_sfx"]
+unique_name_in_owner = true
+stream = ExtResource("5_4mssh")
+bus = &"Sfx"
+
+[node name="hb_music" type="HBoxContainer" parent="vb/vb_volumes"]
+layout_mode = 2
+
+[node name="lb" type="Label" parent="vb/vb_volumes/hb_music"]
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+text = "Music"
+
+[node name="btn_music_mute" type="TextureButton" parent="vb/vb_volumes/hb_music"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+size_flags_vertical = 4
+toggle_mode = true
+texture_normal = ExtResource("3_v6g6c")
+texture_pressed = ExtResource("4_4mssh")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="sl_music" type="HSlider" parent="vb/vb_volumes/hb_music"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+max_value = 1.2
+step = 0.01
+
+[node name="lb_music" type="Label" parent="vb/vb_volumes/hb_music"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(40, 0)
+layout_mode = 2
+text = "1.0"
+horizontal_alignment = 2
+
+[node name="hb_ui" type="HBoxContainer" parent="vb/vb_volumes"]
+layout_mode = 2
+
+[node name="lb" type="Label" parent="vb/vb_volumes/hb_ui"]
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+text = "UI"
+
+[node name="btn_ui_mute" type="TextureButton" parent="vb/vb_volumes/hb_ui"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+size_flags_vertical = 4
+toggle_mode = true
+texture_normal = ExtResource("3_v6g6c")
+texture_pressed = ExtResource("4_4mssh")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="sl_ui" type="HSlider" parent="vb/vb_volumes/hb_ui"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+max_value = 1.2
+step = 0.01
+
+[node name="lb_ui" type="Label" parent="vb/vb_volumes/hb_ui"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(40, 0)
+layout_mode = 2
+text = "1.0"
+horizontal_alignment = 2
+
+[node name="ui_test" type="AudioStreamPlayer" parent="vb/vb_volumes/hb_ui"]
+unique_name_in_owner = true
+stream = ExtResource("5_4mssh")
+bus = &"UI"
+
+[connection signal="toggled" from="vb/vb_volumes/hb_master/btn_master_mute" to="." method="_on_btn_master_mute_toggled"]
+[connection signal="value_changed" from="vb/vb_volumes/hb_master/sl_master" to="." method="_on_sl_master_value_changed"]
+[connection signal="toggled" from="vb/vb_volumes/hb_sfx/btn_sfx_mute" to="." method="_on_btn_sfx_mute_toggled"]
+[connection signal="value_changed" from="vb/vb_volumes/hb_sfx/sl_sfx" to="." method="_on_sl_sfx_value_changed"]
+[connection signal="toggled" from="vb/vb_volumes/hb_music/btn_music_mute" to="." method="_on_btn_music_mute_toggled"]
+[connection signal="value_changed" from="vb/vb_volumes/hb_music/sl_music" to="." method="_on_sl_music_value_changed"]
+[connection signal="toggled" from="vb/vb_volumes/hb_ui/btn_ui_mute" to="." method="_on_btn_ui_mute_toggled"]
+[connection signal="value_changed" from="vb/vb_volumes/hb_ui/sl_ui" to="." method="_on_sl_ui_value_changed"]

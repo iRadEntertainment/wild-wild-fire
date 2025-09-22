@@ -13,3 +13,6 @@ builds/
 .mono/
 data_*/
 mono_crash.*.json
+
+# C# build project ignores
+addons/debug_draw_3d/libs/~libdd3d.windows.editor.x86_64.dll~RF3ac253d0.TMP

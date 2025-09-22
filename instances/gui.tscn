@@ -13,6 +13,7 @@ unique_name_in_owner = true
 
 [node name="pnl_in_game_menu" parent="." instance=ExtResource("3_8pa3e")]
 unique_name_in_owner = true
+visible = false
 offset_left = 260.0
 offset_top = 126.0
 offset_right = -260.0

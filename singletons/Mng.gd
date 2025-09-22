@@ -5,16 +5,23 @@ var is_debug_mode: bool = true
 
 var game: Game
 var game_stats: GameStats
-var cam: ThirdPersonCamera
+
+enum CamType {PLANE_FOLLOW, PLANE_FIXED, MAP}
+var current_cam_type: CamType = CamType.PLANE_FIXED:
+	set(val):
+		current_cam_type = val
+		camera_type_changed.emit()
+var current_cam: Camera3D # MapCamera or AirplaneCamera
+signal camera_type_changed
 
 # getters
 var map: Map:
 	get: return game.map if game else null
 var map_data
-#var airport: Airport:
-	#get: return game.airport if game else null
-#var aeroplane: Airplane:
-	#get: return game.airplane if game else null
+var airport: Airport:
+	get: return game.airport if game else null
+var airplane: Airplane:
+	get: return game.airplane if game else null
 
 signal level_setup_complete
 
