@@ -46,17 +46,17 @@ _subresources={
 },
 "PlaneBasePrimary": {
 "use_external/enabled": true,
-"use_external/fallback_path": "res://assets/models/Airplane/PlaneBasePrimary.tres",
+"use_external/fallback_path": "res://assets/models/Airplane/AirplaneBasePrimary.tres",
 "use_external/path": "uid://d2g0kwbshgq7o"
 },
 "PlaneBaseSecondary": {
 "use_external/enabled": true,
-"use_external/fallback_path": "res://assets/models/Airplane/PlaneBaseSecondary.tres",
+"use_external/fallback_path": "res://assets/models/Airplane/AirplaneBaseSecondary.tres",
 "use_external/path": "uid://dvgburp0fhg1c"
 },
 "PlaneGlass": {
 "use_external/enabled": true,
-"use_external/fallback_path": "res://assets/models/Airplane/PlaneGlass.tres",
+"use_external/fallback_path": "res://assets/models/Airplane/AirplaneGlass.tres",
 "use_external/path": "uid://b3ydf3l3h8500"
 },
 "Propeller": {
