@@ -81,6 +81,10 @@ public partial class FireSimulation : Node3D
 		public float internalMoisture; //Twigs 0 - Leafy 1
 		public float surfaceMoisture;
 		public bool burnable;
+
+        public Vector2I CellPosInGrid { get => new Vector2I(x, y); }
+        public bool FullyBurnt { get => burntness > 0.9999f; }
+        public bool IsBurning { get => !FullyBurnt && burntness > 0; }
 	}
 
 
@@ -97,15 +101,15 @@ public partial class FireSimulation : Node3D
 	// Updated every phys frame the sim runs
 	private Image workingImage;
 
-	/// <summary>
-	/// R: Heat
-	/// G: Internal Moisture
-	/// B: Surface Moisture
-	/// A: 1 - burntness
-	/// </summary>
-	public ImageTexture OutputTexture { get; private set; }
+    /// <summary>
+    /// Contains the final sim state and is updated in place every tick.<br />
+    /// R: Heat<br />
+    /// G: Internal Moisture<br />
+    /// B: Surface Moisture<br />
+    /// A: 1 - burntness<br />
+    /// </summary>
+    public ImageTexture OutputTexture { get; private set; }
 
-	// TODO: Add fire out detection to sim tick
 	public bool FireOut { get; private set; } = false;
 
 	// if false the sim has not been initialized correctly or at all
@@ -304,7 +308,6 @@ public partial class FireSimulation : Node3D
 		}
 		activeInASet = !activeInASet;
 
-
 		List<Task> tasks = new List<Task>();
 		Vector2I taskSize = new Vector2I(gridSize.X / threadGroups.X, gridSize.Y / threadGroups.Y);
 		for (int segmentX = 0; segmentX < threadGroups.X; segmentX++)
@@ -324,7 +327,24 @@ public partial class FireSimulation : Node3D
 		foreach (Task task in tasks)
 		{
 			task.Wait();
-		}
+        }
+
+        FireOut = true;
+        for (int x = 0; x < gridSize.X; x++) 
+        {
+            for (int y = 0; y < gridSize.Y; y++) 
+            {
+                if (finalCellState[x, y].burntness > 0 && finalCellState[x,y].burntness < 0.9999f) 
+                {
+                    FireOut = false;
+					break;
+                }
+            }
+            if(!FireOut) 
+            {
+                break;
+            }
+        }
 
 		if (enableDebugLogging)
 		{
@@ -538,7 +558,15 @@ public partial class FireSimulation : Node3D
 		return FireOut;
 	}
 
-	//Any others?
+    public FireCell GetCell(Vector2I position) 
+    {
+        return GetCell(position.X, position.Y);
+    }
+    
+    public FireCell GetCell(int x, int y) 
+    {
+        return GetCellValue(finalCellState, x, y);
+    }
 
 	#endregion
 }
