@@ -12,3 +12,6 @@
 
 ### Music
 - Music by [Renrebello](https://pixabay.com/users/renrebello-45761742/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=273033) from [Pixabay](https://pixabay.com/music//?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=273033)
+
+### Shaders
+- [Water Shader 3D - by Lesus](https://godotshaders.com/shader/water-shader-3d-godot-4-3/)
