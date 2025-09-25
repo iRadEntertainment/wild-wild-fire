@@ -5,12 +5,13 @@
 [resource]
 script = ExtResource("1_d6tly")
 MaxFuel = 98.104
-FuelConsumptionRate = 1.403
-RefillWaterRate = 25.308
-WaterDropRate = 27.393
-WaterParticleAmount = 3.246
+FuelConsumptionRate = 0.266
+RefillWaterRate = 14.37
+WaterDropRate = 35.734
+WaterParticleAmount = 1.682
 MaxSpeed = 6.5
 MinFlySpeed = 3.0
 TurnSensitivity = 3.305
 ClimbSensitivity = 3.632
+SeaStartPitchCorrection = 1.002
 metadata/_custom_type_script = "uid://cf6jnrgq1gdmy"

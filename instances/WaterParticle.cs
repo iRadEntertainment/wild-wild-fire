@@ -6,11 +6,11 @@ using System.Reflection;
 public partial class WaterParticle : RigidBody3D
 {
 
-    public override void _Ready()
-    {
-        base._Ready();
-        BodyEntered.GetMethodInfo
-    }
-    public override OnBo
+    // public override void _Ready()
+    // {
+    //     base._Ready();
+    //     BodyEntered.GetMethodInfo
+    // }
+    // public override OnBo
     
 }

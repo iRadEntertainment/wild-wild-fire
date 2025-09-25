@@ -1,3 +1,4 @@
+using System;
 using System.Runtime.CompilerServices;
 using Godot;
 
@@ -29,6 +30,7 @@ public partial class Airplane : CharacterBody3D
 	public float CurrentThrust = 0.0f;
 	public Vector2 CurrentDirection = Vector2.Zero;
 	public bool IsBoosting = false;
+	public bool IsRefillingWater = false;
 	public bool IsTakingOff = false;
 	public bool IsLanding = false;
 	public bool IsLanded = false;
@@ -123,11 +125,11 @@ public partial class Airplane : CharacterBody3D
 		{
 			return;
 		}
-		ProcessNormalFlight(delta);
-		UpdatePlaneTransform(delta);
 		GetElevations();
-		ProcessFuelConsumption(delta);
+		ProcessNormalFlight(delta);
 		CheckWaterLevelRefill(delta);
+		ProcessFuelConsumption(delta);
+		UpdatePlaneTransform(delta);
 	}
 
 	private void ProcessNormalFlight(double delta)
@@ -142,9 +144,14 @@ public partial class Airplane : CharacterBody3D
 		// Update target values based on input
 		_targetRoll = -inputDir.X * settings.MaxRollAngle;
 		_targetPitch = inputDir.Y * settings.MaxPitchAngle;
+		if (ElevFromSea < settings.SeaStartPitchCorrection)
+		{
+			float _allowedPitch = Mathf.Lerp(0.0f, -settings.MaxPitchAngle, ElevFromSea / settings.SeaStartPitchCorrection);
+			_targetPitch = Mathf.Max(_targetPitch, _allowedPitch);
+		}
 		_targetSpeed = Mathf.Lerp(
 			settings.MinFlySpeed,
-			settings.MaxSpeed,
+			IsRefillingWater ? settings.MinFlySpeed * 1.1f : settings.MaxSpeed,
 			CurrentThrust
 			);
 	}
@@ -193,7 +200,7 @@ public partial class Airplane : CharacterBody3D
 
 	private void ProcessFuelConsumption(double delta)
 	{
-		CurrentFuel -= settings.FuelConsumptionRate * CurrentThrust * (float)delta;
+		CurrentFuel -= settings.FuelConsumptionRate * CurrentSpeed * (float)delta;
 		if (CurrentFuel <= 0.0f)
 		{
 			CurrentFuel = 0.0f;
@@ -203,7 +210,8 @@ public partial class Airplane : CharacterBody3D
 
 	private void CheckWaterLevelRefill(double delta)
 	{
-		if (CurrentWater < settings.MaxWater && ElevFromSea < 0.1f)
+		IsRefillingWater = CurrentWater < settings.MaxWater && ElevFromSea < 0.1f;
+		if (IsRefillingWater)
 		{
 			CurrentWater += settings.RefillWaterRate * (float)delta;
 			_targetSpeed = settings.MinFlySpeed;
