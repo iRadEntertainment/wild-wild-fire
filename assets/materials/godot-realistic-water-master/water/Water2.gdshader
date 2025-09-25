@@ -230,7 +230,7 @@ void vertex() {
     // Calculate wave displacement and normals
     WaveResult waveResult = wave(VERTEX.xz, time);
     // Apply wave displacement to the vertex position
-    VERTEX += waveResult.displacement;
+    //VERTEX += waveResult.displacement;
     // Store the height of the wave displacement
     height = waveResult.displacement.y;
 
