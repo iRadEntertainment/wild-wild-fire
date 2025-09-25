@@ -50,6 +50,10 @@ var meshes = {
 		#},
 }
 
+var mesh_buildings_folder: String = "res://assets/models/meshes/buildings/"
+var meshes_buildings: Array[Mesh] = []
+var meshinstances_building: Array[MultiMeshInstance3D] = []
+
 
 @export var map: Map
 func set_map(_map: Map) -> void:
@@ -70,6 +74,7 @@ func populate_multimesh() -> void:
 	if not map: return
 	if not map.data: return
 	clear()
+	fetch_meshes_buildings()
 	create_multimesh_nodes()
 	
 	var inst_base: MultiMeshInstance3D = meshes[MeshType.BASE]["instance"]
@@ -122,12 +127,47 @@ func populate_multimesh() -> void:
 			transf.origin = map_data.grid_pos_to_map_pos(grid_pos)
 			transf.origin.y = map_data.get_elevation_at_grid_pos(grid_pos)
 			inst_tile_urban.multimesh.set_instance_transform(idx, transf)
+	
+	
+	var building_visible_num_array: Array[int] = []
+	building_visible_num_array.resize(meshinstances_building.size())
+	building_visible_num_array.fill(0)
+	for idx: int in map_data.out_tiles_urban.size():
+		var rand_idx: int = map_data.rng.randi_range(-5, meshinstances_building.size()-1)
+		if rand_idx < 0: continue
+		building_visible_num_array[rand_idx] += 1
+		
+		var grid_pos: Vector2i = map_data.out_tiles_urban[idx]
+		var mm_instance: MultiMeshInstance3D = meshinstances_building[rand_idx]
+		var transf: Transform3D = Transform3D.IDENTITY
+		transf.origin = map_data.grid_pos_to_map_pos(grid_pos)
+		transf.origin.y = map_data.get_elevation_at_grid_pos(grid_pos) + 0.25
+		transf.origin.x += map_data.rng.randf_range(-0.25, 0.25)
+		transf.origin.z += map_data.rng.randf_range(-0.25, 0.25)
+		transf = transf.scaled_local(Vector3.ONE * 0.5)
+		
+		var local_mm_idx: int = building_visible_num_array[rand_idx]
+		mm_instance.multimesh.set_instance_transform(local_mm_idx, transf)
+	
+	
+	for i: int in meshinstances_building.size():
+		var count: int = building_visible_num_array[i]
+		var mm_instance: MultiMeshInstance3D = meshinstances_building[i]
+		mm_instance.multimesh.visible_instance_count = count
 
 
 func clear() -> void:
 	for child in get_children():
-		if child is MultiMeshInstance3D:
-			child.free()
+		child.free()
+
+
+func fetch_meshes_buildings() -> void:
+	meshes_buildings.clear()
+	var d = DirAccess.open(mesh_buildings_folder)
+	var files: PackedStringArray = d.get_files()
+	for file: String in files:
+		var mesh: Mesh = load(mesh_buildings_folder + file)
+		meshes_buildings.append(mesh)
 
 
 func create_multimesh_nodes() -> void:
@@ -151,6 +191,29 @@ func create_multimesh_nodes() -> void:
 		new_mesh_instance.multimesh = multi
 		add_child(new_mesh_instance)
 		meshes[key]["instance"] = new_mesh_instance
+		if Engine.is_editor_hint():
+			new_mesh_instance.owner = owner
+	
+	
+	meshinstances_building.clear()
+	var _instance_count_buildings := int(floor(_instance_count/50))
+	var building_container := Node3D.new()
+	building_container.name = "buildings"
+	add_child(building_container)
+	building_container.owner = owner
+	for i: int in meshes_buildings.size():
+		var mesh: Mesh = meshes_buildings[i]
+		var new_mesh_instance := MultiMeshInstance3D.new()
+		new_mesh_instance.name = "MMBuilding%02d" % i
+		
+		var multi := MultiMesh.new()
+		multi.transform_format = MultiMesh.TRANSFORM_3D
+		multi.mesh = mesh
+		multi.instance_count = _instance_count_buildings
+		
+		new_mesh_instance.multimesh = multi
+		building_container.add_child(new_mesh_instance)
+		meshinstances_building.append(new_mesh_instance)
 		if Engine.is_editor_hint():
 			new_mesh_instance.owner = owner
 #endregion
