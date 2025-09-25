@@ -54,6 +54,7 @@ data = {
 }
 
 [resource]
+resource_local_to_scene = true
 script = ExtResource("1_307o8")
 level_name = "sapri"
 rng_seed = "grap3"

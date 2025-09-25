@@ -21,7 +21,22 @@ var meshes = {
 	MeshType.TILE_GRASS:
 		{
 			"mesh": preload("res://assets/models/meshes/cell_top.mesh"),
-			#"material": preload("res://assets/materials/cell_sand.material")
+			"material": preload("res://assets/materials/tiles/cell_grass.material")
+		},
+	MeshType.TILE_SAND:
+		{
+			"mesh": preload("res://assets/models/meshes/cell_top.mesh"),
+			"material": preload("res://assets/materials/tiles/cell_sand.material")
+		},
+	MeshType.TILE_ROCK:
+		{
+			"mesh": preload("res://assets/models/meshes/cell_top.mesh"),
+			"material": preload("res://assets/materials/tiles/cell_rock.material")
+		},
+	MeshType.TILE_URBAN:
+		{
+			"mesh": preload("res://assets/models/meshes/cell_top.mesh"),
+			"material": preload("res://assets/materials/tiles/cell_urban.material")
 		},
 	#MeshType.TREE_DEAD:
 		#{
@@ -58,7 +73,6 @@ func populate_multimesh() -> void:
 	create_multimesh_nodes()
 	
 	var inst_base: MultiMeshInstance3D = meshes[MeshType.BASE]["instance"]
-	var inst_tile_grass: MultiMeshInstance3D = meshes[MeshType.TILE_GRASS]["instance"]
 	#var inst_tree_dead: MultiMeshInstance3D = meshes[MeshType.TREE_DEAD]["instance"]
 	#var inst_tree_burnt: MultiMeshInstance3D = meshes[MeshType.TREE_BURNT]["instance"]
 	
@@ -66,18 +80,48 @@ func populate_multimesh() -> void:
 		for y in map_data.size.y:
 			var grid_pos: Vector2i = Vector2i(x, y)
 			var idx: int = y * map_data.size.x + x
-			
-			#top
-			var top_transf: Transform3D = Transform3D.IDENTITY
-			top_transf.origin = map_data.grid_pos_to_map_pos(grid_pos)
-			top_transf.origin.y = map_data.get_elevation_at_grid_pos(grid_pos)
-			inst_tile_grass.multimesh.set_instance_transform(idx, top_transf)
-			#multi_mesh_instance_3d.multimesh.set_instance_color(idx, Color(1,1,1,0.6))
-			
-			#bot
-			var y_scale: float = top_transf.origin.y + 5 #m
-			var bot_transf: Transform3D = top_transf.scaled_local(Vector3(1, y_scale, 1))
+			var transf: Transform3D = Transform3D.IDENTITY
+			transf.origin = map_data.grid_pos_to_map_pos(grid_pos)
+			transf.origin.y = map_data.get_elevation_at_grid_pos(grid_pos)
+			var y_scale: float = transf.origin.y + 5 #m
+			var bot_transf: Transform3D = transf.scaled_local(Vector3(1, y_scale, 1))
 			inst_base.multimesh.set_instance_transform(idx, bot_transf)
+	
+	var inst_tile_grass: MultiMeshInstance3D = meshes[MeshType.TILE_GRASS]["instance"]
+	inst_tile_grass.multimesh.visible_instance_count = map_data.out_tiles_grass.size()
+	for idx: int in map_data.out_tiles_grass.size():
+			var grid_pos: Vector2i = map_data.out_tiles_grass[idx]
+			var transf: Transform3D = Transform3D.IDENTITY
+			transf.origin = map_data.grid_pos_to_map_pos(grid_pos)
+			transf.origin.y = map_data.get_elevation_at_grid_pos(grid_pos)
+			inst_tile_grass.multimesh.set_instance_transform(idx, transf)
+	
+	var inst_tile_sand: MultiMeshInstance3D = meshes[MeshType.TILE_SAND]["instance"]
+	inst_tile_sand.multimesh.visible_instance_count = map_data.out_tiles_sand.size()
+	for idx: int in map_data.out_tiles_sand.size():
+			var grid_pos: Vector2i = map_data.out_tiles_sand[idx]
+			var transf: Transform3D = Transform3D.IDENTITY
+			transf.origin = map_data.grid_pos_to_map_pos(grid_pos)
+			transf.origin.y = map_data.get_elevation_at_grid_pos(grid_pos)
+			inst_tile_sand.multimesh.set_instance_transform(idx, transf)
+	
+	var inst_tile_rock: MultiMeshInstance3D = meshes[MeshType.TILE_ROCK]["instance"]
+	inst_tile_rock.multimesh.visible_instance_count = map_data.out_tiles_rock.size()
+	for idx: int in map_data.out_tiles_rock.size():
+			var grid_pos: Vector2i = map_data.out_tiles_rock[idx]
+			var transf: Transform3D = Transform3D.IDENTITY
+			transf.origin = map_data.grid_pos_to_map_pos(grid_pos)
+			transf.origin.y = map_data.get_elevation_at_grid_pos(grid_pos)
+			inst_tile_rock.multimesh.set_instance_transform(idx, transf)
+	
+	var inst_tile_urban: MultiMeshInstance3D = meshes[MeshType.TILE_URBAN]["instance"]
+	inst_tile_urban.multimesh.visible_instance_count = map_data.out_tiles_urban.size()
+	for idx: int in map_data.out_tiles_urban.size():
+			var grid_pos: Vector2i = map_data.out_tiles_urban[idx]
+			var transf: Transform3D = Transform3D.IDENTITY
+			transf.origin = map_data.grid_pos_to_map_pos(grid_pos)
+			transf.origin.y = map_data.get_elevation_at_grid_pos(grid_pos)
+			inst_tile_urban.multimesh.set_instance_transform(idx, transf)
 
 
 func clear() -> void:
@@ -93,6 +137,11 @@ func create_multimesh_nodes() -> void:
 		var mesh: Mesh = meshes[key]["mesh"] # remember to add the correct material
 		var new_mesh_instance := MultiMeshInstance3D.new()
 		new_mesh_instance.name = "MM%s" % (str(MeshType.keys()[key]).capitalize())
+		
+		if meshes[key].has("material"):
+			var material: Material = meshes[key]["material"]
+			new_mesh_instance.material_override = material
+		
 		var multi := MultiMesh.new()
 		multi.transform_format = MultiMesh.TRANSFORM_3D
 		multi.mesh = mesh

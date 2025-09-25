@@ -65,25 +65,42 @@ func _connect_editor_signals() -> void:
 
 
 func _populate_multimesh() -> void:
-	if not is_node_ready(): await ready
+	if not is_node_ready(): return
 	if not data: return
 	data.update_outputs()
+	_update_multimesh()
+	_update_heighmap_collision()
+	_update_boundaries()
+
+
+func _update_multimesh() -> void:
 	%cells_mng.populate_multimesh()
-	
-	%water_mesh.position.y = data.in_water_level
-	
+
+
+func _update_heighmap_collision() -> void:
 	var heightmap_shape: HeightMapShape3D = %terrain_coll.shape
 	var heightmap_img_converted: Image = data.out_img_elevation.duplicate()
 	heightmap_img_converted.convert(Image.FORMAT_RF)
 	heightmap_shape.map_depth = size.x
 	heightmap_shape.map_width = size.y
 	heightmap_shape.update_map_data_from_image(heightmap_img_converted, 0.0, data.in_max_elevation)
-	
-	%boundary_n.position.z = -(data.out_map_world_center.y + data.boundary_offset) * data.cell_world_dim
+
+
+func _update_boundaries() -> void:
+	%water_mesh.position.y = data.in_water_level
+	%boundary_n.position.z = -(data.out_map_world_center.z + data.boundary_offset) * data.cell_world_dim
 	%boundary_e.position.x =  (data.out_map_world_center.x + data.boundary_offset) * data.cell_world_dim
-	%boundary_s.position.z =  (data.out_map_world_center.y + data.boundary_offset) * data.cell_world_dim
+	%boundary_s.position.z =  (data.out_map_world_center.z + data.boundary_offset) * data.cell_world_dim
 	%boundary_w.position.x = -(data.out_map_world_center.x + data.boundary_offset) * data.cell_world_dim
 	%boundary_top.position.y = (data.in_max_elevation + data.boundary_offset) * data.cell_world_dim
+	
+	print("--- BOUNDARIES ---")
+	print("water_mesh.position.y = ", %water_mesh.position.y)
+	print("boundary_n.position.z = ", %boundary_n.position.z)
+	print("boundary_e.position.x = ", %boundary_e.position.x)
+	print("boundary_s.position.z = ", %boundary_s.position.z)
+	print("boundary_w.position.x = ", %boundary_w.position.x)
+	print("boundary_top.position.y = ", %boundary_top.position.y)
 
 
 func _clear_multimesh() -> void:

@@ -2,10 +2,10 @@
 extends Node3D
 class_name CellPreview
 
-const MAT_CELL_GRASS := preload("res://assets/materials/cell_grass.material")
-const MAT_CELL_ROCK := preload("res://assets/materials/cell_rock.material")
-const MAT_CELL_SAND := preload("res://assets/materials/cell_sand.material")
-const MAT_CELL_SIDE := preload("res://assets/materials/cell_side.material")
+const MAT_CELL_GRASS := preload("res://assets/materials/tiles/cell_grass.material")
+const MAT_CELL_ROCK := preload("res://assets/materials/tiles/cell_rock.material")
+const MAT_CELL_SAND := preload("res://assets/materials/tiles/cell_sand.material")
+const MAT_CELL_SIDE := preload("res://assets/materials/tiles/cell_side.material")
 
 
 enum SoilType {
