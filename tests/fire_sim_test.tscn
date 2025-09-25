@@ -40,6 +40,6 @@ externalMoistureMap = ExtResource("3_mtwqd")
 internalMoistureMap = ExtResource("4_1013e")
 metadata/_custom_type_script = "uid://fyrf5rhnbh16"
 
-[node name="FireSimulation" type="Node" parent="FireSimTextureDisplayTest"]
+[node name="FireSimulation" type="Node3D" parent="FireSimTextureDisplayTest"]
 script = ExtResource("5_snpfl")
 metadata/_custom_type_script = "uid://bq5pc7u8ql0hi"

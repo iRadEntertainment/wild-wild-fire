@@ -30,6 +30,7 @@ var level_folder: String:
 @export var rng_seed: String = ""
 @export var size: Vector2i = Vector2i(256, 256) # px / cells
 @export var cell_world_dim: float = 1.0
+@export_range(0.0, 25.0, 0.5) var boundary_offset: float = 10.0
 
 
 @export_group("Inputs", "in_")

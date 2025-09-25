@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using Godot;
 
 
@@ -11,10 +12,15 @@ public partial class Airplane : CharacterBody3D
 	// Idea: Less water, faster speed due to lower weight
 	// Idea: Less gas, faster speed due to lower weight
 	[Export] public AirplaneSettings settings;
+
+	[Signal] delegate void OutOfFuelEventHandler();
+
 	private Node3D planeMesh;
 	private RayCast3D raySea;
 	private RayCast3D rayTerrain;
 	public Marker3D MarkerBottom;
+	public Marker3D MarkerWaterSpawnRight;
+	public Marker3D MarkerWaterSpawnLeft;
 
 	// Current state
 	public float CurrentSpeed = 0.0f;
@@ -28,8 +34,18 @@ public partial class Airplane : CharacterBody3D
 	public bool IsLanded = false;
 	public float ElevFromSea = 0.0f;
 	public float ElevFromTerrain = 0.0f;
-	public float CurrentFuel = 0.0f;
-	public float CurrentWater = 0.0f;
+	private float _currentFuel = 0.0f;
+	public float CurrentFuel
+	{
+		get => _currentFuel;
+		set => _currentFuel = Mathf.Clamp(value, 0.0f, settings.MaxFuel);
+	}
+	private float _currentWater = 0.0f;
+	public float CurrentWater
+	{
+		get => _currentWater;
+		set => _currentWater = Mathf.Clamp(value, 0.0f, settings.MaxWater);
+	}
 
 	// Target state
 	private float _targetSpeed = 0.0f;
@@ -44,8 +60,61 @@ public partial class Airplane : CharacterBody3D
 		raySea = GetNode<RayCast3D>("%RaySea");
 		rayTerrain = GetNode<RayCast3D>("%RayTerrain");
 		MarkerBottom = GetNode<Marker3D>("%MarkerBottom");
-		CurrentSpeed = settings.MinFlySpeed;
-		_targetSpeed = CurrentSpeed;
+		MarkerWaterSpawnLeft = GetNode<Marker3D>("%MarkerWaterSpawnLeft");
+		MarkerWaterSpawnRight = GetNode<Marker3D>("%MarkerWaterSpawnRight");
+		CurrentFuel = settings.MaxFuel;
+		CurrentWater = settings.MaxWater;
+		CurrentSpeed = 0.0f;
+	}
+
+	public override void _Input(InputEvent @event)
+	{
+		base._Input(@event);
+		if (@event.IsActionPressed("land"))
+		{
+			GD.Print("Landing pressed");
+		}
+	}
+
+	public override void _Process(double delta)
+	{
+		if (Input.IsActionPressed("spray") && CurrentWater > 0.0f)
+		{
+			SprayWater(delta);
+		}
+	}
+
+	private void SprayWater(double delta)
+	{
+		if (CurrentWater <= 0.0f)
+		{
+			CurrentWater = 0.0f;
+			return;
+		}
+		float waterConsumed = settings.WaterDropRate * (float)delta;
+		float NextStepWater = CurrentWater - waterConsumed;
+		int prevIterationWaterParticles = (int)Mathf.Floor(CurrentWater / settings.WaterParticleAmount);
+		int nextIterationWaterParticles = (int)Mathf.Floor(NextStepWater / settings.WaterParticleAmount);
+
+		// Spawn one particle every time the CurrentWater drops 5 units
+		int particlesToSpawn = prevIterationWaterParticles - nextIterationWaterParticles;
+		bool isLeftSpawn = nextIterationWaterParticles % 2 == 0;
+		for (int i = 0; i < particlesToSpawn; i++)
+		{
+			SpawnWaterParticle(isLeftSpawn);
+			isLeftSpawn = !isLeftSpawn;
+		}
+		CurrentWater = NextStepWater;
+	}
+
+	private void SpawnWaterParticle(bool isLeftSpawn)
+	{
+		WaterParticle waterParticle = GD.Load<PackedScene>("res://instances/water_particle.tscn").Instantiate<WaterParticle>();
+		Marker3D marker = isLeftSpawn ? MarkerWaterSpawnLeft : MarkerWaterSpawnRight;
+		waterParticle.GlobalTransform = marker.GlobalTransform;
+		// waterParticle.LinearVelocity = Velocity;
+		// waterParticle.LinearVelocity += -marker.Basis.Z * 2.0f;
+		GetParent().AddChild(waterParticle);
 	}
 
 	public override void _PhysicsProcess(double delta)
@@ -57,6 +126,8 @@ public partial class Airplane : CharacterBody3D
 		ProcessNormalFlight(delta);
 		UpdatePlaneTransform(delta);
 		GetElevations();
+		ProcessFuelConsumption(delta);
+		CheckWaterLevelRefill(delta);
 	}
 
 	private void ProcessNormalFlight(double delta)
@@ -120,10 +191,27 @@ public partial class Airplane : CharacterBody3D
 		}
 	}
 
+	private void ProcessFuelConsumption(double delta)
+	{
+		CurrentFuel -= settings.FuelConsumptionRate * CurrentThrust * (float)delta;
+		if (CurrentFuel <= 0.0f)
+		{
+			CurrentFuel = 0.0f;
+			EmitSignal("OutOfFuel");
+		}
+	}
+
+	private void CheckWaterLevelRefill(double delta)
+	{
+		if (CurrentWater < settings.MaxWater && ElevFromSea < 0.1f)
+		{
+			CurrentWater += settings.RefillWaterRate * (float)delta;
+			_targetSpeed = settings.MinFlySpeed;
+		}
+	}
 	private void ProcessLanding(double delta)
 	{
 		// TODO: Implement landing logic
-		// Let's try to use Tweens instead of processing
 		// The airport will have two Node3Ds (marker_land_front, marker_land_back)
 		// If the plane enters an Area3D of the airport, it will check if it is aligned enough with the landing strip
 		// If so it will land on the first of the two markers and reach a full stop at the other marker

@@ -111,13 +111,15 @@ text = "Fuel"
 label_settings = SubResource("LabelSettings_oskb6")
 
 [node name="progress_fuel" type="ProgressBar" parent="vb_top_left/GridContainer"]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 16)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
 theme_override_styles/background = SubResource("StyleBoxFlat_oskb6")
 theme_override_styles/fill = SubResource("StyleBoxFlat_0osg1")
-value = 60.72
+max_value = 1.0
+step = 0.001
 show_percentage = false
 
 [node name="lb_water" type="Label" parent="vb_top_left/GridContainer"]
@@ -126,13 +128,15 @@ text = "Water"
 label_settings = SubResource("LabelSettings_0osg1")
 
 [node name="progress_water" type="ProgressBar" parent="vb_top_left/GridContainer"]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 16)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
 theme_override_styles/background = SubResource("StyleBoxFlat_wa3vo")
 theme_override_styles/fill = SubResource("StyleBoxFlat_n10qx")
-value = 32.76
+max_value = 1.0
+step = 0.001
 show_percentage = false
 
 [node name="pnl_debug" type="PanelContainer" parent="."]

@@ -244,6 +244,14 @@ skeleton = NodePath("")
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0492512, 0.9499076)
 
+[node name="MarkerWaterSpawnRight" type="Marker3D" parent="AirplaneMesh"]
+unique_name_in_owner = true
+transform = Transform3D(0.8660254, 0.35355338, 0.35355338, 0, 0.70710677, -0.70710677, -0.5, 0.6123724, 0.6123724, 0.05049438, 0.049162697, 0.24221368)
+
+[node name="MarkerWaterSpawnLeft" type="Marker3D" parent="AirplaneMesh"]
+unique_name_in_owner = true
+transform = Transform3D(0.70710677, -0.49999997, -0.49999997, 0, 0.70710677, -0.70710677, 0.70710677, 0.49999997, 0.49999997, -0.050000004, 0.04908851, 0.24193262)
+
 [node name="RaySea" type="RayCast3D" parent="."]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.071183726, 0)

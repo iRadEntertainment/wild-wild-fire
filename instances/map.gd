@@ -69,13 +69,21 @@ func _populate_multimesh() -> void:
 	if not data: return
 	data.update_outputs()
 	%cells_mng.populate_multimesh()
+	
 	%water_mesh.position.y = data.in_water_level
-	var heightmap_shape: HeightMapShape3D = %coll.shape
+	
+	var heightmap_shape: HeightMapShape3D = %terrain_coll.shape
 	var heightmap_img_converted: Image = data.out_img_elevation.duplicate()
 	heightmap_img_converted.convert(Image.FORMAT_RF)
 	heightmap_shape.map_depth = size.x
 	heightmap_shape.map_width = size.y
 	heightmap_shape.update_map_data_from_image(heightmap_img_converted, 0.0, data.in_max_elevation)
+	
+	%boundary_n.position.z = -(data.out_map_world_center.y + data.boundary_offset) * data.cell_world_dim
+	%boundary_e.position.x =  (data.out_map_world_center.x + data.boundary_offset) * data.cell_world_dim
+	%boundary_s.position.z =  (data.out_map_world_center.y + data.boundary_offset) * data.cell_world_dim
+	%boundary_w.position.x = -(data.out_map_world_center.x + data.boundary_offset) * data.cell_world_dim
+	%boundary_top.position.y = (data.in_max_elevation + data.boundary_offset) * data.cell_world_dim
 
 
 func _clear_multimesh() -> void:
