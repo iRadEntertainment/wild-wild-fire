@@ -8,46 +8,35 @@ enum MeshType {
 	TILE_SAND,
 	TILE_ROCK,
 	TILE_URBAN,
-	#TREE_DEAD,
-	#TREE_BURNT,
 }
 
 var meshes = {
 	MeshType.BASE:
 		{
 			"mesh": preload("res://assets/models/meshes/cell_bot.mesh"),
-			#"material": preload("res://assets/materials/cell_sand.material")
+			#"material": preload("res://assets/materials/cell_sand.material"),
+			#"instance": null,
 		},
 	MeshType.TILE_GRASS:
 		{
 			"mesh": preload("res://assets/models/meshes/cell_top.mesh"),
-			"material": preload("res://assets/materials/tiles/cell_grass.material")
+			"material": preload("res://assets/materials/tiles/cell_grass.material"),
 		},
 	MeshType.TILE_SAND:
 		{
 			"mesh": preload("res://assets/models/meshes/cell_top.mesh"),
-			"material": preload("res://assets/materials/tiles/cell_sand.material")
+			"material": preload("res://assets/materials/tiles/cell_sand.material"),
 		},
 	MeshType.TILE_ROCK:
 		{
 			"mesh": preload("res://assets/models/meshes/cell_top.mesh"),
-			"material": preload("res://assets/materials/tiles/cell_rock.material")
+			"material": preload("res://assets/materials/tiles/cell_rock.material"),
 		},
 	MeshType.TILE_URBAN:
 		{
 			"mesh": preload("res://assets/models/meshes/cell_top.mesh"),
-			"material": preload("res://assets/materials/tiles/cell_urban.material")
+			"material": preload("res://assets/materials/tiles/cell_urban.material"),
 		},
-	#MeshType.TREE_DEAD:
-		#{
-			#"mesh": preload("res://assets/models/meshes/DeadTree.mesh"),
-			##"material": preload("res://assets/materials/cell_sand.material")
-		#},
-	#MeshType.TREE_BURNT:
-		#{
-			#"mesh": preload("res://assets/models/meshes/BurntTree.mesh"),
-			##"material": preload("res://assets/materials/cell_sand.material")
-		#},
 }
 
 var mesh_buildings_folder: String = "res://assets/models/meshes/buildings/"
@@ -61,12 +50,8 @@ func set_map(_map: Map) -> void:
 var map_data: MapData:
 	get: return map.data
 
-var _instance_count: int
+var _max_instance_count: int
 
-
-#region Update
-
-#endregion
 
 
 #region Populate
@@ -171,7 +156,7 @@ func fetch_meshes_buildings() -> void:
 
 
 func create_multimesh_nodes() -> void:
-	_instance_count = map.size.x * map.size.y
+	_max_instance_count = map.size.x * map.size.y
 	
 	for key: int in meshes:
 		var mesh: Mesh = meshes[key]["mesh"] # remember to add the correct material
@@ -185,8 +170,16 @@ func create_multimesh_nodes() -> void:
 		var multi := MultiMesh.new()
 		multi.transform_format = MultiMesh.TRANSFORM_3D
 		multi.mesh = mesh
-		multi.instance_count = _instance_count
 		
+		var instances_count: int
+		match key:
+			MeshType.BASE: instances_count = _max_instance_count
+			MeshType.TILE_GRASS: instances_count = map_data.out_tiles_grass.size()
+			MeshType.TILE_SAND: instances_count = map_data.out_tiles_sand.size()
+			MeshType.TILE_ROCK: instances_count = map_data.out_tiles_rock.size()
+			MeshType.TILE_URBAN: instances_count = map_data.out_tiles_urban.size()
+		
+		multi.instance_count = instances_count
 		
 		new_mesh_instance.multimesh = multi
 		add_child(new_mesh_instance)
@@ -195,8 +188,10 @@ func create_multimesh_nodes() -> void:
 			new_mesh_instance.owner = owner
 	
 	
+	# buildings
 	meshinstances_building.clear()
-	var _instance_count_buildings := int(floor(_instance_count/50))
+	@warning_ignore("integer_division")
+	var _instance_count_buildings := int(floor(_max_instance_count/50))
 	var building_container := Node3D.new()
 	building_container.name = "buildings"
 	add_child(building_container)
