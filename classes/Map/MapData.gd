@@ -3,27 +3,13 @@ extends Resource
 class_name MapData
 
 
-const LEVELS_FOLDER: String = "res://scenes/levels/"
-const TEST_FILEPATH: String = "res://assets/map/map_data.res"
-const MAP_LEGEND: Dictionary = {
-	CellPreview.SoilType.GRASS: Color(0.197, 0.693, 0.0, 1.0),
-	CellPreview.SoilType.SAND: Color(0.826, 0.637, 0.526, 1.0),
-	CellPreview.SoilType.ROCK: Color(0.764, 0.799, 0.775, 1.0),
-	CellPreview.SoilType.URBAN: Color(0.18, 0.322, 0.31, 1.0),
-}
-
-
-var level_folder: String:
-	get:
-		if not level_name: return ""
-		return LEVELS_FOLDER + "level_%s/" % level_name
-
-@export var level_name: String = ""
+#region Exports
 @warning_ignore_start("unused_private_class_variable")
-@export_tool_button("Save to File", "Save") var _btn_save: Callable = save_to_file
+@export var level_name: String = ""
+#@export_tool_button("Save to File", "Save") var _btn_save: Callable = save_to_file
 @export_tool_button("Update Output", "Reload") var _btn_update: Callable = update_outputs
 @export_tool_button("Export Drawing Img", "Image") var _btn_export: Callable = export_img
-@warning_ignore_restore("unused_private_class_variable")
+@export_tool_button("Populate Data", "BitMap") var _btn_populate: Callable = populate_data
 
 
 @export_group("Globals")
@@ -60,15 +46,67 @@ signal in_water_level_updated(in_water_level: float)
 @export var out_btm_water: BitMap
 
 @export_subgroup("Tile Data")
+@export var out_img_tiles: Image
+@export var out_img_dry: Image
+@export var out_img_trees: Image
+
+
 @export var out_btm_tiles_grass: BitMap
 @export var out_btm_tiles_sand: BitMap
 @export var out_btm_tiles_rock: BitMap
 @export var out_btm_tiles_urban: BitMap
-@export var out_tiles_grass: Array[Vector2i]
-@export var out_tiles_sand: Array[Vector2i]
-@export var out_tiles_rock: Array[Vector2i]
-@export var out_tiles_urban: Array[Vector2i]
+@export var out_tiles_grass: PackedVector2Array
+@export var out_tiles_sand: PackedVector2Array
+@export var out_tiles_rock: PackedVector2Array
+@export var out_tiles_urban: PackedVector2Array
 
+
+@export_group("MeshData")
+@export_tool_button("Fetch Trees", "MeshInstance2D") var _btn_fetch_t: Callable = fetch_meshes_trees
+@export_tool_button("Fetch Buildings", "MeshInstance3D") var _btn_fetch_b: Callable = fetch_meshes_buildings
+
+@export_file_path() var mesh_buildings_folder_name: String = "buildings"
+var mesh_buildings_folder: String:
+	get: return MESH_BASE_FOLDER.path_join(mesh_buildings_folder_name)
+
+@export_file_path() var mesh_trees_folder_name: String = "trees"
+var mesh_trees_folder: String:
+	get: return MESH_BASE_FOLDER.path_join(mesh_trees_folder_name)
+
+@export var roads_gen_points_count: int = 10
+
+@export_subgroup("Definitions", "mesh_def_")
+@export var mesh_def_buildings: Array[MeshDefinition] = []
+@export var mesh_def_trees: Array[MeshDefinition] = []
+@export var mesh_def_road_straight: Mesh = preload("res://assets/models/meshes/road_straight.mesh")
+@export var mesh_def_road_crossing: Mesh = preload("res://assets/models/meshes/road_crossing.mesh")
+
+@export_subgroup("BitMaps", "out_btm_")
+@export var out_btm_buildings: BitMap
+@export var out_btm_trees: BitMap
+@export var out_btm_roads: BitMap
+@export var out_mesh_roads_h: PackedVector2Array
+@export var out_mesh_roads_v: PackedVector2Array
+@export var out_mesh_roads_cross: PackedVector2Array
+@warning_ignore_restore("unused_private_class_variable")
+#endregion
+
+
+const MESH_BASE_FOLDER: String= "res://assets/models/meshes/"
+const LEVELS_FOLDER: String = "res://scenes/levels/"
+const TEST_FILEPATH: String = "res://assets/map/map_data.res"
+const MAP_LEGEND: Dictionary = {
+	CellPreview.SoilType.GRASS: Color(0.197, 0.693, 0.0, 1.0),
+	CellPreview.SoilType.SAND: Color(0.826, 0.637, 0.526, 1.0),
+	CellPreview.SoilType.ROCK: Color(0.764, 0.799, 0.775, 1.0),
+	CellPreview.SoilType.URBAN: Color(0.18, 0.322, 0.31, 1.0),
+}
+
+
+var level_folder: String:
+	get:
+		if not level_name: return ""
+		return LEVELS_FOLDER + "level_%s/" % level_name
 
 var rng: RandomNumberGenerator
 
@@ -79,7 +117,7 @@ func update_outputs() -> void:
 	_update_out_map_world_center()
 	_update_out_img_elevation_mask()
 	_update_out_img_elevation()
-	_update_tile_data()
+	_update_out_img_game_tiles()
 
 
 func _update_rng() -> void:
@@ -146,14 +184,45 @@ func _update_out_img_elevation() -> void:
 				out_btm_water.set_bit(x, y, true)
 
 
-func _update_tile_data() -> void:
-	if not in_tex_tiles: return
-	if Vector2i(in_tex_tiles.get_size()) != size:
-		push_warning("in_tex_tiles size is diffecent from map size")
-		return
-	var in_img_tiles: Image = in_tex_tiles.get_image()
-	in_img_tiles.convert(Image.FORMAT_RGBA8)
+func _update_out_img_game_tiles() -> void:
+	print_rich("[color=yellow][MapData] Updating images Tiles...[/color]")
+	
+	if in_tex_tiles:
+		out_img_tiles = in_tex_tiles.get_image().duplicate()
+		out_img_tiles.resize(size.x, size.y, Image.INTERPOLATE_NEAREST)
+	else:
+		out_img_tiles = null
+	
+	if in_tex_dry:
+		out_img_dry = in_tex_dry.get_image().duplicate()
+		out_img_dry.resize(size.x, size.y)
+	else:
+		out_img_dry = null
+	
+	if in_tex_trees:
+		out_img_trees = in_tex_trees.get_image().duplicate()
+		out_img_trees.resize(size.x, size.y)
+	else:
+		out_img_trees = null
+#endregion
+
+
+#region Popoluate Data
+func populate_data() -> void:
+	_populate_tile_data()
+	_populate_roads_data()
+	_populate_buildings_data()
+	_populate_trees_data()
+
+
+func _populate_tile_data() -> void:
+	print_rich("[color=yellow][MapData] Populationg Tile data...[/color]")
 	_reset_out_tiles()
+	if not out_img_tiles: return
+	if out_img_tiles.get_size() != size:
+		push_warning("out_img_tiles size is different from map size")
+		return
+	
 	
 	var col_grass: Color = MAP_LEGEND[CellPreview.SoilType.GRASS]
 	var col_sand: Color = MAP_LEGEND[CellPreview.SoilType.SAND]
@@ -163,7 +232,7 @@ func _update_tile_data() -> void:
 	for x in size.x:
 		for y in size.y:
 			var p: Vector2i = Vector2i(x, y)
-			var sampled_col: Color = in_img_tiles.get_pixelv(p)
+			var sampled_col: Color = out_img_tiles.get_pixelv(p)
 			
 			if its_almost_the_same_color(sampled_col, col_grass):
 				out_btm_tiles_grass.set_bitv(p, true)
@@ -182,15 +251,101 @@ func _update_tile_data() -> void:
 				out_tiles_sand.append(p)
 
 
-static func its_almost_the_same_color(col_a: Color, col_b: Color, lambda: float = 0.05) -> bool:
-	var r: float = abs(col_a.r - col_b.r)
-	var g: float = abs(col_a.g - col_b.g)
-	var b: float = abs(col_a.b - col_b.b)
-	var a: float = abs(col_a.a - col_b.a)
-	return r < lambda and g < lambda and b < lambda and a < lambda
+func _populate_roads_data() -> void:
+	print_rich("[color=white][MapData] Populationg Roads data...[/color]")
+	out_mesh_roads_cross.clear()
+	for i: int in roads_gen_points_count:
+		var rand_idx: int = rng.randi_range(0, out_tiles_urban.size()-1)
+		var rand_p: Vector2i = out_tiles_urban[rand_idx]
+		var iter: int = 0
+		while Vector2(rand_p) in out_mesh_roads_cross:
+			rand_idx = rng.randi_range(0, out_tiles_urban.size()-1)
+			rand_p = out_tiles_urban[rand_idx]
+			iter += 1
+			if iter > 100:
+				print("dafuq?")
+				break
+		
+		out_mesh_roads_cross.append(rand_p)
+		out_btm_roads.set_bitv(rand_p, true)
+	
+	for start: Vector2i in out_mesh_roads_cross:
+		for dir in [Vector2i.UP, Vector2i.LEFT, Vector2i.RIGHT, Vector2i.DOWN]:
+			var iter: int = 0
+			var next: Vector2i = start + dir
+			var is_horiz: bool = dir.x != 0
+			while out_btm_tiles_urban.get_bitv(next):
+				if not out_btm_roads.get_bitv(next):
+					if is_horiz:
+						out_mesh_roads_h.append(next)
+					else:
+						out_mesh_roads_v.append(next)
+					out_btm_roads.set_bitv(next, true)
+				
+				next += dir
+				iter += 1
+				if iter > 100:
+					print("dafuq?")
+					break
+
+
+func _populate_buildings_data() -> void:
+	if not out_btm_tiles_urban: return
+	print_rich("[color=cyan][MapData] Populationg Buildings data...[/color]")
+	
+	# get weights and clear points positions
+	var weights := PackedFloat32Array()
+	for def: MeshDefinition in mesh_def_buildings:
+		weights.append(def.probability)
+		def.positions.clear()
+		def.instance_count = 0
+	
+	for grid_pos: Vector2i in out_tiles_urban:
+		if out_btm_roads.get_bitv(grid_pos):
+			continue
+		var rand: float = rng.randf()
+		var def_idx: int = Utl.select_from_weights(weights, rand)
+		var def: MeshDefinition = mesh_def_buildings[def_idx]
+		def.positions.append(grid_pos)
+		def.instance_count += 1
+		var transf := Transform3D.IDENTITY
+		transf.origin = grid_pos_to_map_pos(grid_pos)
+		transf.origin.y = get_elevation_at_grid_pos(grid_pos) + 0.25
+		transf.origin.x += rng.randf_range(-0.25, 0.25)
+		transf.origin.z += rng.randf_range(-0.25, 0.25)
+		transf = transf.scaled_local(Vector3.ONE * 0.5)
+		def.mesh_tranforms.append(transf)
+
+
+func _populate_trees_data() -> void:
+	print_rich("[color=green][MapData] Populationg Trees data...[/color]")
+	# get weights and clear points positions
+	var weights := PackedFloat32Array()
+	for def: MeshDefinition in mesh_def_trees:
+		weights.append(def.probability)
+		def.positions.clear()
+		def.instance_count = 0
+	
+	#for grid_pos: Vector2i in out_tiles_urban:
+		#if out_btm_roads.get_bitv(grid_pos):
+			#continue
+		#var rand: float = rng.randf()
+		#var def_idx: int = Utl.select_from_weights(weights, rand)
+		#var def: MeshDefinition = mesh_def_trees[def_idx]
+		#def.positions.append(grid_pos)
+		#def.instance_count += 1
+		#var transf := Transform3D.IDENTITY
+		#transf.origin = grid_pos_to_map_pos(grid_pos)
+		#transf.origin.y = get_elevation_at_grid_pos(grid_pos) + 0.25
+		#transf.origin.x += rng.randf_range(-0.25, 0.25)
+		#transf.origin.z += rng.randf_range(-0.25, 0.25)
+		#transf = transf.scaled_local(Vector3.ONE * 0.5)
+		#def.mesh_tranforms.append(transf)
+	
 
 
 func _reset_out_tiles() -> void:
+	print_rich("[color=orange][MapData] Resetting Tiles data...[/color]")
 	out_btm_tiles_grass = BitMap.new()
 	out_btm_tiles_grass.resize(size)
 	out_btm_tiles_sand = BitMap.new()
@@ -203,8 +358,71 @@ func _reset_out_tiles() -> void:
 	out_tiles_sand = []
 	out_tiles_rock = []
 	out_tiles_urban = []
-
+	
+	out_btm_buildings = BitMap.new()
+	out_btm_buildings.resize(size)
+	out_btm_trees = BitMap.new()
+	out_btm_trees.resize(size)
+	out_btm_roads = BitMap.new()
+	out_btm_roads.resize(size)
+	out_mesh_roads_h.clear()
+	out_mesh_roads_v.clear()
+	out_mesh_roads_cross.clear()
 #endregion
+
+
+#region MeshData
+func fetch_meshes_trees() -> void:
+	mesh_def_trees.clear()
+	var d = DirAccess.open(mesh_trees_folder)
+	var files: PackedStringArray = d.get_files()
+	for file: String in files:
+		var def := MeshDefinition.new()
+		def.filename = file
+		def.mesh = load(mesh_trees_folder.path_join(file))
+		def.probability = 1.0
+		mesh_def_trees.append(def)
+
+
+func fetch_meshes_buildings() -> void:
+	mesh_def_buildings.clear()
+	var d = DirAccess.open(mesh_buildings_folder)
+	var files: PackedStringArray = d.get_files()
+	for file: String in files:
+		var def := MeshDefinition.new()
+		def.filename = file
+		def.mesh = load(mesh_buildings_folder.path_join(file))
+		def.probability = 1.0
+		mesh_def_buildings.append(def)
+#endregion
+
+
+#region Utilities
+func get_elevation_at_grid_pos(grid_pos: Vector2i) -> float:
+	if not out_img_elevation:
+		return 0.0
+	var col: Color = out_img_elevation.get_pixelv(grid_pos)
+	var elev: float = col.r * in_max_elevation
+	
+	return elev
+
+
+func grid_pos_to_map_pos(grid_pos: Vector2i) -> Vector3:
+	var pos := Vector3(grid_pos.x, 0.0, grid_pos.y) * cell_world_dim
+	return pos - out_map_world_center
+
+
+func grid_pos_and_elevation_to_map_pos(grid_pos: Vector2i, elevation: float) -> Vector3:
+	var pos = grid_pos_to_map_pos(grid_pos)
+	pos.y = elevation
+	return pos
+
+
+func map_to_grid_pos(map_pos: Vector3) -> Vector2i:
+	var off_pos: Vector3 = map_pos + out_map_world_center
+	off_pos /= cell_world_dim
+	@warning_ignore("narrowing_conversion")
+	return Vector2i(off_pos.x, off_pos.z)
 
 
 func export_img() -> void:
@@ -241,46 +459,26 @@ func export_img() -> void:
 	img_map_legend.save_png(img_legend_filepath)
 
 
-#region Utilities
-func get_elevation_at_grid_pos(grid_pos: Vector2i) -> float:
-	if not out_img_elevation:
-		return 0.0
-	var col: Color = out_img_elevation.get_pixelv(grid_pos)
-	var elev: float = col.r * in_max_elevation
-	
-	return elev
-
-
-func grid_pos_to_map_pos(grid_pos: Vector2i) -> Vector3:
-	var pos := Vector3(grid_pos.x, 0.0, grid_pos.y) * cell_world_dim
-	return pos - out_map_world_center
-
-
-func grid_pos_and_elevation_to_map_pos(grid_pos: Vector2i, elevation: float) -> Vector3:
-	var pos = grid_pos_to_map_pos(grid_pos)
-	pos.y = elevation
-	return pos
-
-
-func map_to_grid_pos(map_pos: Vector3) -> Vector2i:
-	var off_pos: Vector3 = map_pos + out_map_world_center
-	off_pos /= cell_world_dim
-	@warning_ignore("narrowing_conversion")
-	return Vector2i(off_pos.x, off_pos.z)
+static func its_almost_the_same_color(col_a: Color, col_b: Color, lambda: float = 0.05) -> bool:
+	var r: float = abs(col_a.r - col_b.r)
+	var g: float = abs(col_a.g - col_b.g)
+	var b: float = abs(col_a.b - col_b.b)
+	var a: float = abs(col_a.a - col_b.a)
+	return r < lambda and g < lambda and b < lambda and a < lambda
 #endregion
 
 
 #region Save/Load
-func save_to_file() -> void:
-	var filepath: String = TEST_FILEPATH
-	if level_name:
-		filepath = level_folder + "level_%s_mapdata.tres" % level_name
-		_make_level_dir()
-	ResourceSaver.save(self, filepath)
+#func save_to_file() -> void:
+	#var filepath: String = TEST_FILEPATH
+	#if level_name:
+		#filepath = level_folder + "level_%s_mapdata.tres" % level_name
+		#_make_level_dir()
+	#ResourceSaver.save(self, filepath)
 
 
-static func load_from_file(file_path: String) -> MapData:
-	return ResourceLoader.load(file_path, "MapData")
+#static func load_from_file(file_path: String) -> MapData:
+	#return ResourceLoader.load(file_path, "MapData")
 
 
 func _make_level_dir() -> void:
