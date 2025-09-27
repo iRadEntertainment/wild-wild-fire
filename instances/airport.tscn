@@ -1,9 +1,10 @@
-[gd_scene load_steps=14 format=4 uid="uid://bt1g66qd04g0t"]
+[gd_scene load_steps=15 format=4 uid="uid://bt1g66qd04g0t"]
 
-[ext_resource type="Script" uid="uid://chu808m8ay8l2" path="res://classes/Airport.cs" id="1_shd3s"]
+[ext_resource type="Script" uid="uid://chu808m8ay8l2" path="res://classes/Airport/Airport.cs" id="1_shd3s"]
 [ext_resource type="Texture2D" uid="uid://bds470np0j15w" path="res://assets/models/Kenney/CityKitSuburban/Textures/colormap.png" id="2_rtabe"]
 [ext_resource type="PackedScene" uid="uid://b6yuq32nsgqi8" path="res://assets/models/Kenney/CityKitSuburban/building-type-l.glb" id="3_shd3s"]
 [ext_resource type="Texture2D" uid="uid://cjc66x8r13f7p" path="res://assets/ui/local_gas_station_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.png" id="4_crm40"]
+[ext_resource type="PackedScene" uid="uid://dolg2a4ns8443" path="res://instances/gas_refill_gate.tscn" id="5_3ya7c"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_s2dno"]
 resource_name = "colormap"
@@ -57,19 +58,29 @@ material = SubResource("StandardMaterial3D_shd3s")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3ya7c"]
 transparency = 1
+cull_mode = 2
 albedo_texture = ExtResource("4_crm40")
 emission_enabled = true
 emission = Color(1, 1, 1, 1)
-billboard_mode = 1
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_nxhuk"]
 material = SubResource("StandardMaterial3D_3ya7c")
-size = Vector2(3, 3)
+size = Vector2(0.5, 0.5)
 orientation = 2
 
-[node name="Airport" type="Node3D" node_paths=PackedStringArray("gasOrb")]
+[node name="Airport" type="Node3D" node_paths=PackedStringArray("gasOrb", "markerOne", "markerTwo")]
 script = ExtResource("1_shd3s")
 gasOrb = NodePath("GasRefillOrb")
+minFuelForVisibility = 40.0
+markerOne = NodePath("MarkerLandBack")
+markerTwo = NodePath("MarkerLandFront")
+gasRefillGateScene = ExtResource("5_3ya7c")
+gateLocations = Array[Vector3]([Vector3(0, 8.824565, -14.6879425), Vector3(0, 8.824565, 15.3120575)])
+refillDuration = 3.0
+tweenDuration_MoveToLandingEnd = 1.0
+tweenDuration_MoveToLandedMidPoint = 1.0
+tweenDuration_MoveToTakingOffStart = 1.0
+tweenDuration_MoveToTakingOffEnd = 1.0
 
 [node name="building" parent="." instance=ExtResource("3_shd3s")]
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -1.10796, 0, 0.9998312)
@@ -108,6 +119,7 @@ transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, -1.1
 
 [node name="GasRefillOrb" type="Area3D" parent="."]
 transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 0, 8.824565, 0)
+visible = false
 disable_mode = 2
 collision_layer = 8
 collision_mask = 8
@@ -117,13 +129,6 @@ mesh = SubResource("SphereMesh_crm40")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="GasRefillOrb"]
 shape = SubResource("SphereShape3D_shd3s")
-
-[node name="Label3D" type="Label3D" parent="GasRefillOrb"]
-visible = false
-pixel_size = 0.0025
-billboard = 1
-text = "Placeholder text for 
-Gas Can Icon"
 
 [node name="Mesh" type="MeshInstance3D" parent="GasRefillOrb"]
 mesh = SubResource("PlaneMesh_nxhuk")

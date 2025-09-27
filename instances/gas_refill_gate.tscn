@@ -1,0 +1,52 @@
+[gd_scene load_steps=10 format=3 uid="uid://dolg2a4ns8443"]
+
+[ext_resource type="Script" uid="uid://cjs4w3dsp107s" path="res://classes/Airport/GasRefillGate.cs" id="1_ycpwf"]
+[ext_resource type="Texture2D" uid="uid://cjc66x8r13f7p" path="res://assets/ui/local_gas_station_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.png" id="2_1qj75"]
+
+[sub_resource type="Gradient" id="Gradient_crm40"]
+interpolation_mode = 2
+offsets = PackedFloat32Array(0.022222223, 0.11111111, 0.21234567, 0.36296296, 0.4962963, 0.63950616, 0.73333335, 0.9234568, 1)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0.3137255, 1, 1, 1, 0.3137255, 1, 1, 1, 1, 1, 1, 1, 0.3137255, 1, 1, 1, 1, 1, 1, 1, 0.3137255, 1, 1, 1, 0.3137255, 1, 1, 1, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_3ya7c"]
+gradient = SubResource("Gradient_crm40")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nxhuk"]
+transparency = 1
+albedo_color = Color(0.8784314, 0.80784315, 0.5372549, 0.49803922)
+albedo_texture = SubResource("GradientTexture1D_3ya7c")
+
+[sub_resource type="BoxMesh" id="BoxMesh_ldukb"]
+material = SubResource("StandardMaterial3D_nxhuk")
+size = Vector3(1, 1.5, 0.3)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_o6t6q"]
+size = Vector3(1, 1.5, 0.3)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3ya7c"]
+transparency = 1
+cull_mode = 2
+albedo_texture = ExtResource("2_1qj75")
+emission_enabled = true
+emission = Color(1, 1, 1, 1)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_nxhuk"]
+material = SubResource("StandardMaterial3D_3ya7c")
+size = Vector2(0.5, 0.5)
+orientation = 2
+
+[node name="GasRefillGate" type="Area3D"]
+transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 0, 0, 0)
+disable_mode = 2
+collision_layer = 8
+collision_mask = 8
+script = ExtResource("1_ycpwf")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_ldukb")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_o6t6q")
+
+[node name="Mesh" type="MeshInstance3D" parent="."]
+mesh = SubResource("PlaneMesh_nxhuk")

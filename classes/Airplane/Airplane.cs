@@ -74,6 +74,7 @@ public partial class Airplane : CharacterBody3D
 		base._Input(@event);
 		if (@event.IsActionPressed("land"))
 		{
+			CurrentFuel = 20f;
 			GD.Print("Landing pressed");
 		}
 	}
