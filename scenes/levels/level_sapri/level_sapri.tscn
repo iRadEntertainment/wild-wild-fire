@@ -295,7 +295,19 @@ script = ExtResource("3_xsjd8")
 [node name="particlesmng" type="Node3D" parent="Modules"]
 
 [node name="part_smoke" parent="Modules/particlesmng" instance=ExtResource("4_j3y0w")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.883436, 3.7135086, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.59323, 3.8944101, 9.0399)
+
+[node name="part_smoke2" parent="Modules/particlesmng" instance=ExtResource("4_j3y0w")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22.877783, 3.7135086, 8.681839)
+
+[node name="part_smoke3" parent="Modules/particlesmng" instance=ExtResource("4_j3y0w")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26.12608, 3.7135086, 7.3804064)
+
+[node name="part_smoke4" parent="Modules/particlesmng" instance=ExtResource("4_j3y0w")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28.734344, 3.7135086, 4.1980352)
+
+[node name="part_smoke5" parent="Modules/particlesmng" instance=ExtResource("4_j3y0w")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28.734344, 3.7135086, 0.13970184)
 
 [node name="environment" type="Node3D" parent="."]
 

@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://b0e2cue4akmnn"]
+[gd_scene load_steps=13 format=3 uid="uid://b0e2cue4akmnn"]
 
 [ext_resource type="Texture2D" uid="uid://bn6u5jyv8jfpg" path="res://assets/materials/smoke_texture.png" id="1_vm8bb"]
 
@@ -9,9 +9,16 @@ point_count = 2
 [sub_resource type="CurveTexture" id="CurveTexture_mq7lo"]
 curve = SubResource("Curve_3bq24")
 
+[sub_resource type="Gradient" id="Gradient_vm8bb"]
+offsets = PackedFloat32Array(0.08558559, 0.22522523, 0.5675676, 0.8063063)
+colors = PackedColorArray(2.5471187, 1.3571846, 0.4296629, 1, 0, 0, 0, 1, 0.16379307, 0.16379307, 0.16379307, 1, 1, 1, 1, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_3bq24"]
+gradient = SubResource("Gradient_vm8bb")
+
 [sub_resource type="Curve" id="Curve_v4ogw"]
 _limits = [0.0, 20.0, 0.0, 1.0]
-_data = [Vector2(0, 0), 0.0, 2.9008353, 0, 0, Vector2(0.8120805, 9.004094), 0.0, 0.0, 0, 0, Vector2(1, 0), -118.153175, 0.0, 0, 0]
+_data = [Vector2(0, 0), 0.0, 2.9008353, 0, 0, Vector2(0.5725807, 9.073757), 0.0, 0.0, 0, 0, Vector2(1, 20), 55.300205, 0.0, 0, 0]
 point_count = 3
 
 [sub_resource type="CurveTexture" id="CurveTexture_q35wr"]
@@ -27,9 +34,11 @@ curve = SubResource("Curve_vm8bb")
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_m1cg8"]
 emission_shape_scale = Vector3(0.5, 1, 0.5)
 inherit_velocity_ratio = 0.05
-gravity = Vector3(0, 9.8, 0)
+gravity = Vector3(0, 1.96, 0)
 scale_min = 0.5
 scale_curve = SubResource("CurveTexture_q35wr")
+color = Color(1, 1, 1, 0.5882353)
+color_ramp = SubResource("GradientTexture1D_3bq24")
 alpha_curve = SubResource("CurveTexture_mq7lo")
 turbulence_enabled = true
 turbulence_noise_speed = Vector3(0, 0, 0.165)
@@ -40,7 +49,7 @@ turbulence_influence_over_life = SubResource("CurveTexture_3bq24")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3bq24"]
 transparency = 4
-shading_mode = 2
+shading_mode = 0
 specular_mode = 2
 vertex_color_use_as_albedo = true
 albedo_texture = ExtResource("1_vm8bb")
