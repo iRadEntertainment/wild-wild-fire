@@ -11,4 +11,4 @@ class_name MeshDefinition
 @export var instance_count: int # assigned by MapData
 @export var positions: PackedVector2Array # assigned by MapData
 @export var mesh_tranforms: Array[Transform3D] # assigned by MapData
-var mm_instance: MultiMeshInstance3D # assigned by cells_mng to keep a reference to the node
+var mm_instance: MultiMeshInstance3D = null # assigned by cells_mng to keep a reference to the node

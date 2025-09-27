@@ -10,6 +10,8 @@ enum TileType {
 	TILE_URBAN,
 }
 
+const next_pass_material: Material = preload("res://assets/materials/next_pass.material")
+
 var meshes = {
 	TileType.BASE:
 		{
@@ -64,6 +66,7 @@ func populate_multimesh() -> void:
 	update_roads()
 	update_buildings()
 	update_trees()
+	update_trees_dry()
 
 
 func update_base_tiles() -> void:
@@ -89,6 +92,7 @@ func update_tiles() -> void:
 		transf.origin = map_data.grid_pos_to_map_pos(grid_pos)
 		transf.origin.y = map_data.get_elevation_at_grid_pos(grid_pos)
 		inst_tile_grass.multimesh.set_instance_transform(idx, transf)
+		inst_tile_grass.multimesh.set_instance_custom_data(idx, Color(grid_pos.x, grid_pos.y,0,0))
 	
 	var inst_tile_sand: MultiMeshInstance3D = meshes[TileType.TILE_SAND]["instance"]
 	inst_tile_sand.multimesh.visible_instance_count = map_data.out_tiles_sand.size()
@@ -98,6 +102,7 @@ func update_tiles() -> void:
 		transf.origin = map_data.grid_pos_to_map_pos(grid_pos)
 		transf.origin.y = map_data.get_elevation_at_grid_pos(grid_pos)
 		inst_tile_sand.multimesh.set_instance_transform(idx, transf)
+		inst_tile_sand.multimesh.set_instance_custom_data(idx, Color(grid_pos.x, grid_pos.y,0,0))
 	
 	var inst_tile_rock: MultiMeshInstance3D = meshes[TileType.TILE_ROCK]["instance"]
 	inst_tile_rock.multimesh.visible_instance_count = map_data.out_tiles_rock.size()
@@ -107,6 +112,7 @@ func update_tiles() -> void:
 		transf.origin = map_data.grid_pos_to_map_pos(grid_pos)
 		transf.origin.y = map_data.get_elevation_at_grid_pos(grid_pos)
 		inst_tile_rock.multimesh.set_instance_transform(idx, transf)
+		inst_tile_rock.multimesh.set_instance_custom_data(idx, Color(grid_pos.x, grid_pos.y,0,0))
 	
 	var inst_tile_urban: MultiMeshInstance3D = meshes[TileType.TILE_URBAN]["instance"]
 	inst_tile_urban.multimesh.visible_instance_count = map_data.out_tiles_urban.size()
@@ -116,13 +122,16 @@ func update_tiles() -> void:
 		transf.origin = map_data.grid_pos_to_map_pos(grid_pos)
 		transf.origin.y = map_data.get_elevation_at_grid_pos(grid_pos)
 		inst_tile_urban.multimesh.set_instance_transform(idx, transf)
+		inst_tile_urban.multimesh.set_instance_custom_data(idx, Color(grid_pos.x, grid_pos.y,0,0))
 
 
 func update_roads() -> void:
 	var mm_instance_road_cross: MultiMeshInstance3D = MultiMeshInstance3D.new()
 	mm_instance_road_cross.name = "MMRoadCrossings"
+	mm_instance_road_cross.material_overlay = next_pass_material
 	var mm_instance_road := MultiMesh.new()
 	mm_instance_road.transform_format = MultiMesh.TRANSFORM_3D
+	mm_instance_road.use_custom_data = true
 	mm_instance_road.mesh = map_data.mesh_def_road_crossing
 	mm_instance_road.instance_count = map_data.out_mesh_roads_cross.size()
 	
@@ -132,14 +141,18 @@ func update_roads() -> void:
 		transf.origin = map_data.grid_pos_to_map_pos(grid_pos)
 		transf.origin.y = map_data.get_elevation_at_grid_pos(grid_pos) + 0.25
 		mm_instance_road.set_instance_transform(idx, transf)
+		mm_instance_road.set_instance_custom_data(idx, Color(grid_pos.x, grid_pos.y,0,0))
 	mm_instance_road_cross.multimesh = mm_instance_road
 	building_container.add_child(mm_instance_road_cross)
 	mm_instance_road_cross.owner = owner
 	
 	var mm_instance_road_straight: MultiMeshInstance3D = MultiMeshInstance3D.new()
 	mm_instance_road_straight.name = "MMRoadStraight"
+	mm_instance_road_straight.material_overlay = next_pass_material
+	
 	var mm_instance_road_s := MultiMesh.new()
 	mm_instance_road_s.transform_format = MultiMesh.TRANSFORM_3D
+	mm_instance_road_s.use_custom_data = true
 	mm_instance_road_s.mesh = map_data.mesh_def_road_straight
 	mm_instance_road_s.instance_count = map_data.out_mesh_roads_h.size() + map_data.out_mesh_roads_v.size()
 	
@@ -151,6 +164,7 @@ func update_roads() -> void:
 		transf.origin.y = map_data.get_elevation_at_grid_pos(grid_pos) + 0.25
 		transf = transf.rotated_local(Vector3.UP, PI/2.0)
 		mm_instance_road_s.set_instance_transform(straight_idx, transf)
+		mm_instance_road_s.set_instance_custom_data(straight_idx, Color(grid_pos.x, grid_pos.y,0,0))
 		straight_idx += 1
 	for i: int in map_data.out_mesh_roads_v.size():
 		var grid_pos: Vector2i = map_data.out_mesh_roads_v[i]
@@ -158,6 +172,7 @@ func update_roads() -> void:
 		transf.origin = map_data.grid_pos_to_map_pos(grid_pos)
 		transf.origin.y = map_data.get_elevation_at_grid_pos(grid_pos) + 0.25
 		mm_instance_road_s.set_instance_transform(straight_idx, transf)
+		mm_instance_road_s.set_instance_custom_data(straight_idx, Color(grid_pos.x, grid_pos.y,0,0))
 		straight_idx += 1
 	
 	mm_instance_road_straight.multimesh = mm_instance_road_s
@@ -169,16 +184,30 @@ func update_buildings() -> void:
 	for def: MeshDefinition in map_data.mesh_def_buildings:
 		var mm_instance: MultiMeshInstance3D = def.mm_instance
 		for idx: int in def.instance_count:
+			var grid_pos: Vector2i = def.positions[idx]
 			var transf: Transform3D = def.mesh_tranforms[idx]
 			mm_instance.multimesh.set_instance_transform(idx, transf)
+			mm_instance.multimesh.set_instance_custom_data(idx, Color(grid_pos.x, grid_pos.y,0,0))
 
 
 func update_trees() -> void:
 	for def: MeshDefinition in map_data.mesh_def_trees:
 		var mm_instance: MultiMeshInstance3D = def.mm_instance
 		for idx: int in def.instance_count:
+			var grid_pos: Vector2i = def.positions[idx]
 			var transf: Transform3D = def.mesh_tranforms[idx]
 			mm_instance.multimesh.set_instance_transform(idx, transf)
+			mm_instance.multimesh.set_instance_custom_data(idx, Color(grid_pos.x, grid_pos.y,0,0))
+
+
+func update_trees_dry() -> void:
+	for def: MeshDefinition in map_data.mesh_def_trees_dry:
+		var mm_instance: MultiMeshInstance3D = def.mm_instance
+		for idx: int in def.instance_count:
+			var grid_pos: Vector2i = def.positions[idx]
+			var transf: Transform3D = def.mesh_tranforms[idx]
+			mm_instance.multimesh.set_instance_transform(idx, transf)
+			mm_instance.multimesh.set_instance_custom_data(idx, Color(grid_pos.x, grid_pos.y,0,0))
 
 
 func clear() -> void:
@@ -190,16 +219,18 @@ func create_tiles_multimesh_nodes() -> void:
 	_max_instance_count = map.size.x * map.size.y
 	
 	for key: int in meshes:
-		var mesh: Mesh = meshes[key]["mesh"] # remember to add the correct material
+		var mesh: Mesh = meshes[key]["mesh"]
 		var new_mesh_instance := MultiMeshInstance3D.new()
 		new_mesh_instance.name = "MM%s" % (str(TileType.keys()[key]).capitalize())
 		
 		if meshes[key].has("material"):
-			var material: Material = meshes[key]["material"]
-			new_mesh_instance.material_override = material
+			new_mesh_instance.material_override = meshes[key]["material"]
+		if key in [TileType.TILE_GRASS, TileType.TILE_URBAN]:
+			new_mesh_instance.material_overlay = next_pass_material
 		
 		var multi := MultiMesh.new()
 		multi.transform_format = MultiMesh.TRANSFORM_3D
+		multi.use_custom_data = true
 		multi.mesh = mesh
 		
 		var instances_count: int
@@ -227,8 +258,10 @@ func create_tiles_multimesh_nodes() -> void:
 	for def: MeshDefinition in map_data.mesh_def_buildings:
 		var new_mesh_instance := MultiMeshInstance3D.new()
 		new_mesh_instance.name = "M%s" % def.filename.get_basename()
+		new_mesh_instance.material_overlay = next_pass_material
 		var multi := MultiMesh.new()
 		multi.transform_format = MultiMesh.TRANSFORM_3D
+		multi.use_custom_data = true
 		multi.mesh = def.mesh
 		multi.instance_count = def.instance_count
 		
@@ -245,8 +278,27 @@ func create_tiles_multimesh_nodes() -> void:
 	for def: MeshDefinition in map_data.mesh_def_trees:
 		var new_mesh_instance := MultiMeshInstance3D.new()
 		new_mesh_instance.name = "M%s" % def.filename.get_basename()
+		new_mesh_instance.material_overlay = next_pass_material
 		var multi := MultiMesh.new()
 		multi.transform_format = MultiMesh.TRANSFORM_3D
+		multi.use_custom_data = true
+		multi.mesh = def.mesh
+		multi.instance_count = def.instance_count
+		
+		new_mesh_instance.multimesh = multi
+		tree_container.add_child(new_mesh_instance)
+		def.mm_instance = new_mesh_instance
+		if Engine.is_editor_hint():
+			new_mesh_instance.owner = owner
+	
+	# dry trees
+	for def: MeshDefinition in map_data.mesh_def_trees_dry:
+		var new_mesh_instance := MultiMeshInstance3D.new()
+		new_mesh_instance.name = "M%s" % def.filename.get_basename()
+		new_mesh_instance.material_overlay = next_pass_material
+		var multi := MultiMesh.new()
+		multi.transform_format = MultiMesh.TRANSFORM_3D
+		multi.use_custom_data = true
 		multi.mesh = def.mesh
 		multi.instance_count = def.instance_count
 		

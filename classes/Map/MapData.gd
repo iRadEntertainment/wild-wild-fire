@@ -73,12 +73,17 @@ var mesh_buildings_folder: String:
 var mesh_trees_folder: String:
 	get: return MESH_BASE_FOLDER.path_join(mesh_trees_folder_name)
 
+@export_file_path() var mesh_trees_dry_folder_name: String = "trees_dry"
+var mesh_trees_dry_folder: String:
+	get: return MESH_BASE_FOLDER.path_join(mesh_trees_dry_folder_name)
+
 @export var roads_gen_points_count: int = 10
 @export_range(0.0, 0.1, 0.01) var trees_gen_base_probability: float = 0.03
 
 @export_subgroup("Definitions", "mesh_def_")
 @export var mesh_def_buildings: Array[MeshDefinition] = []
 @export var mesh_def_trees: Array[MeshDefinition] = []
+@export var mesh_def_trees_dry: Array[MeshDefinition] = []
 @export var mesh_def_road_straight: Mesh = preload("res://assets/models/meshes/road_straight.mesh")
 @export var mesh_def_road_crossing: Mesh = preload("res://assets/models/meshes/road_crossing.mesh")
 
@@ -210,6 +215,7 @@ func _update_out_img_game_tiles() -> void:
 
 #region Popoluate Data
 func populate_data() -> void:
+	rng.seed = hash(rng_seed)
 	_clear_mesh_definition_data()
 	_populate_tile_data()
 	_populate_roads_data()
@@ -218,7 +224,8 @@ func populate_data() -> void:
 
 
 func _clear_mesh_definition_data() -> void:
-	for def: MeshDefinition in mesh_def_buildings + mesh_def_trees:
+	print_rich("[color=blue][MapData] Clear Mesh definitions data...[/color]")
+	for def: MeshDefinition in (mesh_def_buildings + mesh_def_trees + mesh_def_trees_dry):
 		def.positions.clear()
 		def.mesh_tranforms.clear()
 		def.instance_count = 0
@@ -322,8 +329,9 @@ func _populate_buildings_data() -> void:
 		var transf := Transform3D.IDENTITY
 		transf.origin = grid_pos_to_map_pos(grid_pos)
 		transf.origin.y = get_elevation_at_grid_pos(grid_pos) + 0.25
-		transf.origin.x += rng.randf_range(-0.25, 0.25)
-		transf.origin.z += rng.randf_range(-0.25, 0.25)
+		#transf.origin.x += rng.randf_range(-0.25, 0.25)
+		#transf.origin.z += rng.randf_range(-0.25, 0.25)
+		transf = transf.rotated_local(Vector3.UP, PI/4 * rng.randi_range(0, 7))
 		transf = transf.scaled_local(Vector3.ONE * 0.5)
 		def.mesh_tranforms.append(transf)
 
@@ -331,11 +339,18 @@ func _populate_buildings_data() -> void:
 func _populate_trees_data() -> void:
 	print_rich("[color=green][MapData] Populationg Trees data...[/color]")
 	# get weights and clear points positions
-	var weights := PackedFloat32Array()
+	var weights_tree := PackedFloat32Array()
 	for def: MeshDefinition in mesh_def_trees:
-		weights.append(def.probability)
+		weights_tree.append(def.probability)
 		def.positions.clear()
 		def.instance_count = 0
+	
+	var weights_tree_dry := PackedFloat32Array()
+	for def: MeshDefinition in mesh_def_trees_dry:
+		weights_tree_dry.append(def.probability)
+		def.positions.clear()
+		def.instance_count = 0
+	
 	
 	for x in size.x:
 		for y in size.y:
@@ -349,19 +364,29 @@ func _populate_trees_data() -> void:
 			var is_spawn: bool = spawn_prob > rng.randf()
 			if not is_spawn:
 				continue
-			
 			out_btm_trees.set_bitv(grid_pos, true)
 			
 			var rand: float = rng.randf()
-			var def_idx: int = Utl.select_from_weights(weights, rand)
+			var dryness: float = out_img_dry.get_pixelv(grid_pos).r
+			var is_dry: bool = dryness > (0.2 * rand)
+			
+			var def_idx: int = Utl.select_from_weights(weights_tree, rand)
 			var def: MeshDefinition = mesh_def_trees[def_idx]
+			if not is_dry:
+				def_idx = Utl.select_from_weights(weights_tree, rand)
+				def = mesh_def_trees[def_idx]
+			else:
+				def_idx = Utl.select_from_weights(weights_tree_dry, rand)
+				def = mesh_def_trees_dry[def_idx]
+			
 			def.positions.append(grid_pos)
 			def.instance_count += 1
 			var transf := Transform3D.IDENTITY
 			transf.origin = grid_pos_to_map_pos(grid_pos)
 			transf.origin.y = get_elevation_at_grid_pos(grid_pos) + 0.25
-			transf.origin.x += rng.randf_range(-0.25, 0.25)
-			transf.origin.z += rng.randf_range(-0.25, 0.25)
+			transf = transf.rotated_local(Vector3.UP, rng.randf_range(-PI, PI))
+			#transf.origin.x += rng.randf_range(-0.25, 0.25)
+			#transf.origin.z += rng.randf_range(-0.25, 0.25)
 			transf = transf.scaled_local(Vector3(1.0, rng.randf_range(0.8, 1.2), 1.0) )
 			def.mesh_tranforms.append(transf)
 	
@@ -396,7 +421,7 @@ func _reset_out_tiles() -> void:
 
 #region MeshData
 func fetch_meshes_trees() -> void:
-	mesh_def_trees.clear()
+	mesh_def_trees = []
 	var d = DirAccess.open(mesh_trees_folder)
 	var files: PackedStringArray = d.get_files()
 	for file: String in files:
@@ -405,10 +430,24 @@ func fetch_meshes_trees() -> void:
 		def.mesh = load(mesh_trees_folder.path_join(file))
 		def.probability = 1.0
 		mesh_def_trees.append(def)
+	
+	fetch_meshes_trees_dry()
+
+
+func fetch_meshes_trees_dry() -> void:
+	mesh_def_trees_dry = []
+	var d = DirAccess.open(mesh_trees_dry_folder)
+	var files = d.get_files()
+	for file: String in files:
+		var def := MeshDefinition.new()
+		def.filename = file
+		def.mesh = load(mesh_trees_dry_folder.path_join(file))
+		def.probability = 1.0
+		mesh_def_trees_dry.append(def)
 
 
 func fetch_meshes_buildings() -> void:
-	mesh_def_buildings.clear()
+	mesh_def_buildings = []
 	var d = DirAccess.open(mesh_buildings_folder)
 	var files: PackedStringArray = d.get_files()
 	for file: String in files:
