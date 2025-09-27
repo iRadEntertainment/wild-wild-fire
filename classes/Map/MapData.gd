@@ -14,7 +14,7 @@ class_name MapData
 
 @export_group("Globals")
 @export var rng_seed: String = ""
-@export var size: Vector2i = Vector2i(256, 256) # px / cells
+@export var size: Vector2i = Vector2i(128, 128) # px / cells
 @export var cell_world_dim: float = 1.0
 @export_range(0.0, 25.0, 0.5) var boundary_offset: float = 10.0
 
@@ -74,6 +74,7 @@ var mesh_trees_folder: String:
 	get: return MESH_BASE_FOLDER.path_join(mesh_trees_folder_name)
 
 @export var roads_gen_points_count: int = 10
+@export_range(0.0, 0.1, 0.01) var trees_gen_base_probability: float = 0.03
 
 @export_subgroup("Definitions", "mesh_def_")
 @export var mesh_def_buildings: Array[MeshDefinition] = []
@@ -209,10 +210,19 @@ func _update_out_img_game_tiles() -> void:
 
 #region Popoluate Data
 func populate_data() -> void:
+	_clear_mesh_definition_data()
 	_populate_tile_data()
 	_populate_roads_data()
 	_populate_buildings_data()
 	_populate_trees_data()
+
+
+func _clear_mesh_definition_data() -> void:
+	for def: MeshDefinition in mesh_def_buildings + mesh_def_trees:
+		def.positions.clear()
+		def.mesh_tranforms.clear()
+		def.instance_count = 0
+		def.mm_instance = null
 
 
 func _populate_tile_data() -> void:
@@ -303,6 +313,7 @@ func _populate_buildings_data() -> void:
 	for grid_pos: Vector2i in out_tiles_urban:
 		if out_btm_roads.get_bitv(grid_pos):
 			continue
+		out_btm_buildings.set_bitv(grid_pos, true)
 		var rand: float = rng.randf()
 		var def_idx: int = Utl.select_from_weights(weights, rand)
 		var def: MeshDefinition = mesh_def_buildings[def_idx]
@@ -326,21 +337,33 @@ func _populate_trees_data() -> void:
 		def.positions.clear()
 		def.instance_count = 0
 	
-	#for grid_pos: Vector2i in out_tiles_urban:
-		#if out_btm_roads.get_bitv(grid_pos):
-			#continue
-		#var rand: float = rng.randf()
-		#var def_idx: int = Utl.select_from_weights(weights, rand)
-		#var def: MeshDefinition = mesh_def_trees[def_idx]
-		#def.positions.append(grid_pos)
-		#def.instance_count += 1
-		#var transf := Transform3D.IDENTITY
-		#transf.origin = grid_pos_to_map_pos(grid_pos)
-		#transf.origin.y = get_elevation_at_grid_pos(grid_pos) + 0.25
-		#transf.origin.x += rng.randf_range(-0.25, 0.25)
-		#transf.origin.z += rng.randf_range(-0.25, 0.25)
-		#transf = transf.scaled_local(Vector3.ONE * 0.5)
-		#def.mesh_tranforms.append(transf)
+	for x in size.x:
+		for y in size.y:
+			var grid_pos := Vector2i(x, y)
+			if not out_btm_tiles_grass.get_bitv(grid_pos):
+				continue
+			
+			var sampled_prob: float = out_img_trees.get_pixelv(grid_pos).r
+			sampled_prob *= 1.0 - trees_gen_base_probability
+			var spawn_prob: float = trees_gen_base_probability + sampled_prob
+			var is_spawn: bool = spawn_prob > rng.randf()
+			if not is_spawn:
+				continue
+			
+			out_btm_trees.set_bitv(grid_pos, true)
+			
+			var rand: float = rng.randf()
+			var def_idx: int = Utl.select_from_weights(weights, rand)
+			var def: MeshDefinition = mesh_def_trees[def_idx]
+			def.positions.append(grid_pos)
+			def.instance_count += 1
+			var transf := Transform3D.IDENTITY
+			transf.origin = grid_pos_to_map_pos(grid_pos)
+			transf.origin.y = get_elevation_at_grid_pos(grid_pos) + 0.25
+			transf.origin.x += rng.randf_range(-0.25, 0.25)
+			transf.origin.z += rng.randf_range(-0.25, 0.25)
+			transf = transf.scaled_local(Vector3(1.0, rng.randf_range(0.8, 1.2), 1.0) )
+			def.mesh_tranforms.append(transf)
 	
 
 

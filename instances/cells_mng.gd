@@ -39,10 +39,9 @@ var meshes = {
 		},
 }
 
-var meshinstances_trees: Array[MultiMeshInstance3D] = []
-var meshinstances_building: Array[MultiMeshInstance3D] = []
 var meshinstances_roads: Array[MultiMeshInstance3D] = []
 var building_container: Node3D
+var tree_container: Node3D
 
 
 @export var map: Map
@@ -64,6 +63,7 @@ func populate_multimesh() -> void:
 	update_tiles()
 	update_roads()
 	update_buildings()
+	update_trees()
 
 
 func update_base_tiles() -> void:
@@ -174,7 +174,11 @@ func update_buildings() -> void:
 
 
 func update_trees() -> void:
-	pass
+	for def: MeshDefinition in map_data.mesh_def_trees:
+		var mm_instance: MultiMeshInstance3D = def.mm_instance
+		for idx: int in def.instance_count:
+			var transf: Transform3D = def.mesh_tranforms[idx]
+			mm_instance.multimesh.set_instance_transform(idx, transf)
 
 
 func clear() -> void:
@@ -230,7 +234,24 @@ func create_tiles_multimesh_nodes() -> void:
 		
 		new_mesh_instance.multimesh = multi
 		building_container.add_child(new_mesh_instance)
-		meshinstances_building.append(new_mesh_instance)
+		def.mm_instance = new_mesh_instance
+		if Engine.is_editor_hint():
+			new_mesh_instance.owner = owner
+	
+	tree_container = Node3D.new()
+	tree_container.name = "trees"
+	add_child(tree_container)
+	tree_container.owner = owner
+	for def: MeshDefinition in map_data.mesh_def_trees:
+		var new_mesh_instance := MultiMeshInstance3D.new()
+		new_mesh_instance.name = "M%s" % def.filename.get_basename()
+		var multi := MultiMesh.new()
+		multi.transform_format = MultiMesh.TRANSFORM_3D
+		multi.mesh = def.mesh
+		multi.instance_count = def.instance_count
+		
+		new_mesh_instance.multimesh = multi
+		tree_container.add_child(new_mesh_instance)
 		def.mm_instance = new_mesh_instance
 		if Engine.is_editor_hint():
 			new_mesh_instance.owner = owner

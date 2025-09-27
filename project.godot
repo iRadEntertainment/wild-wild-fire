@@ -28,7 +28,6 @@ settings/addon_root_folder="res://tools/addons/debug_draw_3d"
 [display]
 
 window/stretch/mode="canvas_items"
-window/vsync/vsync_mode=0
 
 [dotnet]
 
