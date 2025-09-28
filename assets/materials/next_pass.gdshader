@@ -1,7 +1,7 @@
 // NOTE: Shader automatically converted from Godot Engine 4.5.stable.mono's StandardMaterial3D.
 
 shader_type spatial;
-render_mode blend_mix, depth_draw_never, cull_back, diffuse_burley, specular_schlick_ggx;
+render_mode blend_mix, cull_back;
 
 uniform ivec2 map_size = ivec2(128);
 uniform sampler2D firesim_output : source_color, filter_linear_mipmap, repeat_enable;
@@ -13,7 +13,6 @@ uniform float burn_spread : hint_range(0.0, 10.0, 0.01) = 2.0;
 uniform float ambers_spread : hint_range(0.0, 3.0, 0.01) = 0.5;
 
 uniform sampler2D noise_tex : source_color, filter_linear_mipmap, repeat_enable;
-uniform sampler2D noise_bump : source_color, filter_linear_mipmap, repeat_enable;
 uniform ivec2 albedo_texture_size;
 uniform float alpha_hash_scale : hint_range(0.0, 2.0, 0.01);
 uniform float point_size : hint_range(0.1, 128.0, 0.1);
@@ -98,10 +97,9 @@ void fragment() {
 	//noise_col.a = smoothstep(0.0, 1.0, (heat + burnt) * noise_value);
 
 	//ALBEDO.b = tot_moisture;
-	NORMAL = texture(noise_bump, UV).rgb;
 	METALLIC = tot_moisture * metallic;
 	SPECULAR = tot_moisture * specular;
-	ROUGHNESS = mix(1.0, 0.0, moisture_ext);
+	ROUGHNESS = mix(1.0, 0.2, moisture_ext) * roughness;
 	//1.0 - (moisture_ext + moisture_int);
 	//EMISSION = color_ambers.rgb * heat * emission_energy;
 	vec3 emission_amt = color_ambers.rgb * emission_energy;

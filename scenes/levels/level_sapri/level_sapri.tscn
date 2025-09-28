@@ -322,6 +322,7 @@ light_indirect_energy = 0.61
 light_volumetric_fog_energy = 0.645
 light_angular_distance = 7.4
 light_bake_mode = 1
+shadow_enabled = true
 shadow_blur = 0.17
 directional_shadow_mode = 0
 directional_shadow_split_2 = 0.358
