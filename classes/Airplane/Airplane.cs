@@ -29,7 +29,9 @@ public partial class Airplane : CharacterBody3D
 	public float CurrentRoll = 0.0f;
 	public float CurrentThrust = 0.0f;
 	public Vector2 CurrentDirection = Vector2.Zero;
+	public bool IsParked = true;
 	public bool IsBoosting = false;
+	public bool IsOnWater = false;
 	public bool IsRefillingWater = false;
 	public bool IsTakingOff = false;
 	public bool IsLanding = false;
@@ -67,6 +69,7 @@ public partial class Airplane : CharacterBody3D
 		CurrentFuel = settings.MaxFuel;
 		CurrentWater = settings.MaxWater;
 		CurrentSpeed = 0.0f;
+		CurrentThrust = 0.0f;
 	}
 
 	public override void _Input(InputEvent @event)
@@ -94,6 +97,8 @@ public partial class Airplane : CharacterBody3D
 			CurrentWater = 0.0f;
 			return;
 		}
+		if (ElevFromSea < 1.0f) { return; }
+
 		float waterConsumed = settings.WaterDropRate * (float)delta;
 		float NextStepWater = CurrentWater - waterConsumed;
 		int prevIterationWaterParticles = (int)Mathf.Floor(CurrentWater / settings.WaterParticleAmount);
@@ -122,14 +127,18 @@ public partial class Airplane : CharacterBody3D
 
 	public override void _PhysicsProcess(double delta)
 	{
-		if (IsLanded || IsLanding || IsTakingOff)
+		GetElevations();
+		if (IsLanded || IsLanding || IsTakingOff) {	return; }
+		if (IsParked)
 		{
+			IsParked = !Input.IsActionJustPressed("throttle_up");
 			return;
 		}
-		GetElevations();
+		
 		ProcessNormalFlight(delta);
 		CheckWaterLevelRefill(delta);
 		ProcessFuelConsumption(delta);
+		CheckOutOfFuel(delta);
 		UpdatePlaneTransform(delta);
 	}
 
@@ -157,33 +166,42 @@ public partial class Airplane : CharacterBody3D
 			);
 	}
 
-	private void UpdatePlaneTransform(double delta)
+	private void CheckOutOfFuel(double delta)
 	{
-		// Interpolate current values towards target values
-		CurrentRoll = Mathf.Lerp(CurrentRoll, _targetRoll, settings.RollSpeed * (float)delta);
-		CurrentPitch = Mathf.Lerp(CurrentPitch, _targetPitch, settings.PitchSpeed * (float)delta);
-		CurrentSpeed = Mathf.Lerp(CurrentSpeed, _targetSpeed, settings.ThrustAcceleration * (float)delta);
-
-		// Update mesh rotation (only pitch and roll)
-		planeMesh.Rotation = new Vector3(CurrentPitch, 0, CurrentRoll);
-
-		// Calculate turn rate based on roll angle and rotate the main node on Y axis
-		float turnRate = CurrentRoll * settings.TurnSensitivity * (float)delta;
-		RotateY(turnRate);
-
-
-		// Get the forward direction and apply vertical offset
-		Vector3 forward = -Transform.Basis.Z;
-		Vector3 movement = forward * CurrentSpeed;
-
-		float verticalMovement = CurrentPitch * settings.ClimbSensitivity;
-		movement.Y += verticalMovement;
-
-		Velocity = movement;
-		MoveAndSlide();
-		float directionAngle = -Transform.Basis.Z.AngleTo(Vector3.Forward);
-		CurrentDirection = Vector2.FromAngle(directionAngle);
+		if (CurrentFuel > 0.0f) { return; }
+		
+		_targetPitch = settings.MaxPitchAngle;
+		_targetSpeed = settings.MinFlySpeed;
 	}
+
+
+	private void UpdatePlaneTransform(double delta)
+{
+	// Interpolate current values towards target values
+	CurrentRoll = Mathf.Lerp(CurrentRoll, _targetRoll, settings.RollSpeed * (float)delta);
+	CurrentPitch = Mathf.Lerp(CurrentPitch, _targetPitch, settings.PitchSpeed * (float)delta);
+	CurrentSpeed = Mathf.Lerp(CurrentSpeed, _targetSpeed, settings.ThrustAcceleration * (float)delta);
+
+	// Update mesh rotation (only pitch and roll)
+	planeMesh.Rotation = new Vector3(CurrentPitch, 0, CurrentRoll);
+
+	// Calculate turn rate based on roll angle and rotate the main node on Y axis
+	float turnRate = CurrentRoll * settings.TurnSensitivity * (float)delta;
+	RotateY(turnRate);
+
+
+	// Get the forward direction and apply vertical offset
+	Vector3 forward = -Transform.Basis.Z;
+	Vector3 movement = forward * CurrentSpeed;
+
+	float verticalMovement = CurrentPitch * settings.ClimbSensitivity;
+	movement.Y += verticalMovement;
+
+	Velocity = movement;
+	MoveAndSlide();
+	float directionAngle = -Transform.Basis.Z.AngleTo(Vector3.Forward);
+	CurrentDirection = Vector2.FromAngle(directionAngle);
+}
 
 	private void GetElevations()
 	{
@@ -197,6 +215,7 @@ public partial class Airplane : CharacterBody3D
 		{
 			ElevFromTerrain = rayTerrain.GetCollisionPoint().DistanceTo(rayTerrain.GlobalPosition);
 		}
+		IsOnWater = ElevFromSea < 0.1f;
 	}
 
 	private void ProcessFuelConsumption(double delta)
@@ -211,10 +230,13 @@ public partial class Airplane : CharacterBody3D
 
 	private void CheckWaterLevelRefill(double delta)
 	{
-		IsRefillingWater = CurrentWater < settings.MaxWater && ElevFromSea < 0.1f;
+		IsRefillingWater = (CurrentWater < settings.MaxWater) && IsOnWater;
 		if (IsRefillingWater)
 		{
 			CurrentWater += settings.RefillWaterRate * (float)delta;
+		}
+		if (IsOnWater)
+		{
 			_targetSpeed = settings.MinFlySpeed;
 		}
 	}
