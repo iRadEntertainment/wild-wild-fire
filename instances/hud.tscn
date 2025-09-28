@@ -141,6 +141,7 @@ show_percentage = false
 
 [node name="pnl_debug" type="PanelContainer" parent="."]
 unique_name_in_owner = true
+visible = false
 layout_mode = 1
 anchors_preset = 11
 anchor_left = 1.0

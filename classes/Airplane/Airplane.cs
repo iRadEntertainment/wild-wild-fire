@@ -112,7 +112,7 @@ public partial class Airplane : CharacterBody3D
 
 	private void SpawnWaterParticle(bool isLeftSpawn)
 	{
-		WaterParticle waterParticle = GD.Load<PackedScene>("res://instances/water_particle.tscn").Instantiate<WaterParticle>();
+		RigidBody3D waterParticle = GD.Load<PackedScene>("res://instances/water_particle.tscn").Instantiate<RigidBody3D>();
 		Marker3D marker = isLeftSpawn ? MarkerWaterSpawnLeft : MarkerWaterSpawnRight;
 		waterParticle.GlobalTransform = marker.GlobalTransform;
 		// waterParticle.LinearVelocity = Velocity;

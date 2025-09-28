@@ -1,6 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://cur7tvgwbs6ht"]
+[gd_scene load_steps=9 format=3 uid="uid://cur7tvgwbs6ht"]
 
-[ext_resource type="Script" uid="uid://dqbwye0x5y6io" path="res://instances/WaterParticle.cs" id="1_07hp7"]
+[ext_resource type="Script" uid="uid://f6bu2v4uhfsr" path="res://instances/water_particle.gd" id="1_pr3tk"]
+[ext_resource type="Texture2D" uid="uid://hgtboffxufuu" path="res://assets/easteregg_spritesheet.png" id="2_pr3tk"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_07hp7"]
 radius = 0.03402228
@@ -14,13 +15,49 @@ material = SubResource("StandardMaterial3D_yg8nw")
 radius = 0.05
 height = 0.1
 
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_dpf5o"]
+inherit_velocity_ratio = 0.719
+direction = Vector3(0, -1, 0)
+initial_velocity_min = 0.59999996
+initial_velocity_max = 2.0
+gravity = Vector3(0, -0.6, 0)
+scale_min = 2.0
+scale_max = 5.0
+anim_speed_min = 0.39999998
+anim_speed_max = 0.59999996
+anim_offset_max = 0.59999996
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_cjwub"]
+transparency = 1
+shading_mode = 0
+specular_mode = 2
+albedo_texture = ExtResource("2_pr3tk")
+billboard_mode = 3
+billboard_keep_scale = true
+particles_anim_h_frames = 4
+particles_anim_v_frames = 4
+particles_anim_loop = true
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_td6vx"]
+material = SubResource("StandardMaterial3D_cjwub")
+size = Vector2(0.2, 0.2)
+orientation = 2
+
 [node name="water_particle" type="RigidBody3D"]
 collision_layer = 16
 collision_mask = 6
-script = ExtResource("1_07hp7")
+script = ExtResource("1_pr3tk")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("SphereShape3D_07hp7")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+visible = false
 mesh = SubResource("SphereMesh_pr3tk")
+
+[node name="part_easteregg" type="GPUParticles3D" parent="."]
+amount = 30
+process_material = SubResource("ParticleProcessMaterial_dpf5o")
+draw_pass_1 = SubResource("PlaneMesh_td6vx")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

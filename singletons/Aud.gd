@@ -22,6 +22,11 @@ func stop_music() -> void:
 	_tw_music.set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
 	_tw_music.tween_property($music, "volume_linear", 0.0, 4.0)
 	_tw_music.tween_callback($music.stop)
+
+
+func play_music_easteregg() -> void:
+	if $music_easteregg.playing: return
+	$music_easteregg.play()
 #endregion
 
 

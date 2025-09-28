@@ -1,11 +1,15 @@
-[gd_scene load_steps=8 format=3 uid="uid://n2c52flnw1t0"]
+[gd_scene load_steps=10 format=3 uid="uid://n2c52flnw1t0"]
 
 [ext_resource type="Theme" uid="uid://byujsu8xvuvyt" path="res://assets/theme/main.theme" id="1_l6cm7"]
 [ext_resource type="Texture2D" uid="uid://caxykqte1dlw3" path="res://assets/ui/ref_img_canadair.jpg" id="2_ekxnf"]
 [ext_resource type="Script" uid="uid://b3ksw417y6wmq" path="res://scenes/main_menu.gd" id="2_wu84c"]
 [ext_resource type="PackedScene" uid="uid://bbigim1y05ox2" path="res://scenes/pnl_settings.tscn" id="4_8ln24"]
+[ext_resource type="VideoStream" uid="uid://cqqgaco258tt1" path="res://assets/video/fire.ogv" id="4_oa1go"]
 [ext_resource type="PackedScene" uid="uid://cb0mb3td40ghv" path="res://scenes/pnl_credits.tscn" id="5_8ln24"]
 [ext_resource type="Theme" uid="uid://d4nfuafpb5ani" path="res://assets/theme/main_menu_buttons.theme" id="6_rtw2f"]
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_tbmy8"]
+blend_mode = 1
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_rtw2f"]
 
@@ -41,6 +45,20 @@ texture = ExtResource("2_ekxnf")
 expand_mode = 1
 stretch_mode = 6
 metadata/_edit_lock_ = true
+
+[node name="video" type="VideoStreamPlayer" parent="."]
+material = SubResource("CanvasItemMaterial_tbmy8")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+stream = ExtResource("4_oa1go")
+autoplay = true
+expand = true
+loop = true
+bus = &"Sfx"
 
 [node name="lb_main" type="Label" parent="."]
 layout_mode = 1

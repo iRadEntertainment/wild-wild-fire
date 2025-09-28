@@ -27,6 +27,7 @@ signal game_won
 func _ready() -> void:
 	if Engine.is_editor_hint(): return
 	propagate_call("setup", [], false)
+	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
 
 func setup() -> void:
