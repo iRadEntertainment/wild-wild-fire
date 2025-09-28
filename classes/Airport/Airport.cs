@@ -16,7 +16,9 @@ public partial class Airport : Node3D
     private float minFuelForVisibility = .4f;
 
     public Marker3D MarkerTower;
+
     private Airplane airplane;
+    private Node3D defaultPlaneParent;
 
     [Export]
     private Marker3D markerOne;
@@ -32,11 +34,14 @@ public partial class Airport : Node3D
     private GasRefillGate gateOne;
     private GasRefillGate gateTwo;
 
-    public Vector3 landing_startPoint;
-    public Vector3 landing_endPoint;
-    public Vector3 landed_midPoint;
-    public Vector3 takingOff_startPoint;
-    public Vector3 takingOff_endPoint;
+    [Export]
+    private LandingPath landingPathOne;
+    [Export]
+    private LandingPath landingPathTwo;
+
+    public Vector3 pathStartPoint;
+    public Vector3 pathMidPoint;
+    public Vector3 pathEndPoint;
 
     [Export]
     private float refillDuration = .5f;
@@ -56,11 +61,13 @@ public partial class Airport : Node3D
         base._Ready();
         MarkerTower = GetNode<Marker3D>("%MarkerTower");
         airplane = GetNode<Airplane>("%Airplane");
+        defaultPlaneParent = airplane.GetParent<Node3D>();
 
         gasOrb.BodyEntered += OnBodyEntered;
         ToggleGasOrb(doesExist: false);
 
-        CallDeferred("SpawnGates");
+        CallDeferred("Setup");
+        // CallDeferred("SpawnGates");
     }
 
     public override void _Process(double delta)
@@ -87,6 +94,28 @@ public partial class Airport : Node3D
         }
     }
 
+    private void Setup()
+    {
+        SpawnGates();
+
+        pathStartPoint = gateLocations[0];
+        pathMidPoint = markerOne.Position.Lerp(markerTwo.Position, .5f);
+        pathEndPoint = gateLocations[1];
+
+        Vector3 pathStartOutVec = new Vector3(0, 0, 6);
+        Vector3 pathMidInVec = new Vector3(0, 0, -15);
+        Vector3 pathMidOutVec = new Vector3(0, 0, 6);
+        Vector3 pathEndInVec = new Vector3(0, 0, -8);
+
+        landingPathOne.SetupPath(pathStartPoint, Vector3.Zero, pathStartOutVec);
+        landingPathOne.SetupPath(pathMidPoint, pathMidInVec, pathMidOutVec);
+        landingPathOne.SetupPath(pathEndPoint, pathEndInVec, Vector3.Zero);
+
+        landingPathTwo.SetupPath(pathEndPoint, Vector3.Zero, -pathStartOutVec);
+        landingPathTwo.SetupPath(pathMidPoint, -pathMidInVec, -pathMidOutVec);
+        landingPathTwo.SetupPath(pathStartPoint, -pathEndInVec, Vector3.Zero);
+    }
+
     private void SpawnGates()
     {
         if (IsInstanceValid(gateOne)) gateOne.QueueFree();
@@ -99,27 +128,14 @@ public partial class Airport : Node3D
         gateOne.Position = gateLocations[0];
         gateTwo.Position = gateLocations[1];
 
-
-        gateOne.primaryMarker = markerOne;
-        gateOne.secondaryMarker = markerTwo;
-        gateOne.Name = "GateOne";
-
-        gateTwo.primaryMarker = markerTwo;
-        gateTwo.secondaryMarker = markerOne;
-        gateTwo.Name = "GateTwo";
-
-        gateOne.oppositeGate = gateTwo;
-        gateTwo.oppositeGate = gateOne;
-
-        //gateOne.ToggleActivatable(true);
-        //gateTwo.ToggleActivatable(true);
+        // landingPathOne.Position = gateOne.Position;
+        // landingPathTwo.Position = gateTwo.Position;
     }
 
     public void RefillPlane(Airplane plane)
     {
         plane.CurrentFuel += refillAmount;
         GD.Print($"Airport.cs: Plane Fuel Amount: {plane.CurrentFuel}");
-
     }
 
     private void ToggleGasOrb(bool doesExist)
@@ -128,28 +144,51 @@ public partial class Airport : Node3D
         gasOrb.Monitoring = doesExist;
     }
 
-    public async Task HandleLandingProcess()
+    public async Task HandleLandingProcess(GasRefillGate activatedGate)
     {
+        GD.Print($"Beginning Landing Process");
+        Vector3 startRotation = Vector3.Zero;
+
+        // Remove Gates to prevent looping
         gateOne.QueueFree();
         gateTwo.QueueFree();
         gateOne = null;
         gateTwo = null;
 
+        LandingPath currentPath = landingPathOne;
+        if (activatedGate == gateTwo)
+        {
+            currentPath = landingPathTwo;
+        }
+        currentPath.pathFollow.Set("progress_ratio", 0);
+        // If reversePath is true, reparent to landingPathTwo, else reparent to landingPathOne
+
+
+        airplane.GlobalPosition = activatedGate.GlobalPosition;
+        airplane.Reparent(currentPath.pathFollow);
         airplane.IsLanding = true;
-        Tween tween = CreateTween().SetParallel(false); // .SetTrans(Tween.TransitionType.Back).SetEase(Tween.EaseType.In);
-        tween.TweenProperty(airplane, "position", landing_startPoint, tweenDuration_MoveToLandingStart);
-        tween.TweenProperty(airplane, "position", landing_endPoint, tweenDuration_MoveToLandingEnd);
-        tween.TweenProperty(airplane, "position", landed_midPoint, tweenDuration_MoveToLandedMidPoint);
+        airplane.Rotation = startRotation;
+        await ToSignal(GetTree(), SceneTree.SignalName.PhysicsFrame); // Wait for reparent, hopefully
+
+        Tween tween = CreateTween().SetParallel(false); // .SetTrans(Tween.TransitionType.Expo).SetEase(Tween.EaseType.Out);
+        tween.TweenProperty(currentPath.pathFollow, "progress_ratio", .5, tweenDuration_MoveToLandingEnd);
+        await ToSignal(GetTree().CreateTimer(tweenDuration_MoveToLandingEnd), SceneTreeTimer.SignalName.Timeout);
+
         airplane.IsLanding = false;
         airplane.IsLanded = true;
+        // await ToSignal(GetTree().CreateTimer(10), SceneTreeTimer.SignalName.Timeout);
         await ToSignal(GetTree().CreateTimer(refillDuration), SceneTreeTimer.SignalName.Timeout);
         RefillPlane(airplane);
         airplane.IsLanded = false;
         airplane.IsTakingOff = true;
-        tween = CreateTween().SetParallel(false); // .SetTrans(Tween.TransitionType.Back).SetEase(Tween.EaseType.Out);
-        tween.TweenProperty(airplane, "position", takingOff_startPoint, tweenDuration_MoveToTakingOffStart);
-        tween.TweenProperty(airplane, "position", takingOff_endPoint, tweenDuration_MoveToTakingOffEnd);
-        await ToSignal(GetTree().CreateTimer(tweenDuration_MoveToTakingOffStart + tweenDuration_MoveToTakingOffEnd), SceneTreeTimer.SignalName.Timeout);
+
+        tween = CreateTween().SetParallel(false); // .SetTrans(Tween.TransitionType.Expo).SetEase(Tween.EaseType.Out);
+        tween.TweenProperty(currentPath.pathFollow, "progress_ratio", 1, tweenDuration_MoveToTakingOffEnd);
+
+        await ToSignal(GetTree().CreateTimer(tweenDuration_MoveToTakingOffEnd), SceneTreeTimer.SignalName.Timeout);
+
+        await ToSignal(GetTree(), SceneTree.SignalName.PhysicsFrame); // Wait for reparent, hopefully
+        airplane.Reparent(defaultPlaneParent);
         airplane.IsTakingOff = false;
     }
 

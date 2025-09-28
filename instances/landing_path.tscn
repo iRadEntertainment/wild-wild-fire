@@ -1,0 +1,20 @@
+[gd_scene load_steps=3 format=3 uid="uid://cmo5eqivp5ik2"]
+
+[ext_resource type="Script" uid="uid://ctlitmyl0sirl" path="res://classes/Airport/LandingPath.cs" id="1_y8fb7"]
+
+[sub_resource type="Curve3D" id="Curve3D_y8fb7"]
+_data = {
+"points": PackedVector3Array(0, 0, 0, 0, 0, -6, 0, 8.8, 15, 0, 0, 15, 0, 0, -6, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, 8.8, -15),
+"tilts": PackedFloat32Array(0, 0, 0)
+}
+point_count = 3
+
+[node name="LandingPath1" type="Marker3D"]
+script = ExtResource("1_y8fb7")
+
+[node name="Path3D" type="Path3D" parent="."]
+curve = SubResource("Curve3D_y8fb7")
+
+[node name="PathFollow3D" type="PathFollow3D" parent="Path3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 8.8, 15)
+loop = false
