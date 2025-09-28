@@ -9,15 +9,31 @@ var airplane: Airplane:
 	get: return Mng.airplane
 
 
+func _ready() -> void:
+	%pnl_debug.hide()
+
+
 func _input(event: InputEvent) -> void:
 	if event is InputEventKey:
-		if event.is_pressed() and event.keycode == KEY_BACKSLASH:
+		if event.is_pressed() and event.keycode == KEY_BACKSLASH and Mng.is_debug_mode:
 			%pnl_debug.visible = !%pnl_debug.visible
 
 
 func _process(_delta: float) -> void:
 	_update_fuel_and_water_status()
 	
+	if Mng.is_debug_mode:
+		_update_airplane_info()
+
+
+func _update_fuel_and_water_status() -> void:
+	var fuel_ratio: float = airplane.CurrentFuel / airplane.settings.MaxFuel
+	var water_ratio: float = airplane.CurrentWater / airplane.settings.MaxWater
+	%progress_fuel.value = fuel_ratio
+	%progress_water.value = water_ratio
+
+
+func _update_airplane_info() -> void:
 	if not %pnl_debug.visible: return
 	var nfo: String
 	nfo = "CurrentSpeed: %.03f" % airplane.CurrentSpeed
@@ -32,10 +48,3 @@ func _process(_delta: float) -> void:
 	nfo += "\nElevFromSea: %.01f" % airplane.ElevFromSea
 	nfo += "\nElevFromTerrain: %.01f" % airplane.ElevFromTerrain
 	%lb_debug_info.text = nfo
-
-
-func _update_fuel_and_water_status() -> void:
-	var fuel_ratio: float = airplane.CurrentFuel / airplane.settings.MaxFuel
-	var water_ratio: float = airplane.CurrentWater / airplane.settings.MaxWater
-	%progress_fuel.value = fuel_ratio
-	%progress_water.value = water_ratio

@@ -1,8 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://bbigim1y05ox2"]
+[gd_scene load_steps=7 format=3 uid="uid://bbigim1y05ox2"]
 
 [ext_resource type="Script" uid="uid://i2agw3ikouyg" path="res://scenes/pnl_settings.gd" id="1_6vtcv"]
 [ext_resource type="Theme" uid="uid://byujsu8xvuvyt" path="res://assets/theme/main.theme" id="1_8jliw"]
+[ext_resource type="PackedScene" uid="uid://2eji6i4u8iod" path="res://scenes/pnl_graphics.tscn" id="3_1uy0m"]
 [ext_resource type="PackedScene" uid="uid://b67soww2kv3ed" path="res://instances/pnl_audio.tscn" id="3_dol7y"]
+[ext_resource type="PackedScene" uid="uid://7sceivx5y600" path="res://scenes/pnl_game.tscn" id="5_nl3qh"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_8jliw"]
 
@@ -65,35 +67,20 @@ layout_mode = 2
 size_flags_vertical = 3
 theme_override_styles/panel = SubResource("StyleBoxEmpty_8jliw")
 tab_alignment = 1
-current_tab = 1
+current_tab = 0
 tabs_visible = false
 
-[node name="Graphics" type="PanelContainer" parent="vb/tab"]
-visible = false
+[node name="pnl_graphics" parent="vb/tab" instance=ExtResource("3_1uy0m")]
 layout_mode = 2
-metadata/_tab_index = 0
-
-[node name="lb_placeholder" type="Label" parent="vb/tab/Graphics"]
-layout_mode = 2
-size_flags_vertical = 1
-text = "Graphics"
-horizontal_alignment = 1
-vertical_alignment = 1
 
 [node name="pnl_audio" parent="vb/tab" instance=ExtResource("3_dol7y")]
+visible = false
 layout_mode = 2
 
-[node name="Game" type="PanelContainer" parent="vb/tab"]
+[node name="pnl_game" parent="vb/tab" instance=ExtResource("5_nl3qh")]
 visible = false
 layout_mode = 2
 metadata/_tab_index = 2
-
-[node name="lb_placeholder" type="Label" parent="vb/tab/Game"]
-layout_mode = 2
-size_flags_vertical = 1
-text = "Game settings"
-horizontal_alignment = 1
-vertical_alignment = 1
 
 [connection signal="pressed" from="vb/hb_top/hb_mid/btn_tab_graphics" to="." method="_on_btn_tab_graphics_pressed"]
 [connection signal="pressed" from="vb/hb_top/hb_mid/btn_tab_audio" to="." method="_on_btn_tab_audio_pressed"]

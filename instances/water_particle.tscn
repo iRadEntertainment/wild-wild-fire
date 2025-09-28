@@ -56,6 +56,7 @@ visible = false
 mesh = SubResource("SphereMesh_pr3tk")
 
 [node name="part_easteregg" type="GPUParticles3D" parent="."]
+emitting = false
 amount = 30
 process_material = SubResource("ParticleProcessMaterial_dpf5o")
 draw_pass_1 = SubResource("PlaneMesh_td6vx")

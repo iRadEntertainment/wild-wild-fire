@@ -3,10 +3,13 @@ class_name WaterParticle
 
 
 func _ready() -> void:
-	Aud.play_music_easteregg()
+	if Mng.is_scawy:
+		Aud.play_music_easteregg()
+		$part_easteregg.emitting = true
 
 
 func _on_body_entered(_body: Node) -> void:
-	$part_easteregg.emitting = false
+	if Mng.is_scawy:
+		$part_easteregg.emitting = false
 	await get_tree().create_timer(1).timeout
 	queue_free()

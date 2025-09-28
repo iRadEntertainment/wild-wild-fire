@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://d1hpgbjtidec2" path="res://instances/gui.tscn" id="2_bubbi"]
 [ext_resource type="Script" uid="uid://bq5pc7u8ql0hi" path="res://classes/FireSim/FireSimulation.cs" id="3_xsjd8"]
 [ext_resource type="PackedScene" uid="uid://b0e2cue4akmnn" path="res://instances/part_smoke.tscn" id="4_j3y0w"]
-[ext_resource type="Environment" uid="uid://bfelwt1bgsy8e" path="res://assets/materials/water_env.tres" id="4_orxxa"]
+[ext_resource type="Environment" uid="uid://bfelwt1bgsy8e" path="res://assets/materials/game_env.tres" id="4_orxxa"]
 [ext_resource type="PackedScene" uid="uid://yrhefj7ccy5b" path="res://Airplane.tscn" id="7_miic2"]
 [ext_resource type="Script" uid="uid://ci2vsorh57rmw" path="res://instances/map.gd" id="8_3vg1c"]
 [ext_resource type="PackedScene" uid="uid://bt1g66qd04g0t" path="res://instances/airport.tscn" id="8_dt8mg"]
@@ -315,7 +315,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28.734344, 5.392433, 0.139701
 environment = ExtResource("4_orxxa")
 
 [node name="sun" type="DirectionalLight3D" parent="environment"]
-transform = Transform3D(0.85868776, 0.4389158, -0.26459065, -0.27884364, 0.83329105, 0.47735998, 0.43000177, -0.3361238, 0.8379257, 0, 0, 0)
+unique_name_in_owner = true
+transform = Transform3D(0.8586878, 0.4389159, -0.26459062, -0.27884364, 0.833291, 0.47736004, 0.4300018, -0.33612382, 0.8379257, 0, 0, 0)
 light_energy = 1.255
 light_indirect_energy = 0.61
 light_volumetric_fog_energy = 0.645

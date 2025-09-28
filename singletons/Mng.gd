@@ -1,10 +1,12 @@
 # Singleton Mng
 extends Node
 
-var is_debug_mode: bool = true
+var is_debug_mode: bool = true #TODO: before build switch to false
 
 var game: Game
 var game_stats: GameStats
+var game_env: Environment = preload("res://assets/materials/game_env.tres")
+
 
 enum CamType {PLANE_FOLLOW, PLANE_FIXED, MAP}
 var current_cam_type: CamType = CamType.PLANE_FIXED:
@@ -22,8 +24,16 @@ var airport: Airport:
 	get: return game.airport if game else null
 var airplane: Airplane:
 	get: return game.airplane if game else null
+var game_sun: DirectionalLight3D:
+	get: return game.sun if game else null
+
+
+var is_scawy: bool = true
+
 
 signal level_setup_complete
+
+
 
 func go_to_main_menu() -> void:
 	get_tree().change_scene_to_file("res://scenes/main_menu.tscn")

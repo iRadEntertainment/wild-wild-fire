@@ -10,7 +10,7 @@ class_name Game
 @onready var airport: Airport = %Airport
 @onready var game_camera: GameCamera = %GameCamera
 @onready var MarkerMapCam: Marker3D = %MarkerMapCam
-
+@onready var sun: DirectionalLight3D = %sun
 
 
 var level_n: int
