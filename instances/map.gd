@@ -25,11 +25,11 @@ class_name Map
 func _fetch_now() -> void:
 	if Engine.is_editor_hint():
 		map_elevation_fetcher._fetch_tile(coord_latitude, coord_longitude, zoom)
-@export var show_satellite: bool = false:
-	set(val):
-		show_satellite = val
-		if not is_node_ready(): await ready
-		%elev_visualizer.visible = show_satellite
+#@export var show_satellite: bool = false:
+	#set(val):
+		#show_satellite = val
+		#if not is_node_ready(): await ready
+		#%elev_visualizer.visible = show_satellite
 
 
 @export_group("Animation")
@@ -38,15 +38,121 @@ func _fetch_now() -> void:
 #endregion
 
 
-@onready var map_elevation_fetcher: MapElevationFetcher = %MapElevationFetcher
-@onready var cells_mng: CellsMng = %cells_mng
-@onready var water_mesh: MeshInstance3D = %water_mesh
-#@onready var simulation: FireSimulation = FireSimulation.new()
-
 var size: Vector2i:
 	get:
 		if not data: return Vector2i.ZERO
 		return data.size
+
+
+#region Build nodes
+var cells_mng: CellsMng
+var map_elevation_fetcher: MapElevationFetcher
+var water_mesh: MeshInstance3D
+var terrain_coll: CollisionShape3D
+var boundary_n: CollisionShape3D
+var boundary_e: CollisionShape3D
+var boundary_s: CollisionShape3D
+var boundary_w: CollisionShape3D
+var boundary_top: CollisionShape3D
+
+
+func _enter_tree() -> void:
+	if get_child_count(true) == 0:
+		build_subnodes()
+	else:
+		cells_mng = find_child("cells_mng")
+		map_elevation_fetcher = find_child("MapElevationFetcher")
+		water_mesh = find_child("water_mesh")
+		terrain_coll = find_child("terrain_coll")
+		boundary_n = find_child("boundary_n")
+		boundary_e = find_child("boundary_e")
+		boundary_s = find_child("boundary_s")
+		boundary_w = find_child("boundary_w")
+		boundary_top = find_child("boundary_top")
+
+
+func build_subnodes() -> void:
+	print("[MAP] building subnodes")
+	
+	map_elevation_fetcher = MapElevationFetcher.new()
+	map_elevation_fetcher.name = "MapElevationFetcher"
+	add_child(map_elevation_fetcher)
+	map_elevation_fetcher.owner = get_parent()
+	
+	cells_mng = CellsMng.new()
+	cells_mng.name = "cells_mng"
+	cells_mng.map = self
+	add_child(cells_mng)
+	cells_mng.owner = get_parent()
+	
+	water_mesh = preload("res://instances/water_mesh.tscn").instantiate()
+	water_mesh.name = "water_mesh"
+	add_child(water_mesh)
+	water_mesh.owner = get_parent()
+	
+	_add_static_terrain()
+	_add_static_boundaries()
+
+
+func _add_static_terrain() -> void:
+	var static_t := StaticBody3D.new()
+	static_t.name = "static_terrain"
+	terrain_coll = CollisionShape3D.new()
+	terrain_coll.name = "terrain_coll"
+	terrain_coll.shape = HeightMapShape3D.new()
+	static_t.add_child(terrain_coll)
+	add_child(static_t)
+	static_t.owner = get_parent()
+	terrain_coll.owner = get_parent()
+
+
+func _add_static_boundaries() -> void:
+	var static_b := StaticBody3D.new()
+	static_b.name = "static_boundaries"
+	
+	boundary_n = CollisionShape3D.new()
+	boundary_n.name = "boundary_n"
+	var n_shape := WorldBoundaryShape3D.new()
+	n_shape.plane = Plane.PLANE_XY
+	boundary_n.shape = n_shape
+	static_b.add_child(boundary_n)
+	
+	boundary_e = CollisionShape3D.new()
+	boundary_e.name = "boundary_e"
+	var e_shape := WorldBoundaryShape3D.new()
+	e_shape.plane = -Plane.PLANE_YZ
+	boundary_e.shape = e_shape
+	static_b.add_child(boundary_e)
+	
+	boundary_s = CollisionShape3D.new()
+	boundary_s.name = "boundary_s"
+	var s_shape := WorldBoundaryShape3D.new()
+	s_shape.plane = -Plane.PLANE_XY
+	boundary_s.shape = s_shape
+	static_b.add_child(boundary_s)
+	
+	boundary_w = CollisionShape3D.new()
+	boundary_w.name = "boundary_w"
+	var w_shape := WorldBoundaryShape3D.new()
+	w_shape.plane = Plane.PLANE_YZ
+	boundary_w.shape = w_shape
+	static_b.add_child(boundary_w)
+	
+	boundary_top = CollisionShape3D.new()
+	boundary_top.name = "boundary_top"
+	var top_shape := WorldBoundaryShape3D.new()
+	top_shape.plane = -Plane.PLANE_XZ
+	boundary_top.shape = top_shape
+	static_b.add_child(boundary_top)
+	
+	add_child(static_b)
+	static_b.owner = get_parent()
+	boundary_n.owner = get_parent()
+	boundary_e.owner = get_parent()
+	boundary_s.owner = get_parent()
+	boundary_w.owner = get_parent()
+	boundary_top.owner = get_parent()
+#endregion
 
 
 func _ready() -> void:
@@ -66,7 +172,9 @@ func _connect_editor_signals() -> void:
 
 func _populate_multimesh() -> void:
 	if not is_node_ready(): return
-	if not data: return
+	if not data:
+		push_warning("No data")
+		return
 	data.update_outputs()
 	_update_multimesh()
 	_update_heighmap_collision()
@@ -74,11 +182,11 @@ func _populate_multimesh() -> void:
 
 
 func _update_multimesh() -> void:
-	%cells_mng.populate_multimesh()
+	cells_mng.populate_multimesh()
 
 
 func _update_heighmap_collision() -> void:
-	var heightmap_shape: HeightMapShape3D = %terrain_coll.shape
+	var heightmap_shape: HeightMapShape3D = terrain_coll.shape
 	var heightmap_img_converted: Image = data.out_img_elevation.duplicate()
 	heightmap_img_converted.convert(Image.FORMAT_RF)
 	heightmap_shape.map_depth = size.x
@@ -87,25 +195,17 @@ func _update_heighmap_collision() -> void:
 
 
 func _update_boundaries() -> void:
-	%water_mesh.position.y = data.in_water_level
-	%boundary_n.position.z = -(data.out_map_world_center.z + data.boundary_offset) * data.cell_world_dim
-	%boundary_e.position.x =  (data.out_map_world_center.x + data.boundary_offset) * data.cell_world_dim
-	%boundary_s.position.z =  (data.out_map_world_center.z + data.boundary_offset) * data.cell_world_dim
-	%boundary_w.position.x = -(data.out_map_world_center.x + data.boundary_offset) * data.cell_world_dim
-	%boundary_top.position.y = (data.in_max_elevation + data.boundary_offset) * data.cell_world_dim
-	
-	print("--- BOUNDARIES ---")
-	print("water_mesh.position.y = ", %water_mesh.position.y)
-	print("boundary_n.position.z = ", %boundary_n.position.z)
-	print("boundary_e.position.x = ", %boundary_e.position.x)
-	print("boundary_s.position.z = ", %boundary_s.position.z)
-	print("boundary_w.position.x = ", %boundary_w.position.x)
-	print("boundary_top.position.y = ", %boundary_top.position.y)
+	water_mesh.position.y = data.in_water_level
+	boundary_n.position.z = -(data.out_map_world_center.z + data.boundary_offset) * data.cell_world_dim
+	boundary_e.position.x =  (data.out_map_world_center.x + data.boundary_offset) * data.cell_world_dim
+	boundary_s.position.z =  (data.out_map_world_center.z + data.boundary_offset) * data.cell_world_dim
+	boundary_w.position.x = -(data.out_map_world_center.x + data.boundary_offset) * data.cell_world_dim
+	boundary_top.position.y = (data.in_max_elevation + data.boundary_offset) * data.cell_world_dim
 
 
 func _clear_multimesh() -> void:
 	if not is_node_ready(): await ready
-	%cells_mng.clear()
+	cells_mng.clear()
 
 
 func _update_elevation_heightmap() -> void:
@@ -135,4 +235,4 @@ func _set_anim_ratio(val: float) -> void:
 
 
 func _on_water_level_updated(water_level_meters: float) -> void:
-	%water_mesh.position.y = water_level_meters
+	water_mesh.position.y = water_level_meters

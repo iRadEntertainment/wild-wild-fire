@@ -1,0 +1,22 @@
+[gd_scene load_steps=4 format=3 uid="uid://dhc5uxeopiepa"]
+
+[ext_resource type="Material" uid="uid://bfpeec0jm3jhs" path="res://assets/materials/godot-realistic-water-master/water/Water_2.material" id="1_f04uk"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_bsyhm"]
+size = Vector2(2000, 2000)
+subdivide_width = 20
+subdivide_depth = 20
+
+[sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_bsyhm"]
+
+[node name="water_mesh" type="MeshInstance3D"]
+mesh = SubResource("PlaneMesh_bsyhm")
+surface_material_override/0 = ExtResource("1_f04uk")
+
+[node name="static" type="StaticBody3D" parent="."]
+collision_layer = 3
+collision_mask = 8
+
+[node name="coll" type="CollisionShape3D" parent="static"]
+shape = SubResource("WorldBoundaryShape3D_bsyhm")
+debug_color = Color(0, 0.6013788, 0.70120233, 1)

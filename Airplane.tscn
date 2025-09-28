@@ -268,9 +268,12 @@ collision_mask = 4
 
 [node name="sfx_idle_sound" type="AudioStreamPlayer3D" parent="."]
 stream = ExtResource("3_2ft4c")
+volume_db = -0.235
+unit_size = 2.0
 autoplay = true
 bus = &"Sfx"
 
 [node name="sfx_thrust" type="AudioStreamPlayer3D" parent="."]
+unit_size = 2.0
 autoplay = true
 bus = &"Sfx"

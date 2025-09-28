@@ -3,6 +3,5 @@
 [resource]
 resource_name = "BurntTreeMat"
 cull_mode = 2
-albedo_color = Color(0.17641911, 0.17641908, 0.17641908, 1)
-metallic_specular = 0.18
+albedo_color = Color(0, 0, 0, 1)
 roughness = 0.5
