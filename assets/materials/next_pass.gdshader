@@ -3,54 +3,49 @@
 shader_type spatial;
 render_mode blend_mix, depth_draw_never, cull_back, diffuse_burley, specular_schlick_ggx;
 
-uniform sampler2D heat_map : source_color, filter_linear_mipmap, repeat_enable;
-uniform sampler2D burnt_map : source_color, filter_linear_mipmap, repeat_enable;
+uniform ivec2 map_size = ivec2(128);
+uniform sampler2D firesim_output : source_color, filter_linear_mipmap, repeat_enable;
 uniform vec4 color_burn : source_color;
 uniform vec4 color_ambers : source_color;
+uniform vec4 color_wet : source_color;
+uniform float burnt_to_heat_ratio : hint_range(0.5, 1.1, 0.001) = 0.96;
+uniform float burn_spread : hint_range(0.0, 10.0, 0.01) = 2.0;
+uniform float ambers_spread : hint_range(0.0, 3.0, 0.01) = 0.5;
 
-uniform sampler2D texture_albedo : source_color, filter_linear_mipmap, repeat_enable;
+uniform sampler2D noise_tex : source_color, filter_linear_mipmap, repeat_enable;
+uniform sampler2D noise_bump : source_color, filter_linear_mipmap, repeat_enable;
 uniform ivec2 albedo_texture_size;
 uniform float alpha_hash_scale : hint_range(0.0, 2.0, 0.01);
 uniform float point_size : hint_range(0.1, 128.0, 0.1);
 
 uniform float roughness : hint_range(0.0, 1.0);
-uniform sampler2D texture_metallic : hint_default_white, filter_linear_mipmap, repeat_enable;
-uniform vec4 metallic_texture_channel;
-uniform sampler2D texture_roughness : hint_roughness_r, filter_linear_mipmap, repeat_enable;
-
 uniform float specular : hint_range(0.0, 1.0, 0.01);
 uniform float metallic : hint_range(0.0, 1.0, 0.01);
-
-uniform sampler2D texture_emission : source_color, hint_default_black, filter_linear_mipmap, repeat_enable;
-uniform vec4 emission : source_color;
 uniform float emission_energy : hint_range(0.0, 100.0, 0.01);
-varying vec3 uv1_triplanar_pos;
 
+varying vec3 uv1_triplanar_pos;
 uniform float uv1_blend_sharpness : hint_range(0.0, 150.0, 0.001);
 varying vec3 uv1_power_normal;
-
 uniform vec3 uv1_scale;
 uniform vec3 uv1_offset;
 uniform vec3 uv2_scale;
 uniform vec3 uv2_offset;
 
 varying flat ivec2 grid_pos;
+varying flat vec2 grid_pos_norm;
 
+// Fire sim Output Image
+float get_heat() { return texture(firesim_output, grid_pos_norm).r; }
+float get_moisture_internal() { return texture(firesim_output, grid_pos_norm).g; }
+float get_moisture_external() { return texture(firesim_output, grid_pos_norm).b; }
+float get_burnt() { return 1.0 - texture(firesim_output, grid_pos_norm).a; }
 
-float get_heat() {
-	float heat = texture(heat_map, vec2(grid_pos)/128.0).r;
-	return heat;
-}
-
-
-float get_burnt_ratio() {
-	float burnt = texture(burnt_map, vec2(grid_pos)/128.0).r;
-	return burnt;
-}
 
 
 void vertex() {
 	grid_pos = ivec2(INSTANCE_CUSTOM.rg);
+	grid_pos_norm = vec2(grid_pos)/vec2(map_size);
+	
 	vec3 normal = NORMAL;
 
 	TANGENT = vec3(0.0, 0.0, -1.0) * abs(normal.x);
@@ -79,29 +74,42 @@ vec4 triplanar_texture(sampler2D p_sampler, vec3 p_weights, vec3 p_triplanar_pos
 }
 
 void fragment() {
-	vec4 noise_tex = triplanar_texture(texture_albedo, uv1_power_normal, uv1_triplanar_pos);
+	float noise_value = triplanar_texture(noise_tex, uv1_power_normal, uv1_triplanar_pos).r;
+	//noise_value = (noise_value * 2.0) - 1.0;
+	//vec4 noise_tex = texture(noise_tex, UV);
+	float burnt = get_burnt();
 	float heat = get_heat();
-	float burnt_ratio = get_burnt_ratio();
-	vec4 noise_col;
-	noise_col.rgb = mix(color_burn.rgb, color_ambers.rgb, noise_tex.r * (heat - burnt_ratio));
-	noise_col.rgb += mix(color_burn.rgb, color_ambers.rgb, noise_tex.r * (heat - burnt_ratio));
-	noise_col.a = smoothstep(0.0, 1.0, (heat + burnt_ratio) * noise_tex.r);
-
-	float metallic_tex = dot(triplanar_texture(texture_metallic, uv1_power_normal, uv1_triplanar_pos), metallic_texture_channel);
-	METALLIC = metallic_tex * metallic;
-	SPECULAR = specular;
-
-	vec4 roughness_texture_channel = vec4(1.0, 0.0, 0.0, 0.0);
-	float roughness_tex = dot(triplanar_texture(texture_roughness, uv1_power_normal, uv1_triplanar_pos), roughness_texture_channel);
-	ROUGHNESS = roughness_tex * roughness;
-
-	// Emission: Enabled
-	vec3 emission_tex = triplanar_texture(texture_emission, uv1_power_normal, uv1_triplanar_pos).rgb;
-	// Emission Operator: Add
-	EMISSION = noise_col.rgb * heat * emission_energy;
-	//ALPHA *= smoothstep(noise_tex.r, 0.0, heat);
-	//ALPHA_HASH_SCALE = alpha_hash_scale;
+	float moisture_int = get_moisture_internal();
+	float moisture_ext = get_moisture_external();
+	float tot_moisture = (moisture_ext + moisture_int);
 	
-	ALBEDO.rgb = noise_col.rgb;
-	ALPHA *= noise_col.a;
+	vec4 burnt_col = color_burn;
+	burnt_col.a = burnt * mix(0.6, 1.0, noise_value * burn_spread);
+	vec4 heat_col = color_ambers;
+	heat_col.a = (heat - burnt * burnt_to_heat_ratio) * smoothstep(0.0, 1.0, pow(noise_value, heat/ambers_spread));
+	vec4 wet_col = color_wet * tot_moisture;
+	wet_col.a = moisture_ext * mix(0.0, 1.0, 1.0 - noise_value);
+	wet_col.a = min(color_wet.a, wet_col.a);
+	
+	
+	//vec4 noise_col;
+	//noise_col.rgb = mix(color_burn.rgb, color_ambers.rgb, noise_value * (heat - burnt));
+	//noise_col.rgb += mix(color_burn.rgb, color_ambers.rgb, noise_value * (heat - burnt));
+	//noise_col.a = smoothstep(0.0, 1.0, (heat + burnt) * noise_value);
+
+	//ALBEDO.b = tot_moisture;
+	NORMAL = texture(noise_bump, UV).rgb;
+	METALLIC = tot_moisture * metallic;
+	SPECULAR = tot_moisture * specular;
+	ROUGHNESS = mix(1.0, 0.0, moisture_ext);
+	//1.0 - (moisture_ext + moisture_int);
+	//EMISSION = color_ambers.rgb * heat * emission_energy;
+	vec3 emission_amt = color_ambers.rgb * emission_energy;
+	emission_amt *= heat_col.a;
+	EMISSION = emission_amt;
+	
+	vec3 final_col = mix(wet_col.rgb, burnt_col.rgb, burnt_col.a);
+	final_col += heat_col.rgb * heat_col.a;
+	ALBEDO.rgb = final_col;
+	ALPHA = max(max(burnt_col.a, heat_col.a), wet_col.a);
 }

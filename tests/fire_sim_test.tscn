@@ -1,5 +1,6 @@
-[gd_scene load_steps=6 format=3 uid="uid://1fgi2oiec67y"]
+[gd_scene load_steps=7 format=3 uid="uid://1fgi2oiec67y"]
 
+[ext_resource type="Script" uid="uid://jtr7cmr5le1" path="res://tests/fire_sim_test.gd" id="1_1f5a5"]
 [ext_resource type="Script" uid="uid://fyrf5rhnbh16" path="res://classes/FireSim/FireSimTextureDisplayTest.cs" id="1_dkcha"]
 [ext_resource type="Texture2D" uid="uid://cvqg4m8ea0qx3" path="res://assets/map/sim-map-textures/example-test/Brunable.png" id="2_1f5a5"]
 [ext_resource type="Texture2D" uid="uid://0kx0452g6l6p" path="res://assets/map/sim-map-textures/example-test/ExternalM.png" id="3_mtwqd"]
@@ -13,6 +14,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_1f5a5")
 
 [node name="ColorRect" type="ColorRect" parent="."]
 layout_mode = 1
@@ -34,12 +36,31 @@ stretch_mode = 5
 script = ExtResource("1_dkcha")
 fireCells = NodePath("FireSimulation")
 runTexturedMap = false
-startingPos = Vector2i(50, 50)
+startingPos = Vector2i(64, 96)
+mapSize = Vector2i(128, 128)
 burnableMap = ExtResource("2_1f5a5")
 externalMoistureMap = ExtResource("3_mtwqd")
 internalMoistureMap = ExtResource("4_1013e")
 metadata/_custom_type_script = "uid://fyrf5rhnbh16"
 
 [node name="FireSimulation" type="Node3D" parent="FireSimTextureDisplayTest"]
+unique_name_in_owner = true
 script = ExtResource("5_snpfl")
+simSpeed = 40.0
 metadata/_custom_type_script = "uid://bq5pc7u8ql0hi"
+
+[node name="btn_snapshot" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -8.0
+offset_top = -8.0
+grow_horizontal = 0
+grow_vertical = 0
+text = "Take Snapshot
+"
+
+[connection signal="pressed" from="btn_snapshot" to="." method="_on_btn_snapshot_pressed"]

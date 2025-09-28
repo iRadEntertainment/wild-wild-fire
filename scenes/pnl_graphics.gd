@@ -22,6 +22,10 @@ const BASE_RESOLUTIONS := [
 ]
 
 
+var game_env: Environment = preload("res://assets/materials/game_env.tres")
+
+
+
 func _ready() -> void:
 	_populate_mode()
 	_populate_vsync()
@@ -84,6 +88,10 @@ func _select_current_values() -> void:
 			best_idx = i
 	if best_idx >= 0:
 		%opt_res.select(best_idx)
+	
+	%sl_max_fps.value = Engine.max_fps
+	%lb_max_fps.text = str(Engine.max_fps)
+	%ck_glow.button_pressed = game_env.glow_enabled
 
 
 func _connect_signals() -> void:
@@ -117,3 +125,19 @@ func _get_selected_resolution_or_current() -> Vector2i:
 	if %opt_res.selected >= 0:
 		return %opt_res.get_item_metadata(%opt_res.selected)
 	return get_window().size
+
+
+func _on_sl_max_fps_value_changed(value: float) -> void:
+	Engine.max_fps = int(value)
+	%lb_max_fps.text = str(value)
+	if value == 29:
+		%lb_max_fps.text = "Uncapped"
+		Engine.max_fps = 0
+
+
+func _on_ck_glow_toggled(toggled_on: bool) -> void: game_env.glow_enabled = toggled_on
+
+
+func _on_sl_glow_strength_value_changed(value: float) -> void:
+	%lb_glow_strength.text = ".02f" % value
+	game_env.glow_strength = value

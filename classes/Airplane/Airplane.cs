@@ -36,6 +36,7 @@ public partial class Airplane : CharacterBody3D
 	public bool IsTakingOff = false;
 	public bool IsLanding = false;
 	public bool IsLanded = false;
+	public bool IsOutOfFuel = false;
 	public float ElevFromSea = 0.0f;
 	public float ElevFromTerrain = 0.0f;
 	private float _currentFuel = 0.0f;
@@ -136,15 +137,15 @@ public partial class Airplane : CharacterBody3D
 		}
 		
 		ProcessNormalFlight(delta);
-		CheckWaterLevelRefill(delta);
 		ProcessFuelConsumption(delta);
 		CheckOutOfFuel(delta);
+		CheckWaterLevelRefill(delta);
 		UpdatePlaneTransform(delta);
 	}
 
 	private void ProcessNormalFlight(double delta)
 	{
-		Vector2 inputDir = Input.GetVector("steer_left", "steer_right", "pitch_up", "pitch_down");
+		Vector2 inputDir = Input.GetVector("steer_left", "steer_right", "pitch_down", "pitch_up");
 		float thrustInput = Input.GetAxis("throttle_down", "throttle_up");
 		IsBoosting = Input.IsActionPressed("boost");
 		float boostMult = IsBoosting ? 1.0f : settings.BoostMultiplier;
@@ -170,7 +171,7 @@ public partial class Airplane : CharacterBody3D
 	{
 		if (CurrentFuel > 0.0f) { return; }
 		
-		_targetPitch = settings.MaxPitchAngle;
+		_targetPitch = -settings.MaxPitchAngle;
 		_targetSpeed = settings.MinFlySpeed;
 	}
 
@@ -221,11 +222,12 @@ public partial class Airplane : CharacterBody3D
 	private void ProcessFuelConsumption(double delta)
 	{
 		CurrentFuel -= settings.FuelConsumptionRate * CurrentSpeed * (float)delta;
-		if (CurrentFuel <= 0.0f)
+		if (CurrentFuel < 0.0f)
 		{
 			CurrentFuel = 0.0f;
 			EmitSignal("OutOfFuel");
 		}
+		IsOutOfFuel = CurrentFuel == 0.0f;
 	}
 
 	private void CheckWaterLevelRefill(double delta)
@@ -237,20 +239,7 @@ public partial class Airplane : CharacterBody3D
 		}
 		if (IsOnWater)
 		{
-			_targetSpeed = settings.MinFlySpeed;
+			_targetSpeed = !IsOutOfFuel ? settings.MinFlySpeed : 0.0f;
 		}
-	}
-	private void ProcessLanding(double delta)
-	{
-		// TODO: Implement landing logic
-		// The airport will have two Node3Ds (marker_land_front, marker_land_back)
-		// If the plane enters an Area3D of the airport, it will check if it is aligned enough with the landing strip
-		// If so it will land on the first of the two markers and reach a full stop at the other marker
-		// opposite of the landing approach side.
-	}
-
-	private void ProcessTakeoff(double delta)
-	{
-		// TODO: Implement takeoff logic
 	}
 }
