@@ -14,6 +14,8 @@ public partial class Airport : Node3D
 
     [Export]
     private float minFuelForVisibility = .4f;
+    private const float CONST_minFuelThresholdPercent = .4f;
+
 
     public Marker3D MarkerTower;
 
@@ -46,13 +48,7 @@ public partial class Airport : Node3D
     [Export]
     private float refillDuration = .5f;
     [Export]
-    private float tweenDuration_MoveToLandingStart = .1f;
-    [Export]
     private float tweenDuration_MoveToLandingEnd = .3f;
-    [Export]
-    private float tweenDuration_MoveToLandedMidPoint = .4f;
-    [Export]
-    private float tweenDuration_MoveToTakingOffStart = .4f;
     [Export]
     private float tweenDuration_MoveToTakingOffEnd = .3f;
 
@@ -65,6 +61,8 @@ public partial class Airport : Node3D
 
         gasOrb.BodyEntered += OnBodyEntered;
         ToggleGasOrb(doesExist: false);
+
+        minFuelForVisibility = airplane.settings.MaxFuel * CONST_minFuelThresholdPercent;
 
         CallDeferred("Setup");
         // CallDeferred("SpawnGates");
@@ -96,7 +94,7 @@ public partial class Airport : Node3D
 
     private void Setup()
     {
-        SpawnGates();
+        //SpawnGates();
 
         pathStartPoint = gateLocations[0];
         pathMidPoint = markerOne.Position.Lerp(markerTwo.Position, .5f);
@@ -127,14 +125,11 @@ public partial class Airport : Node3D
         AddChild(gateTwo);
         gateOne.Position = gateLocations[0];
         gateTwo.Position = gateLocations[1];
-
-        // landingPathOne.Position = gateOne.Position;
-        // landingPathTwo.Position = gateTwo.Position;
     }
 
     public void RefillPlane(Airplane plane)
     {
-        plane.CurrentFuel += refillAmount;
+        plane.CurrentFuel = plane.settings.MaxFuel;
         GD.Print($"Airport.cs: Plane Fuel Amount: {plane.CurrentFuel}");
     }
 
@@ -149,20 +144,19 @@ public partial class Airport : Node3D
         GD.Print($"Beginning Landing Process");
         Vector3 startRotation = Vector3.Zero;
 
+        LandingPath currentPath = landingPathOne;
+        if (activatedGate == gateTwo)
+        {
+            currentPath = landingPathTwo;
+        }
+
         // Remove Gates to prevent looping
         gateOne.QueueFree();
         gateTwo.QueueFree();
         gateOne = null;
         gateTwo = null;
 
-        LandingPath currentPath = landingPathOne;
-        if (activatedGate == gateTwo)
-        {
-            currentPath = landingPathTwo;
-        }
         currentPath.pathFollow.Set("progress_ratio", 0);
-        // If reversePath is true, reparent to landingPathTwo, else reparent to landingPathOne
-
 
         airplane.GlobalPosition = activatedGate.GlobalPosition;
         airplane.Reparent(currentPath.pathFollow);

@@ -79,10 +79,8 @@ gasRefillGateScene = ExtResource("5_3ya7c")
 gateLocations = Array[Vector3]([Vector3(0, 8.824565, -14.6879425), Vector3(0, 8.824565, 15.3120575)])
 landingPathOne = NodePath("LandingPath1")
 landingPathTwo = NodePath("LandingPath2")
-refillDuration = 3.0
+refillDuration = 1.0
 tweenDuration_MoveToLandingEnd = 3.0
-tweenDuration_MoveToLandedMidPoint = 3.0
-tweenDuration_MoveToTakingOffStart = 3.0
 tweenDuration_MoveToTakingOffEnd = 3.0
 
 [node name="building" parent="." instance=ExtResource("3_shd3s")]
