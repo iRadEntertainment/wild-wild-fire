@@ -100,10 +100,10 @@ public partial class Airport : Node3D
         pathMidPoint = markerOne.Position.Lerp(markerTwo.Position, .5f);
         pathEndPoint = gateLocations[1];
 
-        Vector3 pathStartOutVec = new Vector3(0, 0, 6);
-        Vector3 pathMidInVec = new Vector3(0, 0, -15);
-        Vector3 pathMidOutVec = new Vector3(0, 0, 6);
-        Vector3 pathEndInVec = new Vector3(0, 0, -8);
+        Vector3 pathStartOutVec = new Vector3(0, 0, -gateLocations[0].Z / 3);
+        Vector3 pathMidInVec = new Vector3(0, 0, gateLocations[0].Z);
+        Vector3 pathMidOutVec = new Vector3(0, 0, -gateLocations[0].Z / 3);
+        Vector3 pathEndInVec = new Vector3(0, 0, gateLocations[0].Z / 2);
 
         landingPathOne.SetupPath(pathStartPoint, Vector3.Zero, pathStartOutVec);
         landingPathOne.SetupPath(pathMidPoint, pathMidInVec, pathMidOutVec);
