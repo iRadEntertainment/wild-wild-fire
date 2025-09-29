@@ -14,8 +14,8 @@ mesh = SubResource("PlaneMesh_bsyhm")
 surface_material_override/0 = ExtResource("1_f04uk")
 
 [node name="static" type="StaticBody3D" parent="."]
-collision_layer = 3
-collision_mask = 8
+collision_layer = 2
+collision_mask = 24
 
 [node name="coll" type="CollisionShape3D" parent="static"]
 shape = SubResource("WorldBoundaryShape3D_bsyhm")

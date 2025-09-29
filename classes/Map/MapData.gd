@@ -94,6 +94,18 @@ var mesh_trees_dry_folder: String:
 @export var out_mesh_roads_h: PackedVector2Array
 @export var out_mesh_roads_v: PackedVector2Array
 @export var out_mesh_roads_cross: PackedVector2Array
+
+
+@export_group("FireSim", "firesim_")
+@export var firesim_starting_cell: Vector2i = Vector2i(64, 96)
+@export var firesim_pre_sim_ticks: int = 100
+@export_range(0.0, 1.0, 0.01) var firesim_average_moisture: float = 0.5
+
+@export_subgroup("Output Textures", "out_firesim_")
+@export var out_firesim_burnable: Texture2D
+@export var out_firesim_int_moisture: Texture2D
+@export var out_firesim_ext_moisture: Texture2D
+
 @warning_ignore_restore("unused_private_class_variable")
 #endregion
 
@@ -216,11 +228,15 @@ func _update_out_img_game_tiles() -> void:
 #region Popoluate Data
 func populate_data() -> void:
 	rng.seed = hash(rng_seed)
+	# tiles
 	_clear_mesh_definition_data()
 	_populate_tile_data()
 	_populate_roads_data()
 	_populate_buildings_data()
 	_populate_trees_data()
+	
+	# fire sim
+	_prepare_firesim_out()
 
 
 func _clear_mesh_definition_data() -> void:
@@ -416,6 +432,58 @@ func _reset_out_tiles() -> void:
 	out_mesh_roads_h.clear()
 	out_mesh_roads_v.clear()
 	out_mesh_roads_cross.clear()
+
+
+func _prepare_firesim_out() -> void:
+	var img_burnable := Image.create(size.x, size.y, false, Image.FORMAT_L8)
+	var img_int_moisture := Image.create(size.x, size.y, false, Image.FORMAT_L8)
+	var img_ext_moisture := Image.create(size.x, size.y, false, Image.FORMAT_L8)
+	
+	for x in size.x:
+		for y in size.y:
+			var grid_pos := Vector2i(x, y)
+			var is_sand: bool = out_btm_tiles_sand.get_bitv(grid_pos)
+			var is_rock: bool = out_btm_tiles_rock.get_bitv(grid_pos)
+			var is_water: bool = out_btm_water.get_bitv(grid_pos)
+			if is_sand or is_rock or is_water: continue
+			
+			var is_tree: bool = out_btm_trees.get_bitv(grid_pos)
+			var is_building: bool = out_btm_buildings.get_bitv(grid_pos)
+			var is_grass: bool = out_btm_tiles_grass.get_bitv(grid_pos) and not is_tree
+			var is_road: bool = out_btm_roads.get_bitv(grid_pos)
+			
+			var wetness: float = 1.0 - out_img_dry.get_pixelv(grid_pos).r * firesim_average_moisture
+			var burnable_value: float
+			var int_moist_value: float
+			var ext_moist_value: float
+			
+			if is_tree:
+				burnable_value = 0.8
+				int_moist_value = 1.0 * wetness
+				ext_moist_value = 0.0
+			elif is_building:
+				burnable_value = 1.0
+				int_moist_value = 0.5 * wetness
+				ext_moist_value = 0.0
+			elif is_grass:
+				burnable_value = 0.7
+				int_moist_value = 0.2 * wetness
+				ext_moist_value = 0.05
+			elif is_road:
+				burnable_value = 0.6
+				int_moist_value = 0.1 * wetness
+				ext_moist_value = 0.2
+			
+			var col_burnable := Color.WHITE * burnable_value
+			var col_int_moist := Color.WHITE * int_moist_value
+			var col_ext_moist := Color.WHITE * ext_moist_value
+			img_burnable.set_pixelv(grid_pos, col_burnable)
+			img_int_moisture.set_pixelv(grid_pos, col_int_moist)
+			img_ext_moisture.set_pixelv(grid_pos, col_ext_moist)
+	
+	out_firesim_burnable = ImageTexture.create_from_image(img_burnable)
+	out_firesim_int_moisture = ImageTexture.create_from_image(img_int_moisture)
+	out_firesim_ext_moisture = ImageTexture.create_from_image(img_ext_moisture)
 #endregion
 
 

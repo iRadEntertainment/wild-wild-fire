@@ -20,25 +20,25 @@ public partial class Airplane : CharacterBody3D
 	private RayCast3D raySea;
 	private RayCast3D rayTerrain;
 	public Marker3D MarkerBottom;
-	public Marker3D MarkerWaterSpawnRight;
-	public Marker3D MarkerWaterSpawnLeft;
+	private Marker3D MarkerWaterSpawnRight;
+	private Marker3D MarkerWaterSpawnLeft;
 
 	// Current state
-	public float CurrentSpeed = 0.0f;
-	public float CurrentPitch = 0.0f;
-	public float CurrentRoll = 0.0f;
-	public float CurrentThrust = 0.0f;
-	public Vector2 CurrentDirection = Vector2.Zero;
-	public bool IsParked = true;
-	public bool IsBoosting = false;
-	public bool IsOnWater = false;
-	public bool IsRefillingWater = false;
-	public bool IsTakingOff = false;
-	public bool IsLanding = false;
-	public bool IsLanded = false;
-	public bool IsOutOfFuel = false;
-	public float ElevFromSea = 0.0f;
-	public float ElevFromTerrain = 0.0f;
+	public float CurrentSpeed {get; set; } = 0.0f;
+	public float CurrentPitch {get; set; } = 0.0f;
+	public float CurrentRoll {get; set; } = 0.0f;
+	public float CurrentThrust {get; set; } = 0.0f;
+	public Vector2 CurrentDirection {get; set; } = Vector2.Zero;
+	public bool IsParked {get; set; } = true;
+	public bool IsBoosting {get; set; } = false;
+	public bool IsOnWater {get; set; } = false;
+	public bool IsRefillingWater {get; set; } = false;
+	public bool IsTakingOff {get; set; } = false;
+	public bool IsLanding {get; set; } = false;
+	public bool IsLanded {get; set; } = false;
+	public bool IsOutOfFuel {get; set; } = false;
+	public float ElevFromSea {get; set; } = 0.0f;
+	public float ElevFromTerrain {get; set; } = 0.0f;
 	private float _currentFuel = 0.0f;
 	public float CurrentFuel
 	{
@@ -51,6 +51,7 @@ public partial class Airplane : CharacterBody3D
 		get => _currentWater;
 		set => _currentWater = Mathf.Clamp(value, 0.0f, settings.MaxWater);
 	}
+	public bool ConsumeFuel = true;
 
 	// Target state
 	private float _targetSpeed = 0.0f;
@@ -137,7 +138,7 @@ public partial class Airplane : CharacterBody3D
 		}
 		
 		ProcessNormalFlight(delta);
-		ProcessFuelConsumption(delta);
+		if (ConsumeFuel) {ProcessFuelConsumption(delta);}
 		CheckOutOfFuel(delta);
 		CheckWaterLevelRefill(delta);
 		UpdatePlaneTransform(delta);

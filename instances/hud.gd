@@ -13,6 +13,11 @@ func _ready() -> void:
 	%pnl_debug.hide()
 
 
+func setup() -> void:
+	Mng.game.simulation_started.connect(_on_game_simulation_started)
+	
+
+
 func _input(event: InputEvent) -> void:
 	if event is InputEventKey:
 		if event.is_pressed() and event.keycode == KEY_BACKSLASH and Mng.is_debug_mode:
@@ -31,6 +36,10 @@ func _update_fuel_and_water_status() -> void:
 	var water_ratio: float = airplane.CurrentWater / airplane.settings.MaxWater
 	%progress_fuel.value = fuel_ratio
 	%progress_water.value = water_ratio
+
+
+func _on_game_simulation_started() -> void:
+	%firesim_preview.texture = Mng.game.fire_simulation.OutputTexture
 
 
 func _update_airplane_info() -> void:

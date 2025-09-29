@@ -37,6 +37,7 @@ script = ExtResource("1_dkcha")
 fireCells = NodePath("FireSimulation")
 runTexturedMap = false
 startingPos = Vector2i(64, 96)
+preSimSteps = 3000
 mapSize = Vector2i(128, 128)
 burnableMap = ExtResource("2_1f5a5")
 externalMoistureMap = ExtResource("3_mtwqd")

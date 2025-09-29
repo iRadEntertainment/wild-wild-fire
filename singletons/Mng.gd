@@ -28,9 +28,18 @@ var game_sun: DirectionalLight3D:
 	get: return game.sun if game else null
 
 
+# game modifier
 var is_scawy: bool = true
+var is_infinite_fuel: bool = false:
+	set(val):
+		is_infinite_fuel = val
+		if airplane:
+			airplane.ConsumeFuel = !val
+			if is_infinite_fuel:
+				airplane.CurrentFuel = airplane.settings.MaxFuel
 
 
+signal game_ready
 signal level_setup_complete
 
 
@@ -52,6 +61,9 @@ func start_game(level_n: int) -> void:
 	get_tree().change_scene_to_file(level_path)
 	await get_tree().tree_changed
 	game = get_tree().current_scene
+	if not game.is_node_ready(): await game.ready
+	game_ready.emit()
+	
 	game_stats.new_level(game)
 	if not game.is_setup: await game.setup_complete
 	Aud.stop_music()

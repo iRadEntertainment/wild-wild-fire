@@ -94,6 +94,25 @@ grow_vertical = 2
 theme = ExtResource("1_oskb6")
 script = ExtResource("1_hvx1s")
 
+[node name="PanelContainer" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -332.0
+offset_top = -332.0
+grow_horizontal = 0
+grow_vertical = 0
+
+[node name="firesim_preview" type="TextureRect" parent="PanelContainer"]
+unique_name_in_owner = true
+texture_filter = 1
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 2
+expand_mode = 1
+
 [node name="vb_top_left" type="VBoxContainer" parent="."]
 layout_mode = 0
 offset_left = 15.0

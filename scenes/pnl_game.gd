@@ -9,6 +9,7 @@ var _capture_pad: bool = true
 
 func _ready() -> void:
 	%ck_scawy.button_pressed = Mng.is_scawy
+	%ck_inf_fuel.button_pressed = Mng.is_infinite_fuel
 	_populate()
 
 
@@ -127,5 +128,5 @@ func _on_rebind_requested(action_name: StringName, entry: EntryInputRemap) -> vo
 	_listening_entry.btn_input.text = "Press any key/button… (Esc to cancel)"
 
 
-func _on_ck_scawy_toggled(toggled_on: bool) -> void:
-	Mng.is_scawy = toggled_on
+func _on_ck_scawy_toggled(toggled_on: bool) -> void: Mng.is_scawy = toggled_on
+func _on_ck_inf_fuel_toggled(toggled_on: bool) -> void: Mng.is_infinite_fuel = toggled_on
