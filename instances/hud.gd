@@ -11,11 +11,12 @@ var airplane: Airplane:
 
 func _ready() -> void:
 	%pnl_debug.hide()
+	%pnl_won.hide()
 
 
 func setup() -> void:
-	Mng.game.simulation_started.connect(_on_game_simulation_started)
-	
+	Mng.game.game_won.connect(_on_game_won)
+	Mng.game.game_lost.connect(_on_game_lost)
 
 
 func _input(event: InputEvent) -> void:
@@ -38,8 +39,10 @@ func _update_fuel_and_water_status() -> void:
 	%progress_water.value = water_ratio
 
 
-func _on_game_simulation_started() -> void:
-	%firesim_preview.texture = Mng.game.fire_simulation.OutputTexture
+func _on_game_won() -> void:
+	%pnl_won.show()
+func _on_game_lost() -> void:
+	pass
 
 
 func _update_airplane_info() -> void:

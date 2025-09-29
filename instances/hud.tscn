@@ -1,7 +1,8 @@
-[gd_scene load_steps=10 format=3 uid="uid://cyy7bec3ko53i"]
+[gd_scene load_steps=11 format=3 uid="uid://cyy7bec3ko53i"]
 
 [ext_resource type="Script" uid="uid://d0cgk0g6nbqhe" path="res://instances/hud.gd" id="1_hvx1s"]
 [ext_resource type="Theme" uid="uid://byujsu8xvuvyt" path="res://assets/theme/main.theme" id="1_oskb6"]
+[ext_resource type="PackedScene" uid="uid://cktbf881367es" path="res://instances/minimap.tscn" id="3_0osg1"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_oskb6"]
 font_size = 20
@@ -13,7 +14,7 @@ shadow_color = Color(0, 0, 0, 0.14901961)
 shadow_offset = Vector2(1, 2)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_oskb6"]
-bg_color = Color(0, 0, 0, 0.105882354)
+bg_color = Color(0, 0, 0, 0.3254902)
 border_width_left = 1
 border_width_top = 1
 border_width_right = 1
@@ -46,7 +47,7 @@ shadow_color = Color(0, 0, 0, 0.14901961)
 shadow_offset = Vector2(1, 2)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wa3vo"]
-bg_color = Color(0, 0, 0, 0.105882354)
+bg_color = Color(0, 0, 0, 0.3372549)
 border_width_left = 1
 border_width_top = 1
 border_width_right = 1
@@ -63,7 +64,7 @@ expand_margin_right = 2.0
 expand_margin_bottom = 2.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_n10qx"]
-bg_color = Color(0.46666667, 0.6666667, 0.7882353, 1)
+bg_color = Color(0.6192735, 0.8234746, 0.9529527, 1)
 corner_radius_top_left = 8
 corner_radius_top_right = 8
 corner_radius_bottom_right = 8
@@ -94,30 +95,25 @@ grow_vertical = 2
 theme = ExtResource("1_oskb6")
 script = ExtResource("1_hvx1s")
 
-[node name="PanelContainer" type="PanelContainer" parent="."]
+[node name="minimap" parent="." instance=ExtResource("3_0osg1")]
 layout_mode = 1
 anchors_preset = 3
 anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -332.0
-offset_top = -332.0
+offset_left = -256.0
+offset_top = -256.0
+offset_right = 0.0
+offset_bottom = 0.0
 grow_horizontal = 0
 grow_vertical = 0
-
-[node name="firesim_preview" type="TextureRect" parent="PanelContainer"]
-unique_name_in_owner = true
-texture_filter = 1
-custom_minimum_size = Vector2(128, 128)
-layout_mode = 2
-expand_mode = 1
 
 [node name="vb_top_left" type="VBoxContainer" parent="."]
 layout_mode = 0
 offset_left = 15.0
 offset_top = 16.0
-offset_right = 487.0
+offset_right = 419.0
 offset_bottom = 76.0
 
 [node name="GridContainer" type="GridContainer" parent="vb_top_left"]
@@ -156,6 +152,7 @@ theme_override_styles/background = SubResource("StyleBoxFlat_wa3vo")
 theme_override_styles/fill = SubResource("StyleBoxFlat_n10qx")
 max_value = 1.0
 step = 0.001
+value = 0.4
 show_percentage = false
 
 [node name="pnl_debug" type="PanelContainer" parent="."]
@@ -182,5 +179,28 @@ text = "Debug info (press \"\\\" to toggle)"
 unique_name_in_owner = true
 layout_mode = 2
 text = "fdasdsa dsada"
+fit_content = true
+autowrap_mode = 0
+
+[node name="pnl_won" type="PanelContainer" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -16.0
+offset_top = -16.0
+offset_right = 16.0
+offset_bottom = 16.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="RichTextLabel" parent="pnl_won"]
+layout_mode = 2
+theme_override_font_sizes/normal_font_size = 50
+bbcode_enabled = true
+text = "[wave]The fire is out!"
 fit_content = true
 autowrap_mode = 0

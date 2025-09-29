@@ -173,6 +173,22 @@ custom_minimum_size = Vector2(360, 0)
 layout_mode = 2
 size_flags_horizontal = 4
 
+[node name="ck_inf_fuel" type="CheckButton" parent="vb_main/scroll/vb"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(504, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+text = "Infinite fuel"
+
+[node name="ck_inf_water" type="CheckButton" parent="vb_main/scroll/vb"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(504, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+text = "Infinite water tank"
+
 [node name="ck_scawy" type="CheckButton" parent="vb_main/scroll/vb"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(504, 0)
@@ -180,14 +196,6 @@ layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 text = "Scawy"
-
-[node name="ck_inf_fuel" type="CheckButton" parent="vb_main/scroll/vb"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(504, 0)
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-text = "Infinite Fuel"
 
 [node name="lb2" type="Label" parent="vb_main/scroll/vb"]
 custom_minimum_size = Vector2(180, 48)
@@ -209,5 +217,6 @@ size_flags_vertical = 3
 [node name="entry_input" parent="vb_main/scroll/vb/vb_inputs" instance=ExtResource("4_llfil")]
 layout_mode = 2
 
-[connection signal="toggled" from="vb_main/scroll/vb/ck_scawy" to="." method="_on_ck_scawy_toggled"]
 [connection signal="toggled" from="vb_main/scroll/vb/ck_inf_fuel" to="." method="_on_ck_inf_fuel_toggled"]
+[connection signal="toggled" from="vb_main/scroll/vb/ck_inf_water" to="." method="_on_ck_inf_water_toggled"]
+[connection signal="toggled" from="vb_main/scroll/vb/ck_scawy" to="." method="_on_ck_scawy_toggled"]

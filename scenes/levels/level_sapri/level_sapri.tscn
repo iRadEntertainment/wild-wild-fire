@@ -13,7 +13,7 @@
 [ext_resource type="Script" uid="uid://bhnw4oa8nrktj" path="res://classes/Map/MapElevationFetcher.gd" id="9_orxxa"]
 [ext_resource type="ArrayMesh" uid="uid://0kh8rdkiku4b" path="res://assets/models/meshes/cell_bot.mesh" id="10_5lful"]
 [ext_resource type="Script" uid="uid://hubef3pfivn1" path="res://instances/cells_mng.gd" id="10_f6l8y"]
-[ext_resource type="PackedScene" uid="uid://dhc5uxeopiepa" path="res://instances/water_mesh.tscn" id="11_36jsh"]
+[ext_resource type="PackedScene" uid="uid://dhc5uxeopiepa" path="res://instances/sea.tscn" id="11_36jsh"]
 [ext_resource type="Material" uid="uid://bdggqet2he6o8" path="res://assets/materials/tiles/cell_grass.material" id="11_mjb2w"]
 [ext_resource type="Material" uid="uid://6g5piqfvhiey" path="res://assets/materials/next_pass.material" id="12_ruyi8"]
 [ext_resource type="ArrayMesh" uid="uid://4cwj3t76l3h7" path="res://assets/models/meshes/cell_top.mesh" id="13_5xbq7"]
@@ -291,24 +291,24 @@ unique_name_in_owner = true
 [node name="FireSimulation" type="Node3D" parent="Modules"]
 unique_name_in_owner = true
 script = ExtResource("3_xsjd8")
-simSpeed = 3.0
+simSpeed = 2.0
 
 [node name="particlesmng" type="Node3D" parent="Modules"]
 
 [node name="part_smoke" parent="Modules/particlesmng" instance=ExtResource("4_j3y0w")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.59323, 3.8944101, 9.0399)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 25.341524, 5.32312, -6.054282)
 
 [node name="part_smoke2" parent="Modules/particlesmng" instance=ExtResource("4_j3y0w")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22.877783, 4.9611506, 8.681839)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22.066992, 4.9611506, 2.1897626)
 
 [node name="part_smoke3" parent="Modules/particlesmng" instance=ExtResource("4_j3y0w")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26.12608, 5.571858, 7.3804064)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 29.821796, 5.979136, 7.5738416)
 
 [node name="part_smoke4" parent="Modules/particlesmng" instance=ExtResource("4_j3y0w")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28.734344, 6.038342, 4.1980352)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 37.04583, 9.05761, 5.165915)
 
 [node name="part_smoke5" parent="Modules/particlesmng" instance=ExtResource("4_j3y0w")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28.734344, 5.392433, 0.13970184)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 35.63704, 6.4930162, -5.709638)
 
 [node name="environment" type="Node3D" parent="."]
 
@@ -469,10 +469,13 @@ visible = false
 material_overlay = ExtResource("12_ruyi8")
 multimesh = SubResource("MultiMesh_gc155")
 
-[node name="water_mesh" parent="map" instance=ExtResource("11_36jsh")]
+[node name="sea" parent="map" instance=ExtResource("11_36jsh")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 
 [node name="static_terrain" type="StaticBody3D" parent="map"]
+collision_layer = 4
+collision_mask = 24
+input_ray_pickable = false
 
 [node name="terrain_coll" type="CollisionShape3D" parent="map/static_terrain"]
 shape = SubResource("HeightMapShape3D_orxxa")

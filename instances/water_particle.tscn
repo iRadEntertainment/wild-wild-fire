@@ -46,9 +46,12 @@ orientation = 2
 [node name="water_particle" type="RigidBody3D"]
 collision_layer = 16
 collision_mask = 6
+contact_monitor = true
+max_contacts_reported = 1
 script = ExtResource("1_pr3tk")
+water_intensity = 0.01
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+[node name="coll" type="CollisionShape3D" parent="."]
 shape = SubResource("SphereShape3D_07hp7")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]

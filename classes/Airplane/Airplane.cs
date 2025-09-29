@@ -52,6 +52,7 @@ public partial class Airplane : CharacterBody3D
 		set => _currentWater = Mathf.Clamp(value, 0.0f, settings.MaxWater);
 	}
 	public bool ConsumeFuel = true;
+	public bool ConsumeWater = true;
 
 	// Target state
 	private float _targetSpeed = 0.0f;
@@ -93,7 +94,7 @@ public partial class Airplane : CharacterBody3D
 
 	private void SprayWater(double delta)
 	{
-		if (CurrentWater <= 0.0f)
+		if (CurrentWater <= 0.0f && ConsumeWater)
 		{
 			CurrentWater = 0.0f;
 			return;
@@ -113,7 +114,11 @@ public partial class Airplane : CharacterBody3D
 			SpawnWaterParticle(isLeftSpawn);
 			isLeftSpawn = !isLeftSpawn;
 		}
-		CurrentWater = NextStepWater;
+
+		if (ConsumeWater)
+		{
+			CurrentWater = NextStepWater;
+		}
 	}
 
 	private void SpawnWaterParticle(bool isLeftSpawn)

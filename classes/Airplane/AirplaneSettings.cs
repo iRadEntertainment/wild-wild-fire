@@ -9,7 +9,7 @@ public partial class AirplaneSettings : Resource
     [Export(PropertyHint.Range, "0.0, 200.0, 1.0")] public float MaxFuel { get; set; } = 100.0f;
     [Export(PropertyHint.Range, "0.0, 40.0, 1.0")] public float RefillFuelRate { get; set; } = 20.0f;
     [Export(PropertyHint.Range, "0.0, 5.0, 0.01")] public float FuelConsumptionRate { get; set; } = 1.0f;
-    [Export(PropertyHint.Range, "0.0, 40.0, 1.0")] public float RefillWaterRate { get; set; } = 20.0f;
+    [Export(PropertyHint.Range, "10.0, 200.0, 1.0")] public float RefillWaterRate { get; set; } = 50.0f;
     [Export(PropertyHint.Range, "0.0, 40.0, 0.1")] public float WaterDropRate { get; set; } = 20.0f;
     [Export(PropertyHint.Range, "0.0, 10.0, 1.0")] public float WaterParticleAmount { get; set; } = 5.0f;
 

@@ -1,0 +1,136 @@
+[gd_scene load_steps=13 format=3 uid="uid://cktbf881367es"]
+
+[ext_resource type="Script" uid="uid://sktgikqjth1c" path="res://instances/minimap.gd" id="1_0e1h7"]
+[ext_resource type="Texture2D" uid="uid://dr53h4ny6iqq8" path="res://assets/textures/screen_panel.png" id="1_iqe7v"]
+[ext_resource type="Texture2D" uid="uid://d1ifs7w5746s3" path="res://tests/test_fire_sim_output.png" id="2_0a0sv"]
+[ext_resource type="Shader" uid="uid://15mok2kc5jm7" path="res://assets/materials/minimap.gdshader" id="3_rwyve"]
+[ext_resource type="Texture2D" uid="uid://rra21mle3yhq" path="res://scenes/levels/level_sapri/level_sapri_tiles.png" id="4_yk3qp"]
+[ext_resource type="Texture2D" uid="uid://lxr6ilycssbl" path="res://assets/textures/plane_icon.png" id="6_blr8y"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_0e1h7"]
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_yk3qp"]
+blend_mode = 1
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_n10qx"]
+shader = ExtResource("3_rwyve")
+shader_parameter/type = 1
+shader_parameter/base_color = Color(0, 0, 0, 0)
+shader_parameter/data_color = Color(1.6727678, 0.9960662, 0.34115142, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_6fdae"]
+shader = ExtResource("3_rwyve")
+shader_parameter/type = 2
+shader_parameter/base_color = Color(0, 0, 0, 1)
+shader_parameter/data_color = Color(0.3209658, 0.7627235, 0.64012015, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_sjqol"]
+shader = ExtResource("3_rwyve")
+shader_parameter/type = 3
+shader_parameter/base_color = Color(0, 0, 0, 0)
+shader_parameter/data_color = Color(0.13472305, 0.59111404, 0.77393556, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_34k8l"]
+shader = ExtResource("3_rwyve")
+shader_parameter/type = 4
+shader_parameter/base_color = Color(0, 0, 0, 0)
+shader_parameter/data_color = Color(0, 0, 0, 1)
+
+[node name="minimap" type="PanelContainer"]
+custom_minimum_size = Vector2(256, 256)
+offset_right = 256.0
+offset_bottom = 256.0
+theme_override_styles/panel = SubResource("StyleBoxEmpty_0e1h7")
+script = ExtResource("1_0e1h7")
+
+[node name="bg" type="NinePatchRect" parent="."]
+layout_mode = 2
+texture = ExtResource("1_iqe7v")
+patch_margin_left = 18
+patch_margin_top = 18
+patch_margin_right = 18
+patch_margin_bottom = 18
+
+[node name="marg" type="MarginContainer" parent="."]
+material = SubResource("CanvasItemMaterial_yk3qp")
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/margin_left = 18
+theme_override_constants/margin_top = 18
+theme_override_constants/margin_right = 18
+theme_override_constants/margin_bottom = 18
+
+[node name="firesim_preview" type="TextureRect" parent="marg"]
+unique_name_in_owner = true
+visible = false
+texture_filter = 1
+layout_mode = 2
+texture = ExtResource("2_0a0sv")
+expand_mode = 2
+stretch_mode = 5
+
+[node name="bg_map" type="TextureRect" parent="marg"]
+unique_name_in_owner = true
+self_modulate = Color(1, 1, 1, 0.23921569)
+texture_filter = 1
+layout_mode = 2
+texture = ExtResource("4_yk3qp")
+expand_mode = 2
+stretch_mode = 5
+
+[node name="tex_heat" type="TextureRect" parent="marg"]
+unique_name_in_owner = true
+texture_filter = 1
+material = SubResource("ShaderMaterial_n10qx")
+layout_mode = 2
+texture = ExtResource("2_0a0sv")
+expand_mode = 2
+stretch_mode = 5
+
+[node name="tex_int_moist" type="TextureRect" parent="marg"]
+unique_name_in_owner = true
+visible = false
+texture_filter = 1
+material = SubResource("ShaderMaterial_6fdae")
+layout_mode = 2
+texture = ExtResource("2_0a0sv")
+expand_mode = 2
+stretch_mode = 5
+
+[node name="tex_water" type="TextureRect" parent="marg"]
+unique_name_in_owner = true
+texture_filter = 1
+material = SubResource("ShaderMaterial_sjqol")
+layout_mode = 2
+texture = ExtResource("2_0a0sv")
+expand_mode = 2
+stretch_mode = 5
+
+[node name="tex_burnt" type="TextureRect" parent="marg"]
+unique_name_in_owner = true
+visible = false
+texture_filter = 1
+material = SubResource("ShaderMaterial_34k8l")
+layout_mode = 2
+texture = ExtResource("2_0a0sv")
+expand_mode = 2
+stretch_mode = 5
+
+[node name="icons" type="Control" parent="marg"]
+unique_name_in_owner = true
+clip_contents = true
+layout_mode = 2
+
+[node name="airplane_ico" type="TextureRect" parent="marg/icons"]
+unique_name_in_owner = true
+self_modulate = Color(1, 1, 1, 0.7529412)
+custom_minimum_size = Vector2(12, 12)
+layout_mode = 0
+offset_left = 67.0
+offset_top = 60.0
+offset_right = 75.0
+offset_bottom = 68.0
+pivot_offset = Vector2(6, 6)
+texture = ExtResource("6_blr8y")
+expand_mode = 1
+stretch_mode = 5

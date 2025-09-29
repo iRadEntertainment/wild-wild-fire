@@ -1,10 +1,10 @@
 // NOTE: Shader automatically converted from Godot Engine 4.5.stable.mono's StandardMaterial3D.
 
 shader_type spatial;
-render_mode blend_mix, cull_back;
+render_mode cull_back, alpha_to_coverage;
 
-uniform ivec2 map_size = ivec2(128);
-uniform sampler2D firesim_output : source_color, filter_linear_mipmap, repeat_enable;
+uniform ivec2 fire_img_size = ivec2(128);
+uniform sampler2D firesim_output : filter_nearest;
 uniform vec4 color_burn : source_color;
 uniform vec4 color_ambers : source_color;
 uniform vec4 color_wet : source_color;
@@ -43,7 +43,7 @@ float get_burnt() { return 1.0 - texture(firesim_output, grid_pos_norm).a; }
 
 void vertex() {
 	grid_pos = ivec2(INSTANCE_CUSTOM.rg);
-	grid_pos_norm = vec2(grid_pos)/vec2(map_size);
+	grid_pos_norm = vec2(grid_pos)/vec2(fire_img_size);
 	
 	vec3 normal = NORMAL;
 
@@ -76,32 +76,24 @@ void fragment() {
 	float noise_value = triplanar_texture(noise_tex, uv1_power_normal, uv1_triplanar_pos).r;
 	//noise_value = (noise_value * 2.0) - 1.0;
 	//vec4 noise_tex = texture(noise_tex, UV);
-	float burnt = get_burnt();
-	float heat = get_heat();
+	float burnt = clamp(get_burnt(), 0.0, 1.0);
+	float heat = clamp(get_heat(), 0.0, 1.0);
 	float moisture_int = get_moisture_internal();
 	float moisture_ext = get_moisture_external();
 	float tot_moisture = (moisture_ext + moisture_int);
 	
 	vec4 burnt_col = color_burn;
-	burnt_col.a = burnt * mix(0.6, 1.0, noise_value * burn_spread);
+	burnt_col.a = burnt * mix(0.6, 0.8, noise_value * burn_spread);
+	burnt_col.a *= color_burn.a;
 	vec4 heat_col = color_ambers;
 	heat_col.a = (heat - burnt * burnt_to_heat_ratio) * smoothstep(0.0, 1.0, pow(noise_value, heat/ambers_spread));
 	vec4 wet_col = color_wet * tot_moisture;
 	wet_col.a = moisture_ext * mix(0.0, 1.0, 1.0 - noise_value);
 	wet_col.a = min(color_wet.a, wet_col.a);
 	
-	
-	//vec4 noise_col;
-	//noise_col.rgb = mix(color_burn.rgb, color_ambers.rgb, noise_value * (heat - burnt));
-	//noise_col.rgb += mix(color_burn.rgb, color_ambers.rgb, noise_value * (heat - burnt));
-	//noise_col.a = smoothstep(0.0, 1.0, (heat + burnt) * noise_value);
-
-	//ALBEDO.b = tot_moisture;
 	METALLIC = tot_moisture * metallic;
 	SPECULAR = tot_moisture * specular;
 	ROUGHNESS = mix(1.0, 0.2, moisture_ext) * roughness;
-	//1.0 - (moisture_ext + moisture_int);
-	//EMISSION = color_ambers.rgb * heat * emission_energy;
 	vec3 emission_amt = color_ambers.rgb * emission_energy;
 	emission_amt *= heat_col.a;
 	EMISSION = emission_amt;
@@ -110,4 +102,5 @@ void fragment() {
 	final_col += heat_col.rgb * heat_col.a;
 	ALBEDO.rgb = final_col;
 	ALPHA = max(max(burnt_col.a, heat_col.a), wet_col.a);
+	ALPHA = clamp(ALPHA, 0.01, 1.0);
 }

@@ -26,6 +26,8 @@ signal simulation_started
 signal simulation_paused
 signal simulation_ended
 
+var is_game_won: bool = false
+var is_game_lost: bool = false
 signal game_lost
 signal game_won
 
@@ -39,19 +41,31 @@ func _ready() -> void:
 
 func setup() -> void:
 	is_setup = true
+	airplane.ConsumeFuel = !Mng.is_infinite_fuel
+	airplane.ConsumeWater = !Mng.is_infinite_water
 	setup_complete.emit()
-	start_simulation.call_deferred()
+	start_simulation()
 
 
 func start_simulation() -> void:
+	fire_simulation.simSpeed = 200
 	fire_simulation.InitTexturedMap(
 		map.data.out_firesim_burnable,
 		map.data.out_firesim_int_moisture,
 		map.data.out_firesim_ext_moisture,
 		map.data.firesim_starting_cell,
-		100 #map.data.firesim_pre_sim_ticks
+		map.data.firesim_pre_sim_ticks
 	)
+	fire_simulation.simSpeed = 2
 	var next_pass_mat: ShaderMaterial = preload("res://assets/materials/next_pass.material")
 	next_pass_mat.set_shader_parameter(&"firesim_output", fire_simulation.OutputTexture)
+	next_pass_mat.set_shader_parameter(&"fire_img_size", fire_simulation.OutputTexture.get_size())
 	is_simulation_running = true
 	simulation_started.emit()
+
+
+func _process(_delta: float) -> void:
+	if fire_simulation.IsFireOut() and not is_game_won:
+		is_game_won = true
+		game_won.emit()
+		set_process(false)

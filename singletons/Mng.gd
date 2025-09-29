@@ -19,7 +19,8 @@ signal camera_type_changed
 # getters
 var map: Map:
 	get: return game.map if game else null
-var map_data
+var map_data: MapData:
+	get: return game.map.data if game else null
 var airport: Airport:
 	get: return game.airport if game else null
 var airplane: Airplane:
@@ -37,6 +38,13 @@ var is_infinite_fuel: bool = false:
 			airplane.ConsumeFuel = !val
 			if is_infinite_fuel:
 				airplane.CurrentFuel = airplane.settings.MaxFuel
+var is_infinite_water: bool = false:
+	set(val):
+		is_infinite_water = val
+		if airplane:
+			airplane.ConsumeWater = !val
+			if is_infinite_water:
+				airplane.CurrentWater = airplane.settings.MaxWater
 
 
 signal game_ready

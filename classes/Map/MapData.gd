@@ -98,7 +98,7 @@ var mesh_trees_dry_folder: String:
 
 @export_group("FireSim", "firesim_")
 @export var firesim_starting_cell: Vector2i = Vector2i(64, 96)
-@export var firesim_pre_sim_ticks: int = 100
+@export var firesim_pre_sim_ticks: int = 800
 @export_range(0.0, 1.0, 0.01) var firesim_average_moisture: float = 0.5
 
 @export_subgroup("Output Textures", "out_firesim_")

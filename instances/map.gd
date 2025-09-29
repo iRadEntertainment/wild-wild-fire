@@ -47,7 +47,7 @@ var size: Vector2i:
 #region Build nodes
 var cells_mng: CellsMng
 var map_elevation_fetcher: MapElevationFetcher
-var water_mesh: MeshInstance3D
+var sea: StaticBody3D
 var terrain_coll: CollisionShape3D
 var boundary_n: CollisionShape3D
 var boundary_e: CollisionShape3D
@@ -62,7 +62,7 @@ func _enter_tree() -> void:
 	else:
 		cells_mng = find_child("cells_mng")
 		map_elevation_fetcher = find_child("MapElevationFetcher")
-		water_mesh = find_child("water_mesh")
+		sea = find_child("sea")
 		terrain_coll = find_child("terrain_coll")
 		boundary_n = find_child("boundary_n")
 		boundary_e = find_child("boundary_e")
@@ -85,10 +85,10 @@ func build_subnodes() -> void:
 	add_child(cells_mng)
 	cells_mng.owner = get_parent()
 	
-	water_mesh = preload("res://instances/water_mesh.tscn").instantiate()
-	water_mesh.name = "water_mesh"
-	add_child(water_mesh)
-	water_mesh.owner = get_parent()
+	sea = preload("res://instances/sea.tscn").instantiate()
+	sea.name = "sea"
+	add_child(sea)
+	sea.owner = get_parent()
 	
 	_add_static_terrain()
 	_add_static_boundaries()
@@ -97,6 +97,8 @@ func build_subnodes() -> void:
 func _add_static_terrain() -> void:
 	var static_t := StaticBody3D.new()
 	static_t.name = "static_terrain"
+	static_t.collision_layer = 0b00100
+	static_t.collision_mask = 0b11000
 	terrain_coll = CollisionShape3D.new()
 	terrain_coll.name = "terrain_coll"
 	terrain_coll.shape = HeightMapShape3D.new()
@@ -195,7 +197,7 @@ func _update_heighmap_collision() -> void:
 
 
 func _update_boundaries() -> void:
-	water_mesh.position.y = data.in_water_level
+	sea.position.y = data.in_water_level
 	boundary_n.position.z = -(data.out_map_world_center.z + data.boundary_offset) * data.cell_world_dim
 	boundary_e.position.x =  (data.out_map_world_center.x + data.boundary_offset) * data.cell_world_dim
 	boundary_s.position.z =  (data.out_map_world_center.z + data.boundary_offset) * data.cell_world_dim
@@ -235,4 +237,4 @@ func _set_anim_ratio(val: float) -> void:
 
 
 func _on_water_level_updated(water_level_meters: float) -> void:
-	water_mesh.position.y = water_level_meters
+	sea.position.y = water_level_meters
