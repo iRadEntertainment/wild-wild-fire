@@ -14,12 +14,14 @@ var airplane: Airplane:
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_PAUSABLE
 	%pnl_debug.hide()
+	%lb_info.self_modulate.a = 0
 	fade_in()
 
 
 func setup() -> void:
 	Mng.game.game_won.connect(_on_game_won)
 	Mng.game.game_lost.connect(_on_game_lost)
+	Mng.airplane.OutOfFuel.connect(_on_airplane_out_of_fuel)
 
 
 func _input(event: InputEvent) -> void:
@@ -54,6 +56,7 @@ func _on_game_won(_end_game: Mng.EndGame) -> void:
 
 
 func _on_game_lost(_end_game: Mng.EndGame) -> void:
+	await get_tree().create_timer(3.0).timeout
 	fade_out()
 	await _tw_fade.finished
 	Mng.go_to_endscreen()
@@ -92,3 +95,12 @@ func fade_out() -> void:
 	_tw_fade = create_tween()
 	_tw_fade.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
 	_tw_fade.tween_property(%fade_col, "self_modulate:a", 1.0, fade_duration)
+
+
+func give_instruction(text: String) -> void:
+	%lb_info.text = text
+	%anim_info.play(&"flash")
+
+
+func _on_airplane_out_of_fuel() -> void:
+	Aud.play_alarm()

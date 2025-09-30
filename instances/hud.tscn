@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://cyy7bec3ko53i"]
+[gd_scene load_steps=14 format=3 uid="uid://cyy7bec3ko53i"]
 
 [ext_resource type="Script" uid="uid://d0cgk0g6nbqhe" path="res://instances/hud.gd" id="1_hvx1s"]
 [ext_resource type="Theme" uid="uid://byujsu8xvuvyt" path="res://assets/theme/main.theme" id="1_oskb6"]
@@ -84,6 +84,44 @@ corner_radius_top_left = 8
 corner_radius_top_right = 8
 corner_radius_bottom_right = 8
 corner_radius_bottom_left = 8
+
+[sub_resource type="Animation" id="Animation_0osg1"]
+resource_name = "flash"
+length = 2.0
+step = 0.1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:self_modulate")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2, 0.4, 0.6, 0.80526674, 1.0052668, 1.2017996, 1.4017997, 1.6074833, 1.8074833, 2),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 0.47058824), Color(1, 1, 1, 1), Color(1, 1, 1, 0.47058824), Color(1, 1, 1, 1), Color(1, 1, 1, 0.47058824), Color(1, 1, 1, 1), Color(1, 1, 1, 0.47058824), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_wa3vo"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:self_modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_n10qx"]
+_data = {
+&"RESET": SubResource("Animation_wa3vo"),
+&"flash": SubResource("Animation_0osg1")
+}
 
 [node name="HUD" type="Control"]
 layout_mode = 3
@@ -209,3 +247,23 @@ theme = ExtResource("1_oskb6")
 theme_override_font_sizes/font_size = 14
 text = "fps"
 horizontal_alignment = 2
+
+[node name="lb_info" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 310.0
+offset_bottom = -310.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "INFO"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="anim_info" type="AnimationPlayer" parent="lb_info"]
+unique_name_in_owner = true
+libraries = {
+&"": SubResource("AnimationLibrary_n10qx")
+}

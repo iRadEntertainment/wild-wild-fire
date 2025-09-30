@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://cpeunbbr3yjlp"]
+[gd_scene load_steps=8 format=3 uid="uid://cpeunbbr3yjlp"]
 
 [ext_resource type="Script" uid="uid://dl813p27n6vkb" path="res://singletons/Aud.gd" id="1_4c3ed"]
 [ext_resource type="AudioStream" uid="uid://7gqeiq8oy23k" path="res://assets/music/mus_renrebello_tribal.ogg" id="2_n8a0g"]
@@ -6,6 +6,7 @@
 [ext_resource type="AudioStream" uid="uid://d3tjgeqjvas6q" path="res://assets/music/mus_easteregg_oiia_cat.ogg" id="3_pk5m8"]
 [ext_resource type="AudioStream" uid="uid://ctc0hh5wl8k7x" path="res://assets/sfx/sfx_btn_pressed.ogg" id="4_n8a0g"]
 [ext_resource type="AudioStream" uid="uid://wywoww7s27t3" path="res://assets/sfx/voice_test_01_runaway_clear.ogg" id="5_ji5cw"]
+[ext_resource type="AudioStream" uid="uid://bn0jgqycre6nk" path="res://assets/sfx/sfx_alarm.wav" id="7_7xmf2"]
 
 [node name="Aud" type="Node"]
 process_mode = 3
@@ -34,3 +35,8 @@ bus = &"UI"
 stream = ExtResource("5_ji5cw")
 volume_db = -14.0
 bus = &"Voice"
+
+[node name="sfx_alarm" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("7_7xmf2")
+volume_db = 9.852
+bus = &"Sfx"

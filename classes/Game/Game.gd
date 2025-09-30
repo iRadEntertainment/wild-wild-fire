@@ -75,6 +75,7 @@ func _play_intro_cinematic() -> void:
 	Aud.play_radio_voice("res://assets/voices/voice_Runway One, cleared for takeoff..wav")
 	await Aud.voice_over
 	airplane.CanInput = true
+	gui.hud.give_instruction("Start thrusters (SHIFT up - CTRL down)")
 	
 	await airplane.TakeOff
 	await get_tree().create_timer(3.0).timeout
@@ -85,6 +86,7 @@ func setup() -> void:
 	set_day_night()
 	#map.data.update_outputs()
 	#map.data.populate_data()
+	Mng.end_game = -1
 	
 	airplane.CollidedWithTerrain.connect(_on_airplane_collision)
 	airplane.FuelWarning.connect(_on_airplane_fuel_warning)
@@ -122,6 +124,10 @@ func _process(_delta: float) -> void:
 		fire_simulation.process_mode = Node.PROCESS_MODE_DISABLED
 		Aud.play_radio_voice("res://assets/voices/voice_fire extinguished. Mission complete, you’re cleared RTB..wav")
 		set_process(false)
+	
+	if airplane.IsOnWater and airplane.IsOutOfFuel and Mng.end_game != Mng.EndGame.PLANE_ON_SEA:
+		Mng.end_game = Mng.EndGame.PLANE_ON_SEA
+		game_lost.emit(Mng.EndGame.PLANE_ON_SEA)
 
 
 func _input(event: InputEvent) -> void:

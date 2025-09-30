@@ -67,3 +67,7 @@ func play_radio_voice(audio_file_path: String = "") -> void:
 func is_radio_playing() -> bool:
 	return $voice_airport.playing
 #endregion
+
+
+func play_alarm() -> void:
+	$sfx_alarm.play()

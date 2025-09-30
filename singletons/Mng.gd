@@ -1,13 +1,13 @@
 # Singleton Mng
 extends Node
 
-var is_debug_mode: bool = true #TODO: before build switch to false
+var is_debug_mode: bool = false #TODO: before build switch to false
 
 var game: Game
 var game_stats: GameStats
 var game_env: Environment = preload("res://assets/materials/game_env.tres")
 
-enum EndGame {FIRE_ESTINGUISHED, PLANE_CRASHED, AIRPORT_DESTROYED}
+enum EndGame {FIRE_ESTINGUISHED, PLANE_CRASHED, PLANE_ON_SEA, AIRPORT_DESTROYED}
 var end_game: EndGame
 
 # getters

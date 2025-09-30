@@ -4,10 +4,16 @@ const DESCR = [
 """The wildfire are finally out!
 You did an incredible job pilot!
 You will be promoted, how cool is that?""",
+
 """You manage to eject just in time, but the fire kept spreading.
 A new fire started at the position of your impact, the recovery
 team just pulled you out in time!
 Some cities reported heavy damages, your mission has failed...""",
+
+"""You manage to safely land at sea, but the fire kept spreading.
+The recovery team came to your rescue as soon as they could.
+Some cities reported heavy damages, your mission has failed...""",
+
 """With the airport destroyed you headed out to a different airport.
 The wildfire kept spreading, the cities reported massive damages...""",
 ]
@@ -31,9 +37,13 @@ func select_ending() -> void:
 			title = "Canadair\ncrashed"
 			description = DESCR[1]
 			%bgs.current_tab = 1
+		Mng.EndGame.PLANE_ON_SEA:
+			title = "Emergency\nSea Landing"
+			description = DESCR[2]
+			%bgs.current_tab = 1
 		Mng.EndGame.AIRPORT_DESTROYED:
 			title = "Airport\ndestroyed"
-			description = DESCR[2]
+			description = DESCR[3]
 			%bgs.current_tab = 2
 	
 	%lb_main.text = title

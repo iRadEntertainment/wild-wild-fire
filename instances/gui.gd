@@ -2,6 +2,7 @@ extends CanvasLayer
 class_name GUI
 
 @onready var pnl_in_game_menu: InGameMenu = $pnl_in_game_menu
+@onready var hud: HUD = %HUD
 
 
 func _ready() -> void:

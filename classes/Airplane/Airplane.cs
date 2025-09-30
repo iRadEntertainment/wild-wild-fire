@@ -181,6 +181,9 @@ public partial class Airplane : CharacterBody3D
 		// Update target values based on input
 		_targetRoll = -inputDir.X * settings.MaxRollAngle;
 		_targetPitch = inputDir.Y * settings.MaxPitchAngle;
+
+		if (IsOnWater && IsOutOfFuel) { _targetRoll = 0.0f; }
+
 		if (ElevFromSea < settings.SeaStartPitchCorrection)
 		{
 			float _allowedPitch = Mathf.Lerp(0.0f, -settings.MaxPitchAngle, ElevFromSea / settings.SeaStartPitchCorrection);
@@ -206,9 +209,9 @@ public partial class Airplane : CharacterBody3D
 			HasFuelWarning = false;
 		}
 
-		if (CurrentFuel <= 0.0f)
+		if (IsOutOfFuel)
 		{
-			_targetPitch = -settings.MaxPitchAngle;
+			_targetPitch = IsOnWater ? 0.0f : -settings.MaxPitchAngle;
 			_targetSpeed = settings.MinFlySpeed;
 		}
 
@@ -285,7 +288,7 @@ public partial class Airplane : CharacterBody3D
 	}
 	private void CheckWaterLevelRefill(double delta)
 	{
-		IsRefillingWater = (CurrentWater < settings.MaxWater) && IsOnWater;
+		IsRefillingWater = (CurrentWater < settings.MaxWater) && IsOnWater && !IsOutOfFuel;
 		if (IsRefillingWater)
 		{
 			CurrentWater += settings.RefillWaterRate * (float)delta;

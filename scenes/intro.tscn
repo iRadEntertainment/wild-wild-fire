@@ -1,14 +1,10 @@
-[gd_scene load_steps=17 format=3 uid="uid://bwdedi3dcvc1v"]
+[gd_scene load_steps=15 format=3 uid="uid://bwdedi3dcvc1v"]
 
 [ext_resource type="Theme" uid="uid://byujsu8xvuvyt" path="res://assets/theme/main.theme" id="1_4bx60"]
 [ext_resource type="Script" uid="uid://bm2ti3s38l0g0" path="res://scenes/intro.gd" id="1_ioskq"]
 [ext_resource type="Texture2D" uid="uid://crwvxsyfux1ks" path="res://assets/ui/jern-jam-2025.png" id="2_yjqpq"]
-[ext_resource type="VideoStream" uid="uid://cftcx1j55kt6n" path="res://assets/video/smoke.ogv" id="3_es01l"]
 [ext_resource type="VideoStream" uid="uid://cqqgaco258tt1" path="res://assets/video/fire.ogv" id="3_wfs7u"]
 [ext_resource type="Texture2D" uid="uid://0npvti1qk3da" path="res://assets/ui/godot_logo_large_monochrome_dark.svg" id="4_i2l1n"]
-
-[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_0naf5"]
-blend_mode = 1
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_bu1yb"]
 blend_mode = 1
@@ -183,20 +179,6 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 1)
 metadata/_edit_lock_ = true
-
-[node name="video_smoke" type="VideoStreamPlayer" parent="."]
-material = SubResource("CanvasItemMaterial_0naf5")
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-stream = ExtResource("3_es01l")
-autoplay = true
-expand = true
-loop = true
-bus = &"Sfx"
 
 [node name="video_fire" type="VideoStreamPlayer" parent="."]
 material = SubResource("CanvasItemMaterial_bu1yb")
