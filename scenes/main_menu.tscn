@@ -1,31 +1,13 @@
-[gd_scene load_steps=20 format=3 uid="uid://n2c52flnw1t0"]
+[gd_scene load_steps=14 format=3 uid="uid://n2c52flnw1t0"]
 
 [ext_resource type="Theme" uid="uid://byujsu8xvuvyt" path="res://assets/theme/main.theme" id="1_l6cm7"]
 [ext_resource type="Script" uid="uid://b3ksw417y6wmq" path="res://scenes/main_menu.gd" id="2_wu84c"]
-[ext_resource type="Texture2D" uid="uid://dvwlsssbxtumc" path="res://assets/backgrounds/bg_canadair.jpeg" id="3_5dd4i"]
+[ext_resource type="PackedScene" uid="uid://cudovr3jyt40g" path="res://scenes/bg_intro.tscn" id="3_tbmy8"]
 [ext_resource type="PackedScene" uid="uid://bbigim1y05ox2" path="res://scenes/pnl_settings.tscn" id="4_8ln24"]
-[ext_resource type="VideoStream" uid="uid://cqqgaco258tt1" path="res://assets/video/fire.ogv" id="4_oa1go"]
-[ext_resource type="VideoStream" uid="uid://cftcx1j55kt6n" path="res://assets/video/smoke.ogv" id="4_tbmy8"]
 [ext_resource type="PackedScene" uid="uid://cb0mb3td40ghv" path="res://scenes/pnl_credits.tscn" id="5_8ln24"]
 [ext_resource type="FontFile" uid="uid://dg44xuoc7qjcm" path="res://assets/theme/MozaikDuren.otf" id="6_lgwnu"]
 [ext_resource type="Theme" uid="uid://d4nfuafpb5ani" path="res://assets/theme/main_menu_buttons.theme" id="6_rtw2f"]
-[ext_resource type="FontFile" uid="uid://cmydx2pndcq4c" path="res://assets/theme/Viga-Regular.ttf" id="7_5dd4i"]
-
-[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_tbmy8"]
-blend_mode = 1
-
-[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_5dd4i"]
-blend_mode = 3
-
-[sub_resource type="Gradient" id="Gradient_lgwnu"]
-offsets = PackedFloat32Array(0.33157894, 1)
-colors = PackedColorArray(1, 1, 1, 1, 0.38928655, 0.38928664, 0.38928658, 1)
-
-[sub_resource type="GradientTexture2D" id="GradientTexture2D_flqon"]
-gradient = SubResource("Gradient_lgwnu")
-fill = 1
-fill_from = Vector2(0.491453, 0.48290598)
-fill_to = Vector2(0, 1)
+[ext_resource type="FontFile" uid="uid://bkydio50thrf7" path="res://assets/theme/Lemiesz.ttf" id="10_j7ex8"]
 
 [sub_resource type="Shader" id="Shader_rcqid"]
 code = "shader_type canvas_item;
@@ -72,7 +54,7 @@ bump_strength = 0.7
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_5pajh"]
 shader = SubResource("Shader_rcqid")
 shader_parameter/textureNoise = SubResource("NoiseTexture2D_7b55j")
-shader_parameter/color_a = Color(1.8973349, 1.1712435, 0.43205458, 1)
+shader_parameter/color_a = Color(4.299959, 2.6748588, 1.0131202, 1)
 shader_parameter/color_b = Color(0.6156863, 0.08627451, 0.14509805, 1)
 shader_parameter/radius = 0.3490000165775
 shader_parameter/effectControl = 0.8170000388075
@@ -92,64 +74,15 @@ grow_vertical = 2
 theme = ExtResource("1_l6cm7")
 script = ExtResource("2_wu84c")
 
-[node name="bg_texture" type="TextureRect" parent="."]
+[node name="bg_intro" parent="." instance=ExtResource("3_tbmy8")]
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-texture = ExtResource("3_5dd4i")
-expand_mode = 1
-stretch_mode = 6
-metadata/_edit_lock_ = true
-
-[node name="video_smoke" type="VideoStreamPlayer" parent="."]
-visible = false
-self_modulate = Color(1, 1, 1, 0.4392157)
-material = SubResource("CanvasItemMaterial_tbmy8")
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-stream = ExtResource("4_tbmy8")
-expand = true
-loop = true
-bus = &"Sfx"
-
-[node name="video_fire" type="VideoStreamPlayer" parent="."]
-material = SubResource("CanvasItemMaterial_tbmy8")
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-stream = ExtResource("4_oa1go")
-autoplay = true
-expand = true
-loop = true
-bus = &"Sfx"
-
-[node name="bg_col" type="TextureRect" parent="."]
-material = SubResource("CanvasItemMaterial_5dd4i")
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-texture = SubResource("GradientTexture2D_flqon")
-metadata/_edit_lock_ = true
 
 [node name="lb_ctrl" type="RichTextLabel" parent="."]
 layout_mode = 0
-offset_left = 721.5
-offset_top = 59.0
-offset_right = 1121.5
-offset_bottom = 163.0
+offset_left = 631.0
+offset_top = 87.0
+offset_right = 1031.0
+offset_bottom = 191.0
 size_flags_vertical = 3
 theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
 theme_override_constants/outline_size = 2
@@ -164,10 +97,10 @@ vertical_alignment = 1
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 0
-offset_left = 681.0
-offset_top = 143.0
-offset_right = 1160.0
-offset_bottom = 305.0
+offset_left = 572.0
+offset_top = 169.0
+offset_right = 1104.0
+offset_bottom = 331.0
 metadata/_edit_group_ = true
 
 [node name="lb_bg" type="RichTextLabel" parent="MarginContainer"]
@@ -176,7 +109,7 @@ size_flags_vertical = 3
 theme_override_colors/default_color = Color(1, 1, 1, 1)
 theme_override_colors/font_outline_color = Color(0.46332496, 0.053314008, 0.09928126, 1)
 theme_override_constants/outline_size = 17
-theme_override_fonts/normal_font = ExtResource("7_5dd4i")
+theme_override_fonts/normal_font = ExtResource("10_j7ex8")
 theme_override_font_sizes/normal_font_size = 120
 bbcode_enabled = true
 text = "DeHeat"
@@ -190,7 +123,7 @@ material = SubResource("ShaderMaterial_5pajh")
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_colors/default_color = Color(0.047058824, 0.023529412, 0.023529412, 1)
-theme_override_fonts/normal_font = ExtResource("7_5dd4i")
+theme_override_fonts/normal_font = ExtResource("10_j7ex8")
 theme_override_font_sizes/normal_font_size = 120
 bbcode_enabled = true
 text = "DeHeat"

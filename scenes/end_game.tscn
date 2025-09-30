@@ -1,8 +1,24 @@
-[gd_scene load_steps=4 format=3 uid="uid://bdd212e0gxwxh"]
+[gd_scene load_steps=10 format=3 uid="uid://bdd212e0gxwxh"]
 
 [ext_resource type="Script" uid="uid://dlqe7bb1i2tvi" path="res://scenes/end_game.gd" id="1_0py74"]
+[ext_resource type="Theme" uid="uid://byujsu8xvuvyt" path="res://assets/theme/main.theme" id="1_6lcay"]
 [ext_resource type="Texture2D" uid="uid://ckqh5o2rownj3" path="res://assets/backgrounds/bg_palisade.jpeg" id="1_uwdrl"]
 [ext_resource type="Texture2D" uid="uid://c6heourkw0asq" path="res://assets/backgrounds/bg_forest_fire.jpeg" id="2_0py74"]
+[ext_resource type="Texture2D" uid="uid://dvwlsssbxtumc" path="res://assets/backgrounds/bg_canadair.jpeg" id="4_5pifh"]
+[ext_resource type="FontFile" uid="uid://dg44xuoc7qjcm" path="res://assets/theme/MozaikDuren.otf" id="6_plvne"]
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_0h6i1"]
+blend_mode = 3
+
+[sub_resource type="Gradient" id="Gradient_lgwnu"]
+offsets = PackedFloat32Array(0.33157894, 1)
+colors = PackedColorArray(1, 1, 1, 1, 0.38928655, 0.38928664, 0.38928658, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_6lcay"]
+gradient = SubResource("Gradient_lgwnu")
+fill = 1
+fill_from = Vector2(0.491453, 0.48290598)
+fill_to = Vector2(0, 1)
 
 [node name="end_game" type="Control"]
 layout_mode = 3
@@ -11,34 +27,84 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("1_6lcay")
 script = ExtResource("1_0py74")
 
-[node name="bgs" type="Control" parent="."]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
+[node name="bgs" type="TabContainer" parent="."]
+unique_name_in_owner = true
+layout_mode = 0
+offset_right = 1152.0
+offset_bottom = 648.0
 grow_horizontal = 2
 grow_vertical = 2
+current_tab = 2
+tabs_visible = false
 
 [node name="bg_palisade" type="TextureRect" parent="bgs"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+visible = false
+layout_mode = 2
 texture = ExtResource("1_uwdrl")
 expand_mode = 1
 stretch_mode = 6
+metadata/_tab_index = 0
 
 [node name="bg_forest" type="TextureRect" parent="bgs"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+visible = false
+layout_mode = 2
 texture = ExtResource("2_0py74")
 expand_mode = 1
 stretch_mode = 6
+metadata/_tab_index = 1
+
+[node name="bg_canadair" type="TextureRect" parent="bgs"]
+layout_mode = 2
+texture = ExtResource("4_5pifh")
+expand_mode = 1
+stretch_mode = 6
+metadata/_tab_index = 2
+
+[node name="bg_vignette" type="TextureRect" parent="."]
+material = SubResource("CanvasItemMaterial_0h6i1")
+layout_mode = 0
+offset_right = 1152.0
+offset_bottom = 648.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("GradientTexture2D_6lcay")
+metadata/_edit_lock_ = true
+
+[node name="vb" type="VBoxContainer" parent="."]
+layout_mode = 0
+offset_right = 1152.0
+offset_bottom = 648.0
+
+[node name="lb_main" type="RichTextLabel" parent="vb"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 2
+theme_override_fonts/normal_font = ExtResource("6_plvne")
+theme_override_font_sizes/normal_font_size = 160
+bbcode_enabled = true
+text = "Canadair
+destroyed"
+fit_content = true
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="lb_main2" type="RichTextLabel" parent="vb"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+text = "Canadair
+destroyed"
+fit_content = true
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Button" type="Button" parent="."]
+layout_mode = 0
+offset_right = 1152.0
+offset_bottom = 648.0

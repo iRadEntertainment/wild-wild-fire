@@ -1,0 +1,90 @@
+[gd_scene load_steps=9 format=3 uid="uid://cudovr3jyt40g"]
+
+[ext_resource type="Texture2D" uid="uid://d1pybd66rdl7g" path="res://assets/backgrounds/tricky/bg_tricky_blur.png" id="1_4tm8q"]
+[ext_resource type="Texture2D" uid="uid://8a4s7qqv2j66" path="res://assets/backgrounds/tricky/bg_tricky_plane_smooth.png" id="2_84pgy"]
+[ext_resource type="Script" uid="uid://254ivkmagbp3" path="res://scenes/bg_intro.gd" id="2_kwelw"]
+[ext_resource type="Texture2D" uid="uid://c6fpl0gjc3fcf" path="res://assets/backgrounds/tricky/bg_tricky_overlay2.png" id="3_kwelw"]
+[ext_resource type="Texture2D" uid="uid://dgfy7may6hrxt" path="res://assets/backgrounds/tricky/bg_tricky_overlay.png" id="4_br1hm"]
+[ext_resource type="VideoStream" uid="uid://cftcx1j55kt6n" path="res://assets/video/smoke.ogv" id="5_g2ou6"]
+[ext_resource type="VideoStream" uid="uid://cqqgaco258tt1" path="res://assets/video/fire.ogv" id="6_15cln"]
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_tbmy8"]
+blend_mode = 1
+
+[node name="bg_intro" type="TextureRect"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_4tm8q")
+expand_mode = 1
+stretch_mode = 6
+script = ExtResource("2_kwelw")
+
+[node name="BgTrickyPlaneSmooth" type="Sprite2D" parent="."]
+position = Vector2(294, 211)
+scale = Vector2(0.590106, 0.59010595)
+texture = ExtResource("2_84pgy")
+
+[node name="bg_overlay2" type="TextureRect" parent="."]
+unique_name_in_owner = true
+self_modulate = Color(1, 1, 1, 0.25490198)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -35.555542
+offset_top = -20.0
+offset_right = 35.555542
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("3_kwelw")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="bg_overlay1" type="TextureRect" parent="."]
+unique_name_in_owner = true
+self_modulate = Color(1, 1, 1, 0.58431375)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -48.0
+offset_top = -27.0
+offset_right = 48.0
+offset_bottom = 27.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("4_br1hm")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="video_smoke" type="VideoStreamPlayer" parent="."]
+self_modulate = Color(1, 1, 1, 0.4392157)
+material = SubResource("CanvasItemMaterial_tbmy8")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+stream = ExtResource("5_g2ou6")
+expand = true
+loop = true
+bus = &"Sfx"
+
+[node name="video_fire" type="VideoStreamPlayer" parent="."]
+material = SubResource("CanvasItemMaterial_tbmy8")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+stream = ExtResource("6_15cln")
+autoplay = true
+expand = true
+loop = true
+bus = &"Sfx"
