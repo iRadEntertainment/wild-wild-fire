@@ -11,7 +11,7 @@
 
 ### SFX
 - [mouse hover - DrMinky from Freesound.org](https://freesound.org/people/DrMinky/sounds/166186)
-- [explosion](https://freesound.org/people/florianreichelt/sounds/563010/)
+- [explosion - florianreichelt from Freesound.org](https://freesound.org/people/florianreichelt/sounds/563010/)
 
 ### Music
 - Music by [Renrebello](https://pixabay.com/users/renrebello-45761742/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=273033) from [Pixabay](https://pixabay.com/music//?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=273033)
