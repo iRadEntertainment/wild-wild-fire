@@ -1,11 +1,14 @@
-[gd_scene load_steps=3 format=3 uid="uid://3wmv8hh54tmu"]
+[gd_scene load_steps=4 format=3 uid="uid://3wmv8hh54tmu"]
 
+[ext_resource type="Script" uid="uid://dn7lmd7j68fyp" path="res://instances/explosion.gd" id="1_870o4"]
 [ext_resource type="PackedScene" uid="uid://b0e2cue4akmnn" path="res://instances/part_smoke.tscn" id="1_hnrdp"]
 [ext_resource type="AudioStream" uid="uid://2eeriiqpuodx" path="res://assets/sfx/sfx_explosion.ogg" id="2_bek8i"]
 
 [node name="explosion" type="Node3D"]
+script = ExtResource("1_870o4")
 
 [node name="part_smoke" parent="." instance=ExtResource("1_hnrdp")]
+emitting = false
 
 [node name="sfx" type="AudioStreamPlayer3D" parent="."]
 stream = ExtResource("2_bek8i")

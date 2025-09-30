@@ -30,8 +30,58 @@ layout_mode = 2
 [node name="lb_credits" type="RichTextLabel" parent="vb"]
 layout_mode = 2
 size_flags_vertical = 3
-text = "Those look like SHIT!"
+theme_override_constants/underline_alpha = 50
+bbcode_enabled = true
+text = "[font_size=26][b]TEAM[/b][/font_size]
+
+[ul][url=https://twitch.tv/iraddev]iRadDev[/url] - Programming[/ul]
+[ul][url=https://twitch.tv/grap3jelly]Grap3J3lly[/url] - Programming and modelling[/ul]
+[ul][url=https://twitch.tv/big_the_]Big_The_[/url] - Fire simulation[/ul]
+
+
+[font_size=26][b]Friends[/b][/font_size]
+
+[ul]Trickylady - Main menu design[/ul]
+[ul]Pgorley - Voicelines[/ul]
+
+
+[font_size=20][b]3D Models[/b][/font_size]
+
+[font_size=14][ul][url=https://www.kenney.nl/assets/city-kit-suburban]Kenney - City Kit Suburban[/url][/ul][/font_size]
+
+
+[font_size=20][b]Pictures[/b][/font_size]
+
+[font_size=14][ul][url=https://www1.lunapic.com/]Background FX - Lunapic.com (no AI)[/url][/ul][/font_size]
+[font_size=14][ul][url=https://www.irishnews.com/entertainment/hollywood-cancels-film-premieres-as-firefighters-battle-extreme-wildfire-P722VFYVGJPXJAIWBSMJVBFLP4/]Firefighters battle the advancing Palisades Fire in the Pacific Palisades neighborhood of Los Angeles (Etienne Laurent/AP) (Etienne Laurent/AP)[/url][/ul][/font_size]
+
+
+[font_size=20][b]Icons[/b][/font_size]
+
+[font_size=14][ul][url=https://game-icons.net/1x1/lorc/fire-wave.html]Fire wave icon - by Lorc under CC BY 3.0[/url][/ul][/font_size]
+[font_size=14][ul][url=https://game-icons.net/1x1/lorc/fire-zone.html]Fire zone icon - by Lorc under CC BY 3.0[/url][/ul][/font_size]
+[font_size=14][ul][url=https://game-icons.net/1x1/skoll/airplane.html]Airplane icon - by Skoll under CC BY 3.0[/url][/ul][/font_size]
+[font_size=14][ul][url=https://fonts.google.com/icons?selected=Material+Symbols+Outlined:local_gas_station:FILL@0;wght@400;GRAD@0;opsz@24&icon.query=gas&icon.size=24&icon.color=%23e3e3e3]Local Gas Station icon - by google icons[/url][/ul][/font_size]
+
+
+[font_size=20][b]SFX[/b][/font_size]
+
+[font_size=14][ul][url=https://freesound.org/people/DrMinky/sounds/166186]mouse hover - DrMinky from Freesound.org[/url][/ul]
+[font_size=14][ul][url=https://freesound.org/people/florianreichelt/sounds/563010/]explosion - florianreichelt from Freesound.org[/url][/ul][/font_size]
+
+
+[font_size=20][b]Music[/b][/font_size]
+
+[font_size=14][ul]Music by [url=https://pixabay.com/users/renrebello-45761742/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=273033]Renrebello[/url] from [url=https://pixabay.com/music//?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=273033]Pixabay[/url][/ul][/font_size]
+
+
+[font_size=20][b]Shaders[/b][/font_size]
+
+[font_size=14][ul][url=https://godotshaders.com/shader/water-shader-3d-godot-4-3/]Water Shader 3D - by Lesus[/url][/ul][/font_size]
+"
 horizontal_alignment = 1
+meta_underlined = false
+hint_underlined = false
 
 [node name="sep02" type="HSeparator" parent="vb"]
 layout_mode = 2
@@ -46,9 +96,11 @@ text = "Close"
 
 [node name="btn_quit" type="Button" parent="vb/hb_bot"]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Quit"
 
+[connection signal="meta_clicked" from="vb/lb_credits" to="." method="_on_lb_credits_meta_clicked"]
 [connection signal="pressed" from="vb/hb_bot/btn_close" to="." method="_on_btn_close_pressed"]
 [connection signal="pressed" from="vb/hb_bot/btn_quit" to="." method="_on_btn_quit_pressed"]
