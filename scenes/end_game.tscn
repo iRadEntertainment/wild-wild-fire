@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://bdd212e0gxwxh"]
+[gd_scene load_steps=11 format=3 uid="uid://bdd212e0gxwxh"]
 
 [ext_resource type="Script" uid="uid://dlqe7bb1i2tvi" path="res://scenes/end_game.gd" id="1_0py74"]
 [ext_resource type="Theme" uid="uid://byujsu8xvuvyt" path="res://assets/theme/main.theme" id="1_6lcay"]
@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://c6heourkw0asq" path="res://assets/backgrounds/bg_forest_fire.jpeg" id="2_0py74"]
 [ext_resource type="Texture2D" uid="uid://dvwlsssbxtumc" path="res://assets/backgrounds/bg_canadair.jpeg" id="4_5pifh"]
 [ext_resource type="FontFile" uid="uid://dg44xuoc7qjcm" path="res://assets/theme/MozaikDuren.otf" id="6_plvne"]
+[ext_resource type="PackedScene" uid="uid://cb0mb3td40ghv" path="res://scenes/pnl_credits.tscn" id="7_plvne"]
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_0h6i1"]
 blend_mode = 3
@@ -37,11 +38,10 @@ offset_right = 1152.0
 offset_bottom = 648.0
 grow_horizontal = 2
 grow_vertical = 2
-current_tab = 2
+current_tab = 0
 tabs_visible = false
 
 [node name="bg_palisade" type="TextureRect" parent="bgs"]
-visible = false
 layout_mode = 2
 texture = ExtResource("1_uwdrl")
 expand_mode = 1
@@ -57,6 +57,7 @@ stretch_mode = 6
 metadata/_tab_index = 1
 
 [node name="bg_canadair" type="TextureRect" parent="bgs"]
+visible = false
 layout_mode = 2
 texture = ExtResource("4_5pifh")
 expand_mode = 1
@@ -75,8 +76,10 @@ metadata/_edit_lock_ = true
 
 [node name="vb" type="VBoxContainer" parent="."]
 layout_mode = 0
-offset_right = 1152.0
-offset_bottom = 648.0
+offset_left = 156.0
+offset_top = 66.0
+offset_right = 996.0
+offset_bottom = 582.0
 
 [node name="lb_main" type="RichTextLabel" parent="vb"]
 unique_name_in_owner = true
@@ -97,14 +100,40 @@ vertical_alignment = 1
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
-text = "Canadair
-destroyed"
+text = "Thanks for playing!"
 fit_content = true
 autowrap_mode = 0
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Button" type="Button" parent="."]
-layout_mode = 0
-offset_right = 1152.0
-offset_bottom = 648.0
+[node name="HBoxContainer" type="HBoxContainer" parent="vb"]
+layout_mode = 2
+
+[node name="btn_return" type="Button" parent="vb/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Return to main menu"
+
+[node name="btn_credits" type="Button" parent="vb/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Credits"
+
+[node name="btn_quit" type="Button" parent="vb/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Quit"
+
+[node name="pnl_credits" parent="." instance=ExtResource("7_plvne")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+offset_left = 96.0
+offset_top = 77.0
+offset_right = -96.0
+offset_bottom = -77.0
+
+[connection signal="pressed" from="vb/HBoxContainer/btn_return" to="." method="_on_btn_return_pressed"]
+[connection signal="pressed" from="vb/HBoxContainer/btn_credits" to="." method="_on_btn_credits_pressed"]
+[connection signal="pressed" from="vb/HBoxContainer/btn_quit" to="." method="_on_btn_quit_pressed"]
