@@ -5,7 +5,7 @@ class_name HUD
 @onready var hud: HUD = %HUD
 @onready var pnl_in_game_menu: InGameMenu = %pnl_in_game_menu
 
-@export_range(0.1, 3.0, 0.1) var fade_duration: float = 1.5
+@export_range(0.1, 3.0, 0.1) var fade_duration: float = 2.5
 
 var airplane: Airplane:
 	get: return Mng.airplane
@@ -47,6 +47,7 @@ func _update_fuel_and_water_status() -> void:
 
 
 func _on_game_won(_end_game: Mng.EndGame) -> void:
+	await get_tree().create_timer(3.0).timeout
 	fade_out()
 	await _tw_fade.finished
 	Mng.go_to_endscreen()

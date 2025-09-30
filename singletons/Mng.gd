@@ -52,6 +52,7 @@ signal level_setup_complete
 
 
 func _ready() -> void:
+	AudioServer.set_bus_mute(2, Mng.is_debug_mode)
 	DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_MAXIMIZED)
 
 

@@ -83,6 +83,8 @@ func _play_intro_cinematic() -> void:
 
 func setup() -> void:
 	set_day_night()
+	#map.data.update_outputs()
+	#map.data.populate_data()
 	
 	airplane.CollidedWithTerrain.connect(_on_airplane_collision)
 	airplane.FuelWarning.connect(_on_airplane_fuel_warning)
@@ -117,6 +119,8 @@ func _process(_delta: float) -> void:
 		is_game_won = true
 		Mng.end_game = Mng.EndGame.FIRE_ESTINGUISHED
 		game_won.emit(Mng.EndGame.FIRE_ESTINGUISHED)
+		fire_simulation.process_mode = Node.PROCESS_MODE_DISABLED
+		Aud.play_radio_voice("res://assets/voices/voice_fire extinguished. Mission complete, you’re cleared RTB..wav")
 		set_process(false)
 
 
@@ -173,8 +177,8 @@ func _on_airplane_collision() -> void:
 	Aud.play_radio_voice(voices.pick_random())
 	await Aud.voice_over
 	await get_tree().create_timer(1.0).timeout
-	Mng.end_game = Mng.EndGame.AIRPORT_DESTROYED
-	game_lost.emit(Mng.EndGame.AIRPORT_DESTROYED)
+	Mng.end_game = Mng.EndGame.PLANE_CRASHED
+	game_lost.emit(Mng.EndGame.PLANE_CRASHED)
 
 
 func _on_airplane_fuel_warning() -> void:

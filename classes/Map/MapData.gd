@@ -306,6 +306,8 @@ func _populate_roads_data() -> void:
 		for dir in [Vector2i.UP, Vector2i.LEFT, Vector2i.RIGHT, Vector2i.DOWN]:
 			var iter: int = 0
 			var next: Vector2i = start + dir
+			if next.x < 0 or next.x >= size.x or next.y < 0 or next.y >= size.y:
+				break
 			var is_horiz: bool = dir.x != 0
 			while out_btm_tiles_urban.get_bitv(next):
 				if not out_btm_roads.get_bitv(next):

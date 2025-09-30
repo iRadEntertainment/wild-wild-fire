@@ -38,15 +38,8 @@ offset_right = 1152.0
 offset_bottom = 648.0
 grow_horizontal = 2
 grow_vertical = 2
-current_tab = 0
+current_tab = 2
 tabs_visible = false
-
-[node name="bg_palisade" type="TextureRect" parent="bgs"]
-layout_mode = 2
-texture = ExtResource("1_uwdrl")
-expand_mode = 1
-stretch_mode = 6
-metadata/_tab_index = 0
 
 [node name="bg_forest" type="TextureRect" parent="bgs"]
 visible = false
@@ -54,12 +47,19 @@ layout_mode = 2
 texture = ExtResource("2_0py74")
 expand_mode = 1
 stretch_mode = 6
-metadata/_tab_index = 1
+metadata/_tab_index = 0
 
 [node name="bg_canadair" type="TextureRect" parent="bgs"]
 visible = false
 layout_mode = 2
 texture = ExtResource("4_5pifh")
+expand_mode = 1
+stretch_mode = 6
+metadata/_tab_index = 1
+
+[node name="bg_palisade" type="TextureRect" parent="bgs"]
+layout_mode = 2
+texture = ExtResource("1_uwdrl")
 expand_mode = 1
 stretch_mode = 6
 metadata/_tab_index = 2

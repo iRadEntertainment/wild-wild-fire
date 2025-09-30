@@ -79,7 +79,7 @@ public partial class Airplane : CharacterBody3D
 		MarkerWaterSpawnLeft = GetNode<Marker3D>("%MarkerWaterSpawnLeft");
 		MarkerWaterSpawnRight = GetNode<Marker3D>("%MarkerWaterSpawnRight");
 		CurrentFuel = settings.MaxFuel;
-		CurrentWater = settings.MaxWater;
+		// CurrentWater = settings.MaxWater;
 		CurrentSpeed = 0.0f;
 		CurrentThrust = 0.0f;
 		AreaHitbox.BodyEntered += OnBodyEntered;

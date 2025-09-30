@@ -6,7 +6,7 @@
 shader_type spatial;
 
 // Set render modes: always draw depth and disable backface culling
-render_mode depth_draw_always, cull_disabled;
+render_mode depth_draw_always, blend_mix, cull_disabled;
 
 // Uniforms for screen and depth textures
 uniform sampler2D SCREEN_TEXTURE : hint_screen_texture, filter_linear_mipmap;
@@ -316,7 +316,7 @@ void fragment() {
     // Sample depth texture
     float depth_raw = texture(DEPTH_TEXTURE, SCREEN_UV).r;
     float depth = PROJECTION_MATRIX[3][2] / (depth_raw + PROJECTION_MATRIX[2][2]);
-    
+
     // Calculate the distance from the camera to the water surface
     float camera_depth = INV_VIEW_MATRIX[3].y - world_position.y;
     if (camera_depth < 0.0) { // Camera is underwater
@@ -328,41 +328,41 @@ void fragment() {
     float depth_blend = exp((depth + VERTEX.z + depth_offset) * -beers_law);
     depth_blend = clamp(1.0 - depth_blend, 0.0, 1.0);
     float depth_blend_power = clamp(pow(depth_blend, 2.5), 0.0, 1.0);
-    
+
     // Sample screen color and blend it with depth color
     vec3 screen_color = textureLod(SCREEN_TEXTURE, SCREEN_UV, depth_blend_power * 2.5).rgb;
     vec3 depth_color = mix(shallow_water_color.rgb, deep_water_color.rgb, depth_blend_power);
     vec3 color = mix(screen_color * depth_color, depth_color * 0.25, depth_blend_power * 0.5);
-    
+
     // Calculate depth difference for edge detection
     float z_depth = edge(texture(DEPTH_TEXTURE, SCREEN_UV).x);
     float z_pos = edge(FRAGCOORD.z);
     float z_dif = z_depth - z_pos;
-    
+
 	// Calculate caustic effect
 	vec4 caustic_screenPos = vec4(SCREEN_UV * 2.0 - 1.0, depth_raw, 1.0);
 	vec4 caustic_localPos = inv_mvp * caustic_screenPos;
 	caustic_localPos = vec4(caustic_localPos.xyz / caustic_localPos.w, caustic_localPos.w);
-	 
+
 	vec2 caustic_Uv = caustic_localPos.xz / vec2(1024.0) + 0.5;
-	caustic_Uv += perturbed_normal.xz * caustic_distortion_strength; 
+	caustic_Uv += perturbed_normal.xz * caustic_distortion_strength;
 
 	float caustic_layer_index = floor(mod(TIME * 26.0, num_caustic_layers)); // Use floor for integer index
 
 	vec4 caustic_color = texture(caustic_sampler, vec3(caustic_Uv * 660.0, caustic_layer_index));
-	float caustic_intensity_multiplier = (1.0 - depth_blend_power) * 6.0; 
+	float caustic_intensity_multiplier = (1.0 - depth_blend_power) * 6.0;
 
 	color *= 1.0 + pow(caustic_color.r, 1.50) * caustic_intensity_multiplier;
-    
+
     // Calculate fresnel effect
     float fresnel = fresnel(5.0, NORMAL, VIEW);
     vec3 surface_color = mix(base_water_color, fresnel_water_color, fresnel);
-    
+
     // Calculate edge foam effect
     vec2 edge_uv = world_position.xz * edge_texture_scale + edge_texture_offset + TIME * edge_texture_speed;
     float edge_fade = smoothstep(edge_fade_start, edge_fade_end, z_dif);
     vec3 depth_color_adj = mix(texture(edge_foam_texture, edge_uv).rgb * edge_foam_intensity, color, edge_fade);
-    
+
     // Apply peak color effect based on height with noise
     float peak_factor = smoothstep(peak_height_threshold, peak_height_threshold + 0.2, height);
     float noise_factor = fbm(world_position.xz * 0.1 + TIME * 0.1);
@@ -374,7 +374,7 @@ void fragment() {
     vec2 foam_uv = world_position.xz * foam_scale + TIME * 0.1;
     float foam_sample = texture(foam_texture, foam_uv).r;
     float foam_blend_factor = smoothstep(0.0, 1.0, peak_factor) * foam_sample * foam_intensity;
-    
+
     final_color = mix(final_color, vec3(1.0), foam_blend_factor);
 
     // Set the final color, metallic, roughness, and normal

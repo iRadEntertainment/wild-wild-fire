@@ -47,7 +47,7 @@ func increase_score(partial_scores: int) -> void:
 	score_updated.emit()
 
 
-func _on_game_end() -> void:
+func _on_game_end(_end_game: Mng.EndGame) -> void:
 	level_stats.time_elapsed = Time.get_ticks_msec() - game_t_start
 
 
