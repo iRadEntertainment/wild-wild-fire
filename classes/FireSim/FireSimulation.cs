@@ -334,7 +334,7 @@ public partial class FireSimulation : Node3D
 		{
 			for (int y = 0; y < gridSize.Y; y++) 
 			{
-				if (finalCellState[x, y].burntness > 0 && finalCellState[x,y].burntness < 0.9999f) 
+				if (finalCellState[x, y].heat > burnThresholdToSpreadHeat) 
 				{
 					FireOut = false;
 					break;
