@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://d1hpgbjtidec2" path="res://instances/gui.tscn" id="2_bubbi"]
 [ext_resource type="Script" uid="uid://bq5pc7u8ql0hi" path="res://classes/FireSim/FireSimulation.cs" id="3_xsjd8"]
 [ext_resource type="PackedScene" uid="uid://b0e2cue4akmnn" path="res://instances/part_smoke.tscn" id="4_j3y0w"]
-[ext_resource type="Environment" uid="uid://bfelwt1bgsy8e" path="res://assets/materials/game_env.tres" id="4_orxxa"]
+[ext_resource type="Environment" uid="uid://cm72auoxmd33d" path="res://assets/materials/game_env_night.tres" id="5_ig4qp"]
 [ext_resource type="PackedScene" uid="uid://yrhefj7ccy5b" path="res://Airplane.tscn" id="7_miic2"]
 [ext_resource type="Script" uid="uid://ci2vsorh57rmw" path="res://instances/map.gd" id="8_3vg1c"]
 [ext_resource type="PackedScene" uid="uid://bt1g66qd04g0t" path="res://instances/airport.tscn" id="8_dt8mg"]
@@ -313,15 +313,33 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 35.63704, 6.4930162, -5.70963
 [node name="environment" type="Node3D" parent="."]
 
 [node name="env" type="WorldEnvironment" parent="environment"]
-environment = ExtResource("4_orxxa")
+environment = ExtResource("5_ig4qp")
 
 [node name="sun" type="DirectionalLight3D" parent="environment"]
 unique_name_in_owner = true
 transform = Transform3D(0.8586878, 0.4389159, -0.26459062, -0.27884364, 0.833291, 0.47736004, 0.4300018, -0.33612382, 0.8379257, 0, 0, 0)
-light_energy = 1.255
+visible = false
+light_energy = 2.176
 light_indirect_energy = 0.61
 light_volumetric_fog_energy = 0.645
 light_angular_distance = 7.4
+light_bake_mode = 1
+shadow_blur = 0.17
+directional_shadow_mode = 0
+directional_shadow_split_2 = 0.358
+directional_shadow_split_3 = 0.519
+directional_shadow_blend_splits = true
+directional_shadow_max_distance = 38.4
+
+[node name="moon" type="DirectionalLight3D" parent="environment"]
+unique_name_in_owner = true
+transform = Transform3D(0.8586878, 0.4389159, -0.26459062, -0.27884364, 0.833291, 0.47736004, 0.4300018, -0.33612382, 0.8379257, 0, 0, 0)
+light_color = Color(0.73671967, 0.82753676, 0.9412697, 1)
+light_energy = 0.421
+light_indirect_energy = 0.415
+light_volumetric_fog_energy = 0.77
+light_angular_distance = 2.1
+light_specular = 0.68
 light_bake_mode = 1
 shadow_blur = 0.17
 directional_shadow_mode = 0

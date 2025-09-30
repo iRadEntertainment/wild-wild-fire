@@ -1,7 +1,7 @@
 // NOTE: Shader automatically converted from Godot Engine 4.5.stable.mono's StandardMaterial3D.
 
 shader_type spatial;
-render_mode cull_back, alpha_to_coverage;
+render_mode cull_back;
 
 uniform ivec2 fire_img_size = ivec2(128);
 uniform sampler2D firesim_output : filter_nearest;
