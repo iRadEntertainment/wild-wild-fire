@@ -82,12 +82,15 @@ func _play_intro_cinematic() -> void:
 
 
 func setup() -> void:
-	is_setup = true
+	set_day_night()
+	
 	airplane.CollidedWithTerrain.connect(_on_airplane_collision)
 	airplane.FuelWarning.connect(_on_airplane_fuel_warning)
 	airplane.WaterWarning.connect(_on_airplane_water_warning)
 	airplane.ConsumeFuel = !Mng.is_infinite_fuel
 	airplane.ConsumeWater = !Mng.is_infinite_water
+	
+	is_setup = true
 	setup_complete.emit()
 
 
@@ -135,6 +138,17 @@ func set_cam(type: CamType) -> void:
 
 func set_cam_cinematic(target: Node3D, distance: float) -> void:
 	cam.SetCameraCinematic(target, distance)
+
+
+func set_day_night() -> void:
+	var env: Environment
+	if Mng.is_night:
+		env = load("res://assets/materials/game_env_night.tres")
+	else:
+		env = load("res://assets/materials/game_env.tres")
+	%env.environment = env
+	%sun.visible = !Mng.is_night
+	%moon.visible = Mng.is_night
 
 
 func _on_airplane_collision() -> void:

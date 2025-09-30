@@ -8,6 +8,8 @@ var _capture_pad: bool = true
 
 
 func _ready() -> void:
+	%ck_day_night.button_pressed = Mng.is_night
+	%ck_day_night.text = "Day time" if !Mng.is_night else "Night time"
 	%ck_scawy.button_pressed = Mng.is_scawy
 	%ck_inf_fuel.button_pressed = Mng.is_infinite_fuel
 	%ck_inf_water.button_pressed = Mng.is_infinite_water
@@ -132,3 +134,8 @@ func _on_rebind_requested(action_name: StringName, entry: EntryInputRemap) -> vo
 func _on_ck_scawy_toggled(toggled_on: bool) -> void: Mng.is_scawy = toggled_on
 func _on_ck_inf_fuel_toggled(toggled_on: bool) -> void: Mng.is_infinite_fuel = toggled_on
 func _on_ck_inf_water_toggled(toggled_on: bool) -> void: Mng.is_infinite_water = toggled_on
+
+
+func _on_ck_day_night_toggled(toggled_on: bool) -> void:
+	Mng.is_night = toggled_on
+	%ck_day_night.text = "Day time" if !Mng.is_night else "Night time"

@@ -173,6 +173,14 @@ custom_minimum_size = Vector2(360, 0)
 layout_mode = 2
 size_flags_horizontal = 4
 
+[node name="ck_day_night" type="CheckButton" parent="vb_main/scroll/vb"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(504, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+text = "Day Time"
+
 [node name="ck_inf_fuel" type="CheckButton" parent="vb_main/scroll/vb"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(504, 0)
@@ -217,6 +225,7 @@ size_flags_vertical = 3
 [node name="entry_input" parent="vb_main/scroll/vb/vb_inputs" instance=ExtResource("4_llfil")]
 layout_mode = 2
 
+[connection signal="toggled" from="vb_main/scroll/vb/ck_day_night" to="." method="_on_ck_day_night_toggled"]
 [connection signal="toggled" from="vb_main/scroll/vb/ck_inf_fuel" to="." method="_on_ck_inf_fuel_toggled"]
 [connection signal="toggled" from="vb_main/scroll/vb/ck_inf_water" to="." method="_on_ck_inf_water_toggled"]
 [connection signal="toggled" from="vb_main/scroll/vb/ck_scawy" to="." method="_on_ck_scawy_toggled"]

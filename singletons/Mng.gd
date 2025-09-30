@@ -24,6 +24,11 @@ var game_sun: DirectionalLight3D:
 
 
 # game modifier
+var is_night: bool = false:
+	set(val):
+		is_night = val
+		if game:
+			game.set_day_night()
 var play_level_cinematic: bool = false
 var is_scawy: bool = false
 var is_infinite_fuel: bool = false:

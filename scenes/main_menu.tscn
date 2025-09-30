@@ -194,6 +194,7 @@ text = "Settings"
 alignment = 2
 
 [node name="btn_leaderboard" type="Button" parent="margin/hb/vb_buttons"]
+visible = false
 layout_mode = 2
 size_flags_horizontal = 8
 disabled = true

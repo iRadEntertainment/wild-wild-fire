@@ -40,10 +40,10 @@ func _update_fuel_and_water_status() -> void:
 	%progress_water.value = water_ratio
 
 
-func _on_game_won() -> void:
+func _on_game_won(end_game: Mng.EndGame) -> void:
 	%pnl_won.show()
-func _on_game_lost() -> void:
-	pass
+func _on_game_lost(end_game: Mng.EndGame) -> void:
+	%pnl_won.show()
 
 
 func _update_airplane_info() -> void:

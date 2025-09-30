@@ -313,6 +313,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 35.63704, 6.4930162, -5.70963
 [node name="environment" type="Node3D" parent="."]
 
 [node name="env" type="WorldEnvironment" parent="environment"]
+unique_name_in_owner = true
 environment = ExtResource("5_ig4qp")
 
 [node name="sun" type="DirectionalLight3D" parent="environment"]
