@@ -540,7 +540,7 @@ metadata/_custom_type_script = "uid://31eem6n8p3pc"
 
 [node name="MarkerFireStart" type="Marker3D" parent="instances"]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 38.7234, 6.394388, -19.489944)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.44926, 6.394388, 24.225193)
 
 [node name="MarkerMapCam" type="Marker3D" parent="instances"]
 unique_name_in_owner = true

@@ -51,6 +51,9 @@ signal game_ready
 signal level_setup_complete
 
 
+func _ready() -> void:
+	DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_MAXIMIZED)
+
 
 func go_to_main_menu() -> void:
 	get_tree().change_scene_to_file("res://scenes/main_menu.tscn")

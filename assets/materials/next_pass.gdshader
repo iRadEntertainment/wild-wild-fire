@@ -1,7 +1,7 @@
 // NOTE: Shader automatically converted from Godot Engine 4.5.stable.mono's StandardMaterial3D.
 
 shader_type spatial;
-render_mode cull_back;
+render_mode blend_mix, cull_back;
 
 uniform ivec2 fire_img_size = ivec2(128);
 uniform sampler2D firesim_output : filter_nearest;
@@ -96,11 +96,11 @@ void fragment() {
 	ROUGHNESS = mix(1.0, 0.2, moisture_ext) * roughness;
 	vec3 emission_amt = color_ambers.rgb * emission_energy;
 	emission_amt *= heat_col.a;
-	EMISSION = emission_amt;
+	EMISSION = clamp(emission_amt, vec3(0.0), vec3(10.0));
 	
 	vec3 final_col = mix(wet_col.rgb, burnt_col.rgb, burnt_col.a);
 	final_col += heat_col.rgb * heat_col.a;
-	ALBEDO.rgb = final_col;
+	ALBEDO.rgb = clamp(final_col, vec3(0.0), vec3(1.0));
 	ALPHA = max(max(burnt_col.a, heat_col.a), wet_col.a);
-	ALPHA = clamp(ALPHA, 0.01, 1.0);
+	ALPHA = clamp(ALPHA, 0.0, 1.0);
 }
