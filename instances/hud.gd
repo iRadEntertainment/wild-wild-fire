@@ -26,6 +26,7 @@ func _input(event: InputEvent) -> void:
 
 
 func _process(_delta: float) -> void:
+	if !airplane: return
 	_update_fuel_and_water_status()
 	
 	if Mng.is_debug_mode:

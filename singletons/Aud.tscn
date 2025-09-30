@@ -32,4 +32,5 @@ bus = &"UI"
 
 [node name="voice_airport" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("5_ji5cw")
+volume_db = -14.0
 bus = &"Voice"

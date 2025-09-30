@@ -7,6 +7,8 @@ var game: Game
 var game_stats: GameStats
 var game_env: Environment = preload("res://assets/materials/game_env.tres")
 
+enum EndGame {FIRE_ESTINGUISHED, PLANE_CRASHED, AIRPORT_DESTROYED}
+var end_game: EndGame
 
 # getters
 var map: Map:
@@ -22,6 +24,7 @@ var game_sun: DirectionalLight3D:
 
 
 # game modifier
+var play_level_cinematic: bool = false
 var is_scawy: bool = false
 var is_infinite_fuel: bool = false:
 	set(val):

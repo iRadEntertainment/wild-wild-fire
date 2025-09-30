@@ -10,6 +10,7 @@ func setup() -> void:
 
 
 func _process(_delta: float) -> void:
+	if not Mng.airplane: return
 	var plane_world_pos: Vector2 = Vector2(Mng.airplane.global_position.x, Mng.airplane.global_position.z)
 	plane_world_pos += Vector2(Mng.map.size)/2.0
 	

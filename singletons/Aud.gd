@@ -45,16 +45,25 @@ func connect_all_buttons_sounds(from_node: Control) -> void:
 
 
 #region Voice
+signal voice_over
 var voice_queue: Array[String] = []
 func play_radio_voice(audio_file_path: String = "") -> void:
-	if $voice_airport.playing and not audio_file_path.is_empty():
-		voice_queue.append(audio_file_path)
-		return
-	elif not audio_file_path.is_empty():
-		voice_queue.append(audio_file_path)
-	
-	var queued_path: String = voice_queue.pop_front()
-	if not queued_path: return
-	$voice_airport.stream = load(queued_path)
+	#if $voice_airport.playing and not audio_file_path.is_empty():
+		#voice_queue.append(audio_file_path)
+		#return
+	#elif not audio_file_path.is_empty():
+		#voice_queue.append(audio_file_path)
+	#
+	#var queued_path: String = voice_queue.pop_front()
+	#if not queued_path: return
+	#$voice_airport.stream = load(queued_path)
+	$voice_airport.stop()
+	$voice_airport.stream = load(audio_file_path)
 	$voice_airport.play()
+	await $voice_airport.finished
+	voice_over.emit()
+
+
+func is_radio_playing() -> bool:
+	return $voice_airport.playing
 #endregion

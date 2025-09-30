@@ -34,8 +34,8 @@ signal simulation_ended
 
 var is_game_won: bool = false
 var is_game_lost: bool = false
-signal game_lost
-signal game_won
+signal game_lost(endgame: Mng.EndGame)
+signal game_won(endgame: Mng.EndGame)
 
 
 
@@ -52,13 +52,40 @@ func _ready() -> void:
 	cam.FirePosition = marker_fire_start.global_position
 	cam.MapCenterTarget = Vector3() + Vector3.UP * map.data.get_elevation_at_grid_pos(Vector2i())
 	set_cam_cinematic(marker_fire_start, 15.0)
-	cam_type = CamType.CINEMATIC
 	
 	start_simulation()
+	if Mng.play_level_cinematic:
+		_play_intro_cinematic()
+	else:
+		cam_type = CamType.FOLLOW
+		airplane.CanInput = true
+
+
+func _play_intro_cinematic() -> void:
+	cam_type = CamType.CINEMATIC
+	var aud_spotted: String = [
+		"res://assets/voices/voice_fire reported on the island..wav",
+		"res://assets/voices/voice_fire spotted on island..wav"
+	].pick_random()
+	Aud.play_radio_voice(aud_spotted)
+	await Aud.voice_over
+	await get_tree().create_timer(1.5).timeout
+	
+	cam_type = CamType.FOLLOW
+	Aud.play_radio_voice("res://assets/voices/voice_Runway One, cleared for takeoff..wav")
+	await Aud.voice_over
+	airplane.CanInput = true
+	
+	await airplane.TakeOff
+	await get_tree().create_timer(3.0).timeout
+	Aud.play_radio_voice("res://assets/voices/voice_proceed to the sea for a water scoop. Maintain low approach, scoop water, then return to the fire line..wav")
 
 
 func setup() -> void:
 	is_setup = true
+	airplane.CollidedWithTerrain.connect(_on_airplane_collision)
+	airplane.FuelWarning.connect(_on_airplane_fuel_warning)
+	airplane.WaterWarning.connect(_on_airplane_water_warning)
 	airplane.ConsumeFuel = !Mng.is_infinite_fuel
 	airplane.ConsumeWater = !Mng.is_infinite_water
 	setup_complete.emit()
@@ -85,7 +112,8 @@ func _process(_delta: float) -> void:
 	if Engine.is_editor_hint(): return
 	if fire_simulation.IsFireOut() and not is_game_won:
 		is_game_won = true
-		game_won.emit()
+		Mng.end_game = Mng.EndGame.FIRE_ESTINGUISHED
+		game_won.emit(Mng.EndGame.FIRE_ESTINGUISHED)
 		set_process(false)
 
 
@@ -107,3 +135,43 @@ func set_cam(type: CamType) -> void:
 
 func set_cam_cinematic(target: Node3D, distance: float) -> void:
 	cam.SetCameraCinematic(target, distance)
+
+
+func _on_airplane_collision() -> void:
+	var expl_inst: Node3D = preload("res://instances/explosion.tscn").instantiate()
+	expl_inst.position = airplane.global_position
+	add_child(expl_inst)
+	set_cam_cinematic(expl_inst, 6)
+	cam_type = CamType.CINEMATIC
+	airplane.queue_free()
+	var voices = [
+		"res://assets/voices/voice_DAR 877 2.wav",
+		"res://assets/voices/voice_DAR 877.wav",
+		"res://assets/voices/voice_DELTA ALPHA ROMEA 877 v2.wav",
+		"res://assets/voices/voice_DELTA ALPHA ROMEO 877.wav",
+	]
+	
+	Aud.play_radio_voice(voices.pick_random())
+	await Aud.voice_over
+	await get_tree().create_timer(1.0).timeout
+	Aud.play_radio_voice(voices.pick_random())
+	await Aud.voice_over
+	Aud.play_radio_voice(voices.pick_random())
+	await Aud.voice_over
+	await get_tree().create_timer(1.0).timeout
+	Mng.end_game = Mng.EndGame.AIRPORT_DESTROYED
+	game_lost.emit(Mng.EndGame.AIRPORT_DESTROYED)
+
+
+func _on_airplane_fuel_warning() -> void:
+	var voices = [
+		"res://assets/voices/voice_monitor your fuel status. #2.wav",
+		"res://assets/voices/voice_monitor your fuel status..wav",
+		"res://assets/voices/voice_you’re low on fuel. Break off and return to the tanker base to refuel, then report back. #2 .wav",
+		"res://assets/voices/voice_you’re low on fuel. Break off and return to the tanker base to refuel, then report back..wav",
+	]
+	Aud.play_radio_voice(voices.pick_random())
+
+
+func _on_airplane_water_warning() -> void:
+	Aud.play_radio_voice("res://assets/voices/voice_you’re low on water. Break off and return to the sea for water pickup..wav")

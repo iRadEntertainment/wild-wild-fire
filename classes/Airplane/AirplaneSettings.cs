@@ -12,6 +12,8 @@ public partial class AirplaneSettings : Resource
     [Export(PropertyHint.Range, "10.0, 200.0, 1.0")] public float RefillWaterRate { get; set; } = 50.0f;
     [Export(PropertyHint.Range, "0.0, 40.0, 0.1")] public float WaterDropRate { get; set; } = 20.0f;
     [Export(PropertyHint.Range, "0.0, 10.0, 1.0")] public float WaterParticleAmount { get; set; } = 5.0f;
+    [Export(PropertyHint.Range, "0.0, 1.0, 0.01")] public float FuelWarning { get; set; } = 0.15f;
+    [Export(PropertyHint.Range, "0.0, 1.0, 0.01")] public float WaterWarning { get; set; } = 0.1f;
 
 
     [ExportSubgroup("Handling")]

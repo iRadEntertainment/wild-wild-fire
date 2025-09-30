@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=4 uid="uid://yrhefj7ccy5b"]
+[gd_scene load_steps=19 format=4 uid="uid://yrhefj7ccy5b"]
 
 [ext_resource type="Script" uid="uid://dx7rd6rtbpvft" path="res://classes/Airplane/Airplane.cs" id="1_bn5qk"]
 [ext_resource type="Resource" uid="uid://c2jqt68v8uo0l" path="res://classes/Airplane/AirplaneSettings.tres" id="2_sl4vo"]
@@ -194,6 +194,10 @@ _surfaces = [{
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_whitq")
 
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_2ft4c"]
+height = 0.21616554
+radius = 1.0092773
+
 [node name="Airplane" type="CharacterBody3D"]
 collision_layer = 8
 collision_mask = 7
@@ -256,14 +260,23 @@ unique_name_in_owner = true
 transform = Transform3D(0.70710677, -0.49999997, -0.49999997, 0, 0.70710677, -0.70710677, 0.70710677, 0.49999997, 0.49999997, -0.050000004, 0.04908851, 0.24193262)
 visible = false
 
-[node name="RaySea" type="RayCast3D" parent="."]
+[node name="rays" type="Node3D" parent="."]
+
+[node name="RaySea" type="RayCast3D" parent="rays"]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.071183726, 0)
 visible = false
 target_position = Vector3(0, -100, 0)
 collision_mask = 3
 
-[node name="RayTerrain" type="RayCast3D" parent="."]
+[node name="RayTerrain" type="RayCast3D" parent="rays"]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.071183726, 0)
+visible = false
+target_position = Vector3(0, -100, 0)
+collision_mask = 4
+
+[node name="RaySplashes" type="RayCast3D" parent="rays"]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.071183726, 0)
 visible = false
@@ -283,3 +296,12 @@ visible = false
 unit_size = 2.0
 autoplay = true
 bus = &"Sfx"
+
+[node name="AreaHitbox" type="Area3D" parent="."]
+unique_name_in_owner = true
+collision_layer = 8
+collision_mask = 4
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="AreaHitbox"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1856719, 0)
+shape = SubResource("CylinderShape3D_2ft4c")
