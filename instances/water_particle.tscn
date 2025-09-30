@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://cur7tvgwbs6ht"]
+[gd_scene load_steps=17 format=3 uid="uid://cur7tvgwbs6ht"]
 
 [ext_resource type="Script" uid="uid://f6bu2v4uhfsr" path="res://instances/water_particle.gd" id="1_pr3tk"]
 [ext_resource type="Texture2D" uid="uid://hgtboffxufuu" path="res://assets/easteregg_spritesheet.png" id="2_pr3tk"]
@@ -44,24 +44,39 @@ material = SubResource("StandardMaterial3D_cjwub")
 size = Vector2(0.2, 0.2)
 orientation = 2
 
+[sub_resource type="Gradient" id="Gradient_pr3tk"]
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_r4rm5"]
+gradient = SubResource("Gradient_pr3tk")
+
+[sub_resource type="Curve" id="Curve_pr3tk"]
+_data = [Vector2(0, 0.227027), 0.0, 9.496793, 0, 0, Vector2(0.14917126, 0.76108104), 0.3437547, 0.3437547, 0, 0, Vector2(1, 1), 0.08771706, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_r4rm5"]
+curve = SubResource("Curve_pr3tk")
+
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_yg8nw"]
 inherit_velocity_ratio = 0.719
 direction = Vector3(0, -1, 0)
-initial_velocity_min = 0.59999996
-initial_velocity_max = 2.0
+initial_velocity_min = 2.55
+initial_velocity_max = 4.7
 gravity = Vector3(0, -0.6, 0)
-scale_min = 2.0
-scale_max = 5.0
-anim_speed_min = 0.39999998
-anim_speed_max = 0.59999996
-anim_offset_max = 0.59999996
+damping_min = 3.1350002
+damping_max = 3.1350002
+scale_min = 2.75
+scale_max = 5.4
+scale_curve = SubResource("CurveTexture_r4rm5")
+scale_over_velocity_max = 0.55
+color_ramp = SubResource("GradientTexture1D_r4rm5")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pr3tk"]
 transparency = 1
 shading_mode = 0
 specular_mode = 2
+vertex_color_use_as_albedo = true
 albedo_texture = ExtResource("2_yg8nw")
-billboard_mode = 1
 billboard_keep_scale = true
 stencil_flags = 2
 
@@ -88,12 +103,14 @@ mesh = SubResource("SphereMesh_pr3tk")
 
 [node name="part_easteregg" type="GPUParticles3D" parent="."]
 emitting = false
-amount = 30
+amount = 15
 process_material = SubResource("ParticleProcessMaterial_dpf5o")
 draw_pass_1 = SubResource("PlaneMesh_td6vx")
 
-[node name="part_easteregg2" type="GPUParticles3D" parent="."]
-amount = 30
+[node name="part_normal" type="GPUParticles3D" parent="."]
+emitting = false
+amount = 15
+transform_align = 3
 process_material = SubResource("ParticleProcessMaterial_yg8nw")
 draw_pass_1 = SubResource("PlaneMesh_r4rm5")
 

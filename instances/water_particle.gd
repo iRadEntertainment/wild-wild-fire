@@ -5,10 +5,12 @@ class_name WaterParticle
 @export_range(0.0, 1.0, 0.001) var water_intensity = 0.1
 @export_range(1.0, 10.0, 0.1) var splash_radius = 2.0
 
+
 func _ready() -> void:
+	$part_normal.emitting = !Mng.is_scawy
+	$part_easteregg.emitting = Mng.is_scawy
 	if Mng.is_scawy:
 		Aud.play_music_easteregg()
-		$part_easteregg.emitting = true
 
 
 func _on_body_entered(body: StaticBody3D) -> void:
@@ -22,7 +24,7 @@ func _on_body_entered(body: StaticBody3D) -> void:
 		var sim_pos: Vector2i = Vector2i(hit_pos.y, hit_pos.x)
 		Mng.game.fire_simulation.SpreadMoistureOnRadius(sim_pos, splash_radius, water_intensity)
 	
-	if Mng.is_scawy:
-		$part_easteregg.emitting = false
+	$part_normal.emitting = false
+	$part_easteregg.emitting = false
 	await get_tree().create_timer(1).timeout
 	queue_free()
