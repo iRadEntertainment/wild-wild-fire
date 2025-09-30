@@ -4,15 +4,16 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://cnngry33dgc8b"
 path.s3tc="res://.godot/imported/Foam.png-f24e54c5d723ee00996c150fb493b683.s3tc.ctex"
+path.etc2="res://.godot/imported/Foam.png-f24e54c5d723ee00996c150fb493b683.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://assets/materials/godot-realistic-water-master/water/Foam.png"
-dest_files=["res://.godot/imported/Foam.png-f24e54c5d723ee00996c150fb493b683.s3tc.ctex"]
+dest_files=["res://.godot/imported/Foam.png-f24e54c5d723ee00996c150fb493b683.s3tc.ctex", "res://.godot/imported/Foam.png-f24e54c5d723ee00996c150fb493b683.etc2.ctex"]
 
 [params]
 

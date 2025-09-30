@@ -4,15 +4,16 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://cacgu7ygf3yho"
 path.s3tc="res://.godot/imported/Water_UV.png-baa38fc101497593224a3ad583bf37fd.s3tc.ctex"
+path.etc2="res://.godot/imported/Water_UV.png-baa38fc101497593224a3ad583bf37fd.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://assets/materials/godot-realistic-water-master/water/Water_UV.png"
-dest_files=["res://.godot/imported/Water_UV.png-baa38fc101497593224a3ad583bf37fd.s3tc.ctex"]
+dest_files=["res://.godot/imported/Water_UV.png-baa38fc101497593224a3ad583bf37fd.s3tc.ctex", "res://.godot/imported/Water_UV.png-baa38fc101497593224a3ad583bf37fd.etc2.ctex"]
 
 [params]
 

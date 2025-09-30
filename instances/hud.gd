@@ -5,13 +5,16 @@ class_name HUD
 @onready var hud: HUD = %HUD
 @onready var pnl_in_game_menu: InGameMenu = %pnl_in_game_menu
 
+@export_range(0.1, 3.0, 0.1) var fade_duration: float = 1.5
+
 var airplane: Airplane:
 	get: return Mng.airplane
 
 
 func _ready() -> void:
+	process_mode = Node.PROCESS_MODE_PAUSABLE
 	%pnl_debug.hide()
-	%pnl_won.hide()
+	fade_in()
 
 
 func setup() -> void:
@@ -26,6 +29,9 @@ func _input(event: InputEvent) -> void:
 
 
 func _process(_delta: float) -> void:
+	if %lb_fps.visible:
+		%lb_fps.text = "FPS %.1f" % Performance.get_monitor(Performance.TIME_FPS)
+	
 	if !airplane: return
 	_update_fuel_and_water_status()
 	
@@ -40,10 +46,16 @@ func _update_fuel_and_water_status() -> void:
 	%progress_water.value = water_ratio
 
 
-func _on_game_won(end_game: Mng.EndGame) -> void:
-	%pnl_won.show()
-func _on_game_lost(end_game: Mng.EndGame) -> void:
-	%pnl_won.show()
+func _on_game_won(_end_game: Mng.EndGame) -> void:
+	fade_out()
+	await _tw_fade.finished
+	Mng.go_to_endscreen()
+
+
+func _on_game_lost(_end_game: Mng.EndGame) -> void:
+	fade_out()
+	await _tw_fade.finished
+	Mng.go_to_endscreen()
 
 
 func _update_airplane_info() -> void:
@@ -61,3 +73,21 @@ func _update_airplane_info() -> void:
 	nfo += "\nElevFromSea: %.01f" % airplane.ElevFromSea
 	nfo += "\nElevFromTerrain: %.01f" % airplane.ElevFromTerrain
 	%lb_debug_info.text = nfo
+
+
+var _tw_fade: Tween
+func fade_in() -> void:
+	%fade_col.self_modulate.a = 1.0
+	if _tw_fade:
+		_tw_fade.kill()
+	_tw_fade = create_tween()
+	_tw_fade.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+	_tw_fade.tween_property(%fade_col, "self_modulate:a", 0.0, fade_duration)
+
+
+func fade_out() -> void:
+	if _tw_fade:
+		_tw_fade.kill()
+	_tw_fade = create_tween()
+	_tw_fade.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+	_tw_fade.tween_property(%fade_col, "self_modulate:a", 1.0, fade_duration)

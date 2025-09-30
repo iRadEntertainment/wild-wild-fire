@@ -4,15 +4,16 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://3eqqjqxo1ys5"
 path.s3tc="res://.godot/imported/Boat_R.png-c163e5755540407bc10e483894892833.s3tc.ctex"
+path.etc2="res://.godot/imported/Boat_R.png-c163e5755540407bc10e483894892833.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://assets/materials/godot-realistic-water-master/boat/Boat_R.png"
-dest_files=["res://.godot/imported/Boat_R.png-c163e5755540407bc10e483894892833.s3tc.ctex"]
+dest_files=["res://.godot/imported/Boat_R.png-c163e5755540407bc10e483894892833.s3tc.ctex", "res://.godot/imported/Boat_R.png-c163e5755540407bc10e483894892833.etc2.ctex"]
 
 [params]
 

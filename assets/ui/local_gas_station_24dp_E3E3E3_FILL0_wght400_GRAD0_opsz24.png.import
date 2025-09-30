@@ -4,15 +4,16 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://cjc66x8r13f7p"
 path.s3tc="res://.godot/imported/local_gas_station_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.png-53e74d83209ac8981a0a58c24c8d5123.s3tc.ctex"
+path.etc2="res://.godot/imported/local_gas_station_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.png-53e74d83209ac8981a0a58c24c8d5123.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://assets/ui/local_gas_station_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.png"
-dest_files=["res://.godot/imported/local_gas_station_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.png-53e74d83209ac8981a0a58c24c8d5123.s3tc.ctex"]
+dest_files=["res://.godot/imported/local_gas_station_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.png-53e74d83209ac8981a0a58c24c8d5123.s3tc.ctex", "res://.godot/imported/local_gas_station_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.png-53e74d83209ac8981a0a58c24c8d5123.etc2.ctex"]
 
 [params]
 

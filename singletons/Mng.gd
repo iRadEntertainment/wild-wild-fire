@@ -78,6 +78,10 @@ func start_game(level_n: int) -> void:
 	level_setup_complete.emit()
 
 
+func go_to_endscreen() -> void:
+	get_tree().change_scene_to_file("res://scenes/end_game.tscn")
+
+
 func reset_stats() -> void:
 	game_stats = GameStats.new()
 

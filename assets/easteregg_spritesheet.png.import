@@ -4,15 +4,16 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://hgtboffxufuu"
 path.s3tc="res://.godot/imported/easteregg_spritesheet.png-c521d274d070271234358af6b2e38c83.s3tc.ctex"
+path.etc2="res://.godot/imported/easteregg_spritesheet.png-c521d274d070271234358af6b2e38c83.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://assets/easteregg_spritesheet.png"
-dest_files=["res://.godot/imported/easteregg_spritesheet.png-c521d274d070271234358af6b2e38c83.s3tc.ctex"]
+dest_files=["res://.godot/imported/easteregg_spritesheet.png-c521d274d070271234358af6b2e38c83.s3tc.ctex", "res://.godot/imported/easteregg_spritesheet.png-c521d274d070271234358af6b2e38c83.etc2.ctex"]
 
 [params]
 

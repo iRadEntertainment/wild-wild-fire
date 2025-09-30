@@ -96,18 +96,25 @@ autowrap_mode = 0
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="lb_main2" type="RichTextLabel" parent="vb"]
+[node name="lb_description" type="RichTextLabel" parent="vb"]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_vertical = 3
-text = "Thanks for playing!"
+text = "Your plane has crashed, you ejected in time to survive, but the wild fire spread to the cities! Do better next time looooooser!"
 fit_content = true
-autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="lb_description2" type="Label" parent="vb"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 1
+text = "Thanks for playing!"
 horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="HBoxContainer" type="HBoxContainer" parent="vb"]
 layout_mode = 2
+size_flags_vertical = 10
 
 [node name="btn_return" type="Button" parent="vb/HBoxContainer"]
 layout_mode = 2

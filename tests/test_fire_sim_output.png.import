@@ -4,15 +4,16 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://d1ifs7w5746s3"
 path.s3tc="res://.godot/imported/test_fire_sim_output.png-ba987cb5c7a7bc778cdec25b2eefc148.s3tc.ctex"
+path.etc2="res://.godot/imported/test_fire_sim_output.png-ba987cb5c7a7bc778cdec25b2eefc148.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://tests/test_fire_sim_output.png"
-dest_files=["res://.godot/imported/test_fire_sim_output.png-ba987cb5c7a7bc778cdec25b2eefc148.s3tc.ctex"]
+dest_files=["res://.godot/imported/test_fire_sim_output.png-ba987cb5c7a7bc778cdec25b2eefc148.s3tc.ctex", "res://.godot/imported/test_fire_sim_output.png-ba987cb5c7a7bc778cdec25b2eefc148.etc2.ctex"]
 
 [params]
 

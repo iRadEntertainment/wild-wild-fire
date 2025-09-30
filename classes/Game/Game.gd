@@ -54,7 +54,7 @@ func _ready() -> void:
 	set_cam_cinematic(marker_fire_start, 15.0)
 	
 	start_simulation()
-	if Mng.play_level_cinematic:
+	if Mng.play_level_cinematic or not Mng.is_debug_mode:
 		_play_intro_cinematic()
 	else:
 		cam_type = CamType.FOLLOW
@@ -164,7 +164,7 @@ func _on_airplane_collision() -> void:
 		"res://assets/voices/voice_DELTA ALPHA ROMEA 877 v2.wav",
 		"res://assets/voices/voice_DELTA ALPHA ROMEO 877.wav",
 	]
-	
+	await get_tree().create_timer(1.0).timeout
 	Aud.play_radio_voice(voices.pick_random())
 	await Aud.voice_over
 	await get_tree().create_timer(1.0).timeout
