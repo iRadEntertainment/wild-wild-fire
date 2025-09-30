@@ -530,7 +530,7 @@ transform = Transform3D(1.3113416e-07, 0, -1, 0, 1, 0, 1, 0, 1.3113416e-07, -1.9
 unique_name_in_owner = true
 transform = Transform3D(1.3113416e-07, 0, -1, 0, 1, 0, 1, 0, 1.3113416e-07, 0.06989956, 3.329589, 30.968342)
 
-[node name="GameCamera" type="Camera3D" parent="instances"]
+[node name="cam" type="Camera3D" parent="instances"]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 9.794241, 18.752502)
 script = ExtResource("9_d1imw")
@@ -539,7 +539,7 @@ metadata/_custom_type_script = "uid://31eem6n8p3pc"
 
 [node name="MarkerFireStart" type="Marker3D" parent="instances"]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.042114, 6.394388, -14.871979)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 38.7234, 6.394388, -19.489944)
 
 [node name="MarkerMapCam" type="Marker3D" parent="instances"]
 unique_name_in_owner = true

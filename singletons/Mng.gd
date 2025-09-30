@@ -8,14 +8,6 @@ var game_stats: GameStats
 var game_env: Environment = preload("res://assets/materials/game_env.tres")
 
 
-enum CamType {PLANE_FOLLOW, PLANE_FIXED, MAP}
-var current_cam_type: CamType = CamType.PLANE_FIXED:
-	set(val):
-		current_cam_type = val
-		camera_type_changed.emit()
-var current_cam: Camera3D # MapCamera or AirplaneCamera
-signal camera_type_changed
-
 # getters
 var map: Map:
 	get: return game.map if game else null
