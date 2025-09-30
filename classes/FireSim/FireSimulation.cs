@@ -308,7 +308,7 @@ public partial class FireSimulation : Node3D
 		}
 		activeInASet = !activeInASet;
 
-		List<Task> tasks = new List<Task>();
+		List<Task<bool>> tasks = new List<Task<bool>>();
 		Vector2I taskSize = new Vector2I(gridSize.X / threadGroups.X, gridSize.Y / threadGroups.Y);
 		for (int segmentX = 0; segmentX < threadGroups.X; segmentX++)
 		{
@@ -318,32 +318,20 @@ public partial class FireSimulation : Node3D
 				int segY = segmentY;
 				tasks.Add(Task.Run(() =>
 				{
-					UpdateCellGroup(segX * taskSize.X, segX * taskSize.X + taskSize.X,
+                    return UpdateCellGroup(segX * taskSize.X, segX * taskSize.X + taskSize.X,
 						segY * taskSize.Y, segY * taskSize.Y + taskSize.Y);
 				}));
 			}
 		}
 
-		foreach (Task task in tasks)
+		FireOut = true;
+		foreach (Task<bool> task in tasks)
 		{
 			task.Wait();
-		}
-
-		FireOut = true;
-		for (int x = 0; x < gridSize.X; x++) 
-		{
-			for (int y = 0; y < gridSize.Y; y++) 
-			{
-				if (finalCellState[x, y].heat > burnThresholdToSpreadHeat) 
-				{
-					FireOut = false;
-					break;
-				}
-			}
-			if(!FireOut) 
-			{
-				break;
-			}
+            if (task.Result) 
+            {
+                FireOut = false;
+            }
 		}
 
 		if (enableDebugLogging)
@@ -364,15 +352,20 @@ public partial class FireSimulation : Node3D
 	/// <param name="endX"></param>
 	/// <param name="startY"></param>
 	/// <param name="endY"></param>
-	private void UpdateCellGroup(int startX, int endX, int startY, int endY)
+	private bool UpdateCellGroup(int startX, int endX, int startY, int endY)
 	{
+        bool burning = false;
 		for (int x = startX; x < endX; x++)
 		{
 			for (int y = startY; y < endY; y++)
 			{
-				UpdateCell(x, y);
+                if (UpdateCell(x, y)) 
+                {
+                    burning = true;
+                }
 			}
 		}
+        return burning;
 	}
 
 	/// <summary>
@@ -380,10 +373,11 @@ public partial class FireSimulation : Node3D
 	/// </summary>
 	/// <param name="x"></param>
 	/// <param name="y"></param>
-	private void UpdateCell(int x, int y)
+	private bool UpdateCell(int x, int y)
 	{
+        bool burning = false;
 		FireCell curCell = startingCellState[x, y];
-		if (!curCell.burnable) { return; }
+		if (!curCell.burnable) { return false; }
 		//curCell.heat += 0.01f * StepMultipler;
 
 		FireCell[] neighbors =
@@ -434,7 +428,8 @@ public partial class FireSimulation : Node3D
 			curCell.heat += selfHeatPerTick * internalMoistureMult * StepMultipler;
 			curCell.burntness += burnPerTick * internalMoistureMult * StepMultipler;
 			curCell.internalMoisture -= internalMoistureLossDurringBurn * StepMultipler;
-		}
+            burning = true;
+        }
 
 		//heat disipation
 		curCell.heat -= heatDispationPerTick * StepMultipler;
@@ -447,6 +442,8 @@ public partial class FireSimulation : Node3D
 		curCell.surfaceMoisture = Mathf.Clamp(curCell.surfaceMoisture, 0, 1);
 
 		finalCellState[x, y] = curCell;
+
+        return burning;
 	}
 
 	/// <summary>
