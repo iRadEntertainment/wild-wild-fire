@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://c3al7nd2ss4oc"
+path="res://.godot/imported/voice_proceed to the sea for a water scoop. Maintain low approach, scoop water, then return to the fire line..wav-dbfd95bfebeb2f7da942ac83e40ec4da.sample"
+
+[deps]
+
+source_file="res://assets/voices/voice_proceed to the sea for a water scoop. Maintain low approach, scoop water, then return to the fire line..wav"
+dest_files=["res://.godot/imported/voice_proceed to the sea for a water scoop. Maintain low approach, scoop water, then return to the fire line..wav-dbfd95bfebeb2f7da942ac83e40ec4da.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

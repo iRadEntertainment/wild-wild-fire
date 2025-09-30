@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://npu82fc55oet"
+path="res://.godot/imported/voice_fire reported near the control tower. Proceed direct to the airport, expedite..wav-803ed9646d8620a96dff40b6f32c1c14.sample"
+
+[deps]
+
+source_file="res://assets/voices/voice_fire reported near the control tower. Proceed direct to the airport, expedite..wav"
+dest_files=["res://.godot/imported/voice_fire reported near the control tower. Proceed direct to the airport, expedite..wav-803ed9646d8620a96dff40b6f32c1c14.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

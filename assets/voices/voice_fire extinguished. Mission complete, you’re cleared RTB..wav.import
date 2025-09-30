@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://bffer3j17ltxl"
+path="res://.godot/imported/voice_fire extinguished. Mission complete, you’re cleared RTB..wav-4fbbdc2b2a9714a451f55498b8124786.sample"
+
+[deps]
+
+source_file="res://assets/voices/voice_fire extinguished. Mission complete, you’re cleared RTB..wav"
+dest_files=["res://.godot/imported/voice_fire extinguished. Mission complete, you’re cleared RTB..wav-4fbbdc2b2a9714a451f55498b8124786.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

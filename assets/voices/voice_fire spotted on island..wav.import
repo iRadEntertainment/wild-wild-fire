@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://c8cpd75tsj2ia"
+path="res://.godot/imported/voice_fire spotted on island..wav-bf5440e3388839202926ff49e44f7101.sample"
+
+[deps]
+
+source_file="res://assets/voices/voice_fire spotted on island..wav"
+dest_files=["res://.godot/imported/voice_fire spotted on island..wav-bf5440e3388839202926ff49e44f7101.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

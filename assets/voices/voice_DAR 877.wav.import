@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://d2rkbif6gy4f8"
+path="res://.godot/imported/voice_DAR 877.wav-53880d0502135d6ab4ded39235fd9cc4.sample"
+
+[deps]
+
+source_file="res://assets/voices/voice_DAR 877.wav"
+dest_files=["res://.godot/imported/voice_DAR 877.wav-53880d0502135d6ab4ded39235fd9cc4.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

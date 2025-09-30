@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://h886in7d61xv"
+path="res://.godot/imported/voice_you’re low on fuel. Break off and return to the tanker base to refuel, then report back. #2 .wav-b84a421df6d6fca90e24121c50d33bbe.sample"
+
+[deps]
+
+source_file="res://assets/voices/voice_you’re low on fuel. Break off and return to the tanker base to refuel, then report back. #2 .wav"
+dest_files=["res://.godot/imported/voice_you’re low on fuel. Break off and return to the tanker base to refuel, then report back. #2 .wav-b84a421df6d6fca90e24121c50d33bbe.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

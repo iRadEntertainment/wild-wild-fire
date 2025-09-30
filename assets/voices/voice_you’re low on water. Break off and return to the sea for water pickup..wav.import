@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://blt605uhovmy4"
+path="res://.godot/imported/voice_you’re low on water. Break off and return to the sea for water pickup..wav-284e5cf0b07da08a459045c641ab6b26.sample"
+
+[deps]
+
+source_file="res://assets/voices/voice_you’re low on water. Break off and return to the sea for water pickup..wav"
+dest_files=["res://.godot/imported/voice_you’re low on water. Break off and return to the sea for water pickup..wav-284e5cf0b07da08a459045c641ab6b26.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

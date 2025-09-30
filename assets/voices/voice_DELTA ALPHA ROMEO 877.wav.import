@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://dw2y5lp7u85nw"
+path="res://.godot/imported/voice_DELTA ALPHA ROMEO 877.wav-b1b4be1a604dad50e1c3ce5007c23e58.sample"
+
+[deps]
+
+source_file="res://assets/voices/voice_DELTA ALPHA ROMEO 877.wav"
+dest_files=["res://.godot/imported/voice_DELTA ALPHA ROMEO 877.wav-b1b4be1a604dad50e1c3ce5007c23e58.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

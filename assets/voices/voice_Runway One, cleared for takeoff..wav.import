@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://bog86cwtk21y1"
+path="res://.godot/imported/voice_Runway One, cleared for takeoff..wav-bcc9cb9a5d1f962308610b4fa8537a6d.sample"
+
+[deps]
+
+source_file="res://assets/voices/voice_Runway One, cleared for takeoff..wav"
+dest_files=["res://.godot/imported/voice_Runway One, cleared for takeoff..wav-bcc9cb9a5d1f962308610b4fa8537a6d.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://brf852u3ikg1v"
+path="res://.godot/imported/voice_fire spreading. Containment required. Expedite to target..wav-3742bf176b308ae835aaf196c7127909.sample"
+
+[deps]
+
+source_file="res://assets/voices/voice_fire spreading. Containment required. Expedite to target..wav"
+dest_files=["res://.godot/imported/voice_fire spreading. Containment required. Expedite to target..wav-3742bf176b308ae835aaf196c7127909.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2
