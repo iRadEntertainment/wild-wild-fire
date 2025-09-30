@@ -65,6 +65,7 @@ func start_simulation() -> void:
 
 
 func _process(_delta: float) -> void:
+	if Engine.is_editor_hint(): return
 	if fire_simulation.IsFireOut() and not is_game_won:
 		is_game_won = true
 		game_won.emit()

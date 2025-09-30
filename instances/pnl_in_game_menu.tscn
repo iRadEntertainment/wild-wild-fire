@@ -1,9 +1,26 @@
-[gd_scene load_steps=5 format=3 uid="uid://i382nukdemjq"]
+[gd_scene load_steps=6 format=3 uid="uid://i382nukdemjq"]
 
 [ext_resource type="Theme" uid="uid://byujsu8xvuvyt" path="res://assets/theme/main.theme" id="1_7fpxa"]
 [ext_resource type="Script" uid="uid://dkunmle1mh76h" path="res://instances/pnl_in_game_menu.gd" id="2_286hu"]
 [ext_resource type="PackedScene" uid="uid://bbigim1y05ox2" path="res://scenes/pnl_settings.tscn" id="2_s5wbo"]
 [ext_resource type="Texture2D" uid="uid://ctfaifp158klq" path="res://assets/ui/ref_img_palette.jpg" id="3_286hu"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_286hu"]
+content_margin_left = 16.0
+content_margin_top = 16.0
+content_margin_right = 16.0
+content_margin_bottom = 16.0
+bg_color = Color(0.2718475, 0.109952055, 0.16641292, 0.28627452)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.7372549, 0.050980393, 0.12941177, 1)
+border_blend = true
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
 
 [node name="pnl_in_game_menu" type="PanelContainer"]
 anchors_preset = 15
@@ -12,9 +29,11 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("1_7fpxa")
+theme_override_styles/panel = SubResource("StyleBoxFlat_286hu")
 script = ExtResource("2_286hu")
 
 [node name="bg_tex" type="TextureRect" parent="."]
+visible = false
 self_modulate = Color(1, 1, 1, 0.16862746)
 layout_mode = 2
 texture = ExtResource("3_286hu")
@@ -30,7 +49,7 @@ text = "Game Paused"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="HSeparator" type="HSeparator" parent="vb"]
+[node name="sep" type="HSeparator" parent="vb"]
 layout_mode = 2
 
 [node name="vb_buttons" type="VBoxContainer" parent="vb"]
@@ -58,6 +77,7 @@ text = "Quit to Desktop"
 
 [node name="pnl_settings" parent="vb" instance=ExtResource("2_s5wbo")]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 size_flags_vertical = 3
 

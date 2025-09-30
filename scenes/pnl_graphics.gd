@@ -92,6 +92,7 @@ func _select_current_values() -> void:
 	%sl_max_fps.value = Engine.max_fps
 	%lb_max_fps.text = str(Engine.max_fps)
 	%ck_glow.button_pressed = game_env.glow_enabled
+	%lb_glow_strength.text = "%.02f" % game_env.glow_strength
 
 
 func _connect_signals() -> void:
@@ -139,5 +140,5 @@ func _on_ck_glow_toggled(toggled_on: bool) -> void: game_env.glow_enabled = togg
 
 
 func _on_sl_glow_strength_value_changed(value: float) -> void:
-	%lb_glow_strength.text = ".02f" % value
+	%lb_glow_strength.text = "%.02f" % value
 	game_env.glow_strength = value

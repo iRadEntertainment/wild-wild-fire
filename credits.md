@@ -1,5 +1,7 @@
 
 ### Pictures
+- [Background FX - Lunapic.com (no AI)](https://www1.lunapic.com/)
+- [Firefighters battle the advancing Palisades Fire in the Pacific Palisades neighborhood of Los Angeles (Etienne Laurent/AP) (Etienne Laurent/AP)](https://www.irishnews.com/entertainment/hollywood-cancels-film-premieres-as-firefighters-battle-extreme-wildfire-P722VFYVGJPXJAIWBSMJVBFLP4/)
 
 ### Icons
 - [Fire wave icon - by Lorc under CC BY 3.0](https://game-icons.net/1x1/lorc/fire-wave.html)

@@ -30,7 +30,7 @@ var game_sun: DirectionalLight3D:
 
 
 # game modifier
-var is_scawy: bool = true
+var is_scawy: bool = false
 var is_infinite_fuel: bool = false:
 	set(val):
 		is_infinite_fuel = val

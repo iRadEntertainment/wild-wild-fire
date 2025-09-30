@@ -1,0 +1,44 @@
+[gd_scene load_steps=4 format=3 uid="uid://bdd212e0gxwxh"]
+
+[ext_resource type="Script" uid="uid://dlqe7bb1i2tvi" path="res://scenes/end_game.gd" id="1_0py74"]
+[ext_resource type="Texture2D" uid="uid://ckqh5o2rownj3" path="res://assets/backgrounds/bg_palisade.jpeg" id="1_uwdrl"]
+[ext_resource type="Texture2D" uid="uid://c6heourkw0asq" path="res://assets/backgrounds/bg_forest_fire.jpeg" id="2_0py74"]
+
+[node name="end_game" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_0py74")
+
+[node name="bgs" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="bg_palisade" type="TextureRect" parent="bgs"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_uwdrl")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="bg_forest" type="TextureRect" parent="bgs"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_0py74")
+expand_mode = 1
+stretch_mode = 6
