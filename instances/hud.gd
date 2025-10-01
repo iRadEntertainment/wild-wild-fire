@@ -8,7 +8,7 @@ class_name HUD
 @export_range(0.1, 3.0, 0.1) var fade_duration: float = 2.5
 
 var airplane: Airplane:
-	get: return Mng.airplane
+	get: return Mng.airplane if is_instance_valid(Mng.airplane) else null
 
 
 func _ready() -> void:

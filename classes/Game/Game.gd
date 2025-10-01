@@ -125,6 +125,7 @@ func _process(_delta: float) -> void:
 		Aud.play_radio_voice("res://assets/voices/voice_fire extinguished. Mission complete, you’re cleared RTB..wav")
 		set_process(false)
 	
+	if not airplane: return
 	if airplane.IsOnWater and airplane.IsOutOfFuel and Mng.end_game != Mng.EndGame.PLANE_ON_SEA:
 		Mng.end_game = Mng.EndGame.PLANE_ON_SEA
 		game_lost.emit(Mng.EndGame.PLANE_ON_SEA)
